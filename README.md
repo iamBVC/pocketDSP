@@ -14,7 +14,7 @@ DSP: Create your own custom FX preset by selecting various standalone effects su
 Spectrum Analyzer: Applies the FFT algorithm to the input signal, makes measurements on the amplitude of the harmonics and saves the data on the SD card.
 
 
-Sound card: Connect the device to your pc to use it as a HiFi sound card.
+Sound card: Connect the device to your pc to use it as a HiFi USB Sound Card.
 
 
 Synthesizer: send midi commands through the USB interface and create sounds using the display to change the oscillators and effects parameters.
