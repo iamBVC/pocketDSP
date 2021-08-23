@@ -9,14 +9,14 @@ static lv_obj_t *label, *btn, *cont, *menu, *list, *slider, *mbox, *chart, *app_
 static lv_obj_t* sys_status;
 static lv_chart_series_t* ser;
 
-static lv_obj_t* dsp_fx_label[DSP_MAX_FX_COUNT], * dsp_fx_scr, * dsp_main_cont;
+static lv_obj_t * dsp_fx_scr, * dsp_main_cont;
 
 uint8_t battery_charge = 100;
 uint8_t is_active_usb = 1;
 uint8_t is_active_sd = 1;
 uint8_t dsp_fx_count = 0;
 
-float dsp_fx_settings[DSP_MAX_FX_COUNT][DSP_MAX_FX_SETTINGS + 1];
+uint16_t dsp_fx_settings[DSP_MAX_FX_COUNT][DSP_MAX_FX_SETTINGS + 1];
 
 static lv_coord_t dsp_filter_response[200];
 
@@ -106,10 +106,10 @@ void start_dsp()
         btn = lv_btn_create(dsp_main_cont);
         lv_obj_set_size(btn, 150, 150);
         lv_obj_add_event_cb(btn, dsp_open_edit, LV_EVENT_CLICKED, i);
-        dsp_fx_label[i] = lv_label_create(btn);
+        label = lv_label_create(btn);
         //lv_label_set_text(dsp_fx_label[i], fx_list[(uint8_t)dsp_fx_settings[i][0]]);
-        lv_label_set_text_fmt(dsp_fx_label[i], "FX %d\n\n%s", i, fx_list[(uint8_t)dsp_fx_settings[i][0]]);
-        lv_obj_center(dsp_fx_label[i]);
+        lv_label_set_text_fmt(label, "FX %d\n\n%s", i, fx_list[(uint8_t)dsp_fx_settings[i][0]]);
+        lv_obj_center(label);
     }
 
     btn = lv_btn_create(app_scr);
@@ -148,9 +148,9 @@ void dsp_add_fx(lv_event_t* e)
         btn = lv_btn_create(dsp_main_cont);
         lv_obj_set_size(btn, 150, 150);
         lv_obj_add_event_cb(btn, dsp_open_edit, LV_EVENT_CLICKED, dsp_fx_count);
-        dsp_fx_label[dsp_fx_count] = lv_label_create(btn);
-        lv_label_set_text_fmt(dsp_fx_label[dsp_fx_count], "FX %d\n\n%s", dsp_fx_count, fx_list[id]);
-        lv_obj_center(dsp_fx_label[dsp_fx_count]);
+        label = lv_label_create(btn);
+        lv_label_set_text_fmt(label, "FX %d\n\n%s", dsp_fx_count, fx_list[id]);
+        lv_obj_center(label);
         dsp_fx_count++;
     }
 }
@@ -377,7 +377,6 @@ void dsp_refresh_fx_slider(lv_event_t* e)
     uint8_t id = lv_event_get_user_data(e);
     uint8_t fx = lv_obj_get_user_data(target);
     dsp_fx_settings[id][fx] = lv_slider_get_value(target);
-
     dsp_open_edit(e);
 }
 void dsp_refresh_fx_list(lv_event_t* e)
