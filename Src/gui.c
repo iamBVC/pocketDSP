@@ -2,42 +2,35 @@
 #include <stdio.h>
 #include <math.h>
 
-#define DSP_MAX_FX_NUM 10
-#define DSP_MAX_FX_SLIDERS 10
+#define DSP_MAX_FX_COUNT 16
+#define DSP_MAX_FX_SETTINGS 10
 
-lv_obj_t* label;
-lv_obj_t* btn;
-lv_obj_t* cont;
-lv_obj_t* menu;
-lv_obj_t* list;
-lv_obj_t* slider;
-lv_obj_t* chart;
-lv_chart_series_t* ser;
-lv_obj_t* app_scr;
+static lv_obj_t *label, *btn, *cont, *menu, *list, *slider, *mbox, *chart, *app_scr;
+static lv_obj_t* sys_status;
+static lv_chart_series_t* ser;
 
-lv_obj_t* sys_status;
-lv_obj_t* dsp_fx_label[DSP_MAX_FX_NUM], * dsp_fx_scr, * dsp_main_cont;
+static lv_obj_t* dsp_fx_label[DSP_MAX_FX_COUNT], * dsp_fx_scr, * dsp_main_cont;
 
 uint8_t battery_charge = 100;
 uint8_t is_active_usb = 1;
 uint8_t is_active_sd = 1;
 uint8_t dsp_fx_count = 0;
 
-uint16_t dsp_fx_selected[DSP_MAX_FX_NUM];
+float dsp_fx_settings[DSP_MAX_FX_COUNT][DSP_MAX_FX_SETTINGS + 1];
 
-float *dsp_fx_settings[DSP_MAX_FX_NUM][DSP_MAX_FX_SLIDERS + 1];
+static lv_coord_t dsp_filter_response[200];
 
-const char *fx_list[] = { "None", "FIR Filter", "Reeverb", "Delay", "Sidechain", "Distortion" };
+const char *fx_list[] = { "None", "Filter", "Reeverb", "Delay", "Sidechain", "Distortion" };
 const char *app_list[] = { "DSP", "Synthesizer", "Oscilloscope", "FFT", "", "" };
-const char* dsp_main_menu[] = { "New project", "Open project", "Save project", "Settings", "Exit" };
+const char *dsp_main_menu[] = { "New project", "Open project", "Save project", "Settings", "Exit" };
 
 void reset_app()
 {
     dsp_fx_count = 0;
-    for (uint8_t i = 0; i < DSP_MAX_FX_NUM; i++)
-        for (uint8_t j = 0; j <= DSP_MAX_FX_SLIDERS; j++)
+    for (uint8_t i = 0; i < DSP_MAX_FX_COUNT; i++)
+        for (uint8_t j = 0; j <= DSP_MAX_FX_SETTINGS; j++)
             dsp_fx_settings[i][j] = 0;
-
+    
     reset_scr();
     start_main();
 }
@@ -149,7 +142,7 @@ void start_dsp()
 
 void dsp_add_fx(lv_event_t* e)
 {
-    if (dsp_fx_count < DSP_MAX_FX_NUM)
+    if (dsp_fx_count < DSP_MAX_FX_COUNT)
     {
         uint8_t id = lv_event_get_user_data(e);
         btn = lv_btn_create(dsp_main_cont);
@@ -165,18 +158,44 @@ void dsp_add_fx(lv_event_t* e)
 void dsp_menu_cb(lv_event_t* e)
 {
     uint16_t selected = lv_dropdown_get_selected(lv_event_get_target(e));
-    if (selected == 0) reset_app(); reset_scr(); start_dsp();
-    if (selected == 1);
+    if (selected == 0)
+    {
+        static const char* btns[] = { "Delete", ""};
+        mbox = lv_msgbox_create(app_scr, "Warning", "Delete the current project?", btns, true);
+        lv_obj_add_event_cb(mbox, dsp_new_project, LV_EVENT_VALUE_CHANGED, NULL);
+        lv_obj_center(mbox);
+    }
+    if (selected == 1) dsp_open_project();
     if (selected == 2);
     if (selected == 3);
     if (selected == 4) reset_app();
 }
 
+void dsp_new_project()
+{
+    reset_app();
+    reset_scr();
+    start_dsp();
+}
+
+void dsp_open_project()
+{
+    /*
+    dsp_fx_count = 1;
+    dsp_fx_settings[0][0] = 2;
+    dsp_fx_settings[0][1] = 10;
+    dsp_fx_settings[0][2] = 50;
+    */
+    reset_scr();
+    start_dsp();
+}
+
 void dsp_open_edit(lv_event_t* e)
 {
     uint8_t id = lv_event_get_user_data(e);
+    uint8_t fx = 1;
 
-    if (lv_obj_is_valid(dsp_fx_scr)) lv_obj_del(dsp_fx_scr);
+    if (lv_obj_is_valid(dsp_fx_scr)) lv_obj_del_async(dsp_fx_scr);
     dsp_fx_scr = lv_obj_create(NULL);
     lv_obj_set_size(dsp_fx_scr, 480, 320);
     lv_scr_load(dsp_fx_scr);
@@ -207,31 +226,33 @@ void dsp_open_edit(lv_event_t* e)
     lv_dropdown_set_selected(list, dsp_fx_settings[id][0]);
     lv_obj_add_event_cb(list, dsp_change_fx, LV_EVENT_VALUE_CHANGED, id);
     lv_obj_align(list, LV_ALIGN_TOP_RIGHT, 0, 0);
-
-    dsp_print_fx(id);
-
     lv_obj_set_style_bg_color(dsp_fx_scr, lv_color_make(220, 255, 220), LV_PART_MAIN);
-}
+ 
 
-void dsp_print_fx(uint8_t id)
-{
-    if (dsp_fx_settings[id][0] == 1) //FIR Filter
+    if (dsp_fx_settings[id][0] == 1) //Filter
     {
-
+        float type = dsp_fx_settings[id][1];
+        float order = dsp_fx_settings[id][2] + 1;
+        float frq1 = dsp_fx_settings[id][3] * 4;
+        float frq2 = dsp_fx_settings[id][4];
+        
         chart = lv_chart_create(dsp_fx_scr);
         lv_obj_set_size(chart, 200, 150);
         lv_obj_align(chart, LV_ALIGN_LEFT_MID, 50, 0);
-        lv_chart_set_type(chart, LV_CHART_TYPE_SCATTER);
+        //lv_chart_set_type(chart,LV_CHART_TYPE_SCATTER);
         lv_obj_set_style_size(chart, 0, LV_PART_INDICATOR);
-        lv_chart_set_axis_tick(chart, LV_CHART_AXIS_PRIMARY_X, 10, 5, 3, 10, true, 50);
+        //lv_chart_set_axis_tick(chart, LV_CHART_AXIS_PRIMARY_X, 10, 5, 3, 10, true, 50);
         lv_chart_set_axis_tick(chart, LV_CHART_AXIS_PRIMARY_Y, 10, 5, 5, 2, true, 50);
         lv_chart_set_range(chart, LV_CHART_AXIS_PRIMARY_X, 0, 20000);
         lv_chart_set_range(chart, LV_CHART_AXIS_PRIMARY_Y, 0, 100);
-        lv_chart_set_point_count(chart, 100);
         ser = lv_chart_add_series(chart, lv_palette_main(LV_PALETTE_RED), LV_CHART_AXIS_PRIMARY_Y);
-        for (uint8_t i = 0; i < 100; i++) lv_chart_set_next_value2(chart, ser, i * 200, 100*pow(40,2)/(pow(40, 2) +pow(i,2)));
+        lv_chart_set_point_count(chart, 200);
+        dsp_filter_response_refresh(type, order, frq1 * 2, frq2 * 2);
+        lv_chart_set_ext_y_array(chart, ser, (lv_coord_t*)dsp_filter_response);
 
-        static const char* opts1 = "Low Pass\n"
+
+        static const char* opts1 =
+            "Low Pass\n"
             "Band Pass\n"
             "High Pass\n"
             "Band Stop";
@@ -240,16 +261,25 @@ void dsp_print_fx(uint8_t id)
         lv_dropdown_set_options_static(list, opts1);
         lv_obj_set_size(list, 110, 40);
         lv_obj_align_to(list, chart, LV_ALIGN_OUT_TOP_RIGHT, 0, 0);
+        lv_dropdown_set_selected(list, dsp_fx_settings[id][fx]);
+        lv_obj_set_user_data(list, fx++);
+        lv_obj_add_event_cb(list, dsp_refresh_fx_list, LV_EVENT_VALUE_CHANGED, id);
 
-        static const char* opts2 = "6 dB\n"
-            "12 dB\n"
-            "30 dB\n"
-            "90 dB";
+        static const char* opts2 =
+            "1° order\n"
+            "2° order\n"
+            "3° order\n"
+            "4° order\n"
+            "5° order\n"
+            "6° order";
 
         list = lv_dropdown_create(dsp_fx_scr);
         lv_dropdown_set_options_static(list, opts2);
         lv_obj_set_size(list,90,40);
         lv_obj_align_to(list, chart, LV_ALIGN_OUT_TOP_LEFT, 0, 0);
+        lv_dropdown_set_selected(list, dsp_fx_settings[id][fx]);
+        lv_obj_set_user_data(list, fx++);
+        lv_obj_add_event_cb(list, dsp_refresh_fx_list, LV_EVENT_VALUE_CHANGED, id);
 
         label = lv_label_create(dsp_fx_scr);
         lv_label_set_text(label, "FRQ1");
@@ -257,6 +287,9 @@ void dsp_print_fx(uint8_t id)
         slider = lv_slider_create(dsp_fx_scr);
         lv_obj_set_width(slider, 150);
         lv_obj_align_to(slider, label, LV_ALIGN_OUT_RIGHT_MID, 20, 0);
+        lv_slider_set_value(slider, dsp_fx_settings[id][fx], LV_ANIM_OFF);
+        lv_obj_set_user_data(slider, fx++);
+        lv_obj_add_event_cb(slider, dsp_refresh_fx_slider, LV_EVENT_VALUE_CHANGED, id);
 
         label = lv_label_create(dsp_fx_scr);
         lv_label_set_text(label, "FRQ2");
@@ -264,6 +297,10 @@ void dsp_print_fx(uint8_t id)
         slider = lv_slider_create(dsp_fx_scr);
         lv_obj_set_width(slider, 150);
         lv_obj_align_to(slider, label, LV_ALIGN_OUT_RIGHT_MID, 20, 0);
+        lv_slider_set_value(slider, dsp_fx_settings[id][fx], LV_ANIM_OFF);
+        lv_obj_set_user_data(slider, fx++);
+        lv_obj_add_event_cb(slider, dsp_refresh_fx_slider, LV_EVENT_VALUE_CHANGED, id);
+
     }
 
 
@@ -275,6 +312,12 @@ void dsp_print_fx(uint8_t id)
         slider = lv_slider_create(dsp_fx_scr);
         lv_obj_set_width(slider, 200);
         lv_obj_align(slider, LV_ALIGN_LEFT_MID, 100, -80);
+        lv_slider_set_value(slider, dsp_fx_settings[id][fx], LV_ANIM_OFF);
+        lv_obj_set_user_data(slider, fx);
+        lv_obj_add_event_cb(slider, dsp_refresh_fx_slider, LV_EVENT_VALUE_CHANGED, id);
+        label = lv_label_create(dsp_fx_scr);
+        lv_label_set_text_fmt(label, "%d%%", dsp_fx_settings[id][fx++]);
+        lv_obj_align_to(label, slider, LV_ALIGN_OUT_RIGHT_MID, 10, 0);
 
         label = lv_label_create(dsp_fx_scr);
         lv_label_set_text(label, "Delay");
@@ -282,6 +325,12 @@ void dsp_print_fx(uint8_t id)
         slider = lv_slider_create(dsp_fx_scr);
         lv_obj_set_width(slider, 200);
         lv_obj_align(slider, LV_ALIGN_LEFT_MID, 100, -40);
+        lv_slider_set_value(slider, dsp_fx_settings[id][fx], LV_ANIM_OFF);
+        lv_obj_set_user_data(slider, fx);
+        lv_obj_add_event_cb(slider, dsp_refresh_fx_slider, LV_EVENT_VALUE_CHANGED, id);
+        label = lv_label_create(dsp_fx_scr);
+        lv_label_set_text_fmt(label, "%d%%", dsp_fx_settings[id][fx++]);
+        lv_obj_align_to(label, slider, LV_ALIGN_OUT_RIGHT_MID, 10, 0);
 
         label = lv_label_create(dsp_fx_scr);
         lv_label_set_text(label, "Wet");
@@ -289,6 +338,12 @@ void dsp_print_fx(uint8_t id)
         slider = lv_slider_create(dsp_fx_scr);
         lv_obj_set_width(slider, 200);
         lv_obj_align(slider, LV_ALIGN_LEFT_MID, 100, 0);
+        lv_slider_set_value(slider, dsp_fx_settings[id][fx], LV_ANIM_OFF);
+        lv_obj_set_user_data(slider, fx);
+        lv_obj_add_event_cb(slider, dsp_refresh_fx_slider, LV_EVENT_VALUE_CHANGED, id);
+        label = lv_label_create(dsp_fx_scr);
+        lv_label_set_text_fmt(label, "%d%%", dsp_fx_settings[id][fx++]);
+        lv_obj_align_to(label, slider, LV_ALIGN_OUT_RIGHT_MID, 10, 0);
 
         label = lv_label_create(dsp_fx_scr);
         lv_label_set_text(label, "Dry");
@@ -296,9 +351,14 @@ void dsp_print_fx(uint8_t id)
         slider = lv_slider_create(dsp_fx_scr);
         lv_obj_set_width(slider, 200);
         lv_obj_align(slider, LV_ALIGN_LEFT_MID, 100, 40);
+        lv_slider_set_value(slider, dsp_fx_settings[id][fx], LV_ANIM_OFF);
+        lv_obj_set_user_data(slider, fx);
+        lv_obj_add_event_cb(slider, dsp_refresh_fx_slider, LV_EVENT_VALUE_CHANGED, id);
+        label = lv_label_create(dsp_fx_scr);
+        lv_label_set_text_fmt(label, "%d%%", dsp_fx_settings[id][fx++]);
+        lv_obj_align_to(label, slider, LV_ALIGN_OUT_RIGHT_MID, 10, 0);
+
     }
-
-
 
 
 }
@@ -307,21 +367,31 @@ void dsp_change_fx(lv_event_t* e)
 {
     uint8_t id = lv_event_get_user_data(e);
     dsp_fx_settings[id][0] = lv_dropdown_get_selected(lv_event_get_target(e));
-    //lv_label_set_text(dsp_fx_label[id], fx_list[(uint8_t)dsp_fx_settings[id][0]]);
-    //lv_label_set_text_fmt(dsp_fx_label[id], "FX %d\n\n%s", id, fx_list[(uint8_t)dsp_fx_settings[id][0]]);
-
+    for (uint8_t i = 1; i <= DSP_MAX_FX_SETTINGS; i++) dsp_fx_settings[id][i] = 0;
     dsp_open_edit(e);
 }
 
-void dsp_refresh_fx(lv_event_t* e)
+void dsp_refresh_fx_slider(lv_event_t* e)
 {
+    lv_obj_t *target = lv_event_get_target(e);
+    uint8_t id = lv_event_get_user_data(e);
+    uint8_t fx = lv_obj_get_user_data(target);
+    dsp_fx_settings[id][fx] = lv_slider_get_value(target);
 
+    dsp_open_edit(e);
+}
+void dsp_refresh_fx_list(lv_event_t* e)
+{
+    lv_obj_t* target = lv_event_get_target(e);
+    uint8_t id = lv_event_get_user_data(e);
+    uint8_t fx = lv_obj_get_user_data(target);
+    dsp_fx_settings[id][fx] = lv_dropdown_get_selected(target);
+    dsp_open_edit(e);
 }
 
-void dsp_close_edit(lv_event_t* e)
+void dsp_close_edit()
 {
     lv_obj_del_async(dsp_fx_scr);
-    //lv_scr_load(app_scr);
     reset_scr();
     start_dsp();
 }
@@ -387,7 +457,7 @@ void start_oscilloscope()
     lv_chart_set_range(chart, LV_CHART_AXIS_PRIMARY_Y, 0, 1000);
     lv_chart_set_zoom_x(chart,256*1);
     lv_chart_set_point_count(chart, 1000);
-    ser = lv_chart_add_series(chart, lv_palette_main(LV_PALETTE_RED), LV_CHART_AXIS_PRIMARY_Y);
+    lv_chart_series_t* ser = lv_chart_add_series(chart, lv_palette_main(LV_PALETTE_RED), LV_CHART_AXIS_PRIMARY_Y);
     for (uint16_t i = 0; i < 1000; i++) lv_chart_set_next_value2(chart, ser, i, 500+400*sin(i/50.0));
     ser = lv_chart_add_series(chart, lv_palette_main(LV_PALETTE_GREEN), LV_CHART_AXIS_PRIMARY_Y);
     for (uint16_t i = 0; i < 1000; i++) lv_chart_set_next_value2(chart, ser, i, 500 + 100 * cos(i / 50.0));
@@ -401,8 +471,7 @@ void start_synthesizer()
 
 void sys_status_refresh()
 {
-    
-    if(sys_status != NULL) lv_obj_del(sys_status);
+    if(lv_obj_is_valid(sys_status)) lv_obj_del_async(sys_status);
     sys_status = lv_obj_create(app_scr);
     lv_obj_set_size(sys_status, 20, 120);
     lv_obj_remove_style_all(sys_status);
@@ -422,4 +491,18 @@ void sys_status_refresh()
     label = lv_label_create(sys_status);
     lv_obj_align(label, LV_ALIGN_TOP_LEFT, 100, 2);
     if (is_active_usb) lv_label_set_text(label, LV_SYMBOL_USB);
+}
+
+
+void dsp_filter_response_refresh(uint8_t type, uint8_t order, float frq1, float frq2)
+{
+
+        for (uint8_t s = 0; s < 200; s++)
+        {
+            if (type == 0) dsp_filter_response[s] = 100.0 / (1.0 + pow(s / frq1, order));
+            if (type == 1) dsp_filter_response[s] = 100.0 / ((1.0 + pow(s / frq2, order))*(1.0 + 1.0 / pow(s / frq1, order)));
+            if (type == 2) dsp_filter_response[s] = 100.0 / (1.0 + 1.0 / pow(s / frq1, order));
+            if (type == 3) dsp_filter_response[s] = 100.0 * (pow(s,order)+pow(frq1,order)) / (pow(s, order)+(frq1*s)+pow(frq1,order));
+        }
+
 }
