@@ -37,15 +37,18 @@ void start_synthesizer();
 void start_app(lv_event_t* e);
 
 void dsp_menu_cb(lv_event_t* e);
-
+void dsp_new_project();
+void dsp_open_project();
 void dsp_add_fx(lv_event_t* e);
 void dsp_change_fx(lv_event_t* e);
-void dsp_refresh_fx(lv_event_t* e);
+void dsp_refresh_fx_slider(lv_event_t* e);
+void dsp_refresh_fx_list(lv_event_t* e);
 void dsp_open_edit(lv_event_t* e);
-void dsp_close_edit(lv_event_t* e);
-void dsp_print_fx(uint8_t id);
+void dsp_close_edit();
 
 void sys_status_refresh();
+
+void dsp_filter_response_refresh(uint8_t type, uint8_t order, float frq1, float frq2);
 
 /**********************
  *      MACROS
