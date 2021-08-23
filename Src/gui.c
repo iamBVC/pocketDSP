@@ -4,6 +4,7 @@
 
 #define DSP_MAX_FX_COUNT 16
 #define DSP_MAX_FX_SETTINGS 10
+#define FFT_POINTS 2048
 
 static lv_obj_t *label, *btn, *cont, *menu, *list, *slider, *mbox, *chart, *app_scr;
 static lv_obj_t* sys_status;
@@ -18,7 +19,7 @@ uint8_t dsp_fx_count = 0;
 
 uint16_t dsp_fx_settings[DSP_MAX_FX_COUNT][DSP_MAX_FX_SETTINGS + 1];
 
-static lv_coord_t dsp_filter_response[200];
+static lv_coord_t dsp_filter_response[200], fft_vectors[FFT_POINTS], oscilloscope_buffer_r[FFT_POINTS], oscilloscope_buffer_l[FFT_POINTS];
 
 const char *fx_list[] = { "None", "Filter", "Reeverb", "Delay", "Sidechain", "Distortion" };
 const char *app_list[] = { "DSP", "Synthesizer", "Oscilloscope", "FFT", "", "" };
@@ -75,6 +76,7 @@ void start_app(lv_event_t* e)
     if (id == app_list[0]) start_dsp();
     if (id == app_list[1]) start_synthesizer();
     if (id == app_list[2]) start_oscilloscope();
+    if (id == app_list[3]) start_fft();
 }
 
 
@@ -395,6 +397,17 @@ void dsp_close_edit()
     start_dsp();
 }
 
+void dsp_filter_response_refresh(uint8_t type, uint8_t order, float frq1, float frq2)
+{
+    for (uint8_t s = 0; s < 200; s++)
+    {
+        if (type == 0) dsp_filter_response[s] = 100.0 / (1.0 + pow(s / frq1, order));
+        if (type == 1) dsp_filter_response[s] = 100.0 / ((1.0 + pow(s / frq2, order)) * (1.0 + 1.0 / pow(s / frq1, order)));
+        if (type == 2) dsp_filter_response[s] = 100.0 / (1.0 + 1.0 / pow(s / frq1, order));
+        if (type == 3) dsp_filter_response[s] = 100.0 * (pow(s, order) + pow(frq1, order)) / (pow(s, order) + (frq1 * s) + pow(frq1, order));
+    }
+}
+
 
 
 
@@ -406,6 +419,13 @@ void dsp_close_edit()
 
 void start_oscilloscope()
 {
+    for (uint16_t i = 0; i < FFT_POINTS; i++)
+    {
+        oscilloscope_buffer_r[i] = 500 + 400.0 * sin(i/50.0);
+        oscilloscope_buffer_l[i] = 500 + 50.0 * cos(i/20.0);
+    }
+
+
     sys_status_refresh();
     lv_obj_align(sys_status, LV_ALIGN_TOP_RIGHT, 0, 0);
 
@@ -450,16 +470,16 @@ void start_oscilloscope()
     chart = lv_chart_create(app_scr);
     lv_obj_set_size(chart, 360, 300);
     lv_obj_align_to(chart, list, LV_ALIGN_OUT_LEFT_TOP, 0, 0);
-    lv_chart_set_type(chart, LV_CHART_TYPE_SCATTER);
     lv_obj_set_style_size(chart, 0, LV_PART_INDICATOR);
-    lv_chart_set_range(chart, LV_CHART_AXIS_PRIMARY_X, 0, 1000);
+    lv_chart_set_range(chart, LV_CHART_AXIS_PRIMARY_X, 0, FFT_POINTS);
     lv_chart_set_range(chart, LV_CHART_AXIS_PRIMARY_Y, 0, 1000);
     lv_chart_set_zoom_x(chart,256*1);
-    lv_chart_set_point_count(chart, 1000);
-    lv_chart_series_t* ser = lv_chart_add_series(chart, lv_palette_main(LV_PALETTE_RED), LV_CHART_AXIS_PRIMARY_Y);
-    for (uint16_t i = 0; i < 1000; i++) lv_chart_set_next_value2(chart, ser, i, 500+400*sin(i/50.0));
+    lv_chart_set_point_count(chart, FFT_POINTS);
+    ser = lv_chart_add_series(chart, lv_palette_main(LV_PALETTE_RED), LV_CHART_AXIS_PRIMARY_Y);
+    lv_chart_set_ext_y_array(chart, ser, (lv_coord_t*)oscilloscope_buffer_r);
     ser = lv_chart_add_series(chart, lv_palette_main(LV_PALETTE_GREEN), LV_CHART_AXIS_PRIMARY_Y);
-    for (uint16_t i = 0; i < 1000; i++) lv_chart_set_next_value2(chart, ser, i, 500 + 100 * cos(i / 50.0));
+    lv_chart_set_ext_y_array(chart, ser, (lv_coord_t*)oscilloscope_buffer_l);
+    lv_obj_set_style_bg_color(chart, lv_color_make(30, 30, 30), LV_PART_MAIN);
 
 }
 
@@ -492,16 +512,48 @@ void sys_status_refresh()
     if (is_active_usb) lv_label_set_text(label, LV_SYMBOL_USB);
 }
 
-
-void dsp_filter_response_refresh(uint8_t type, uint8_t order, float frq1, float frq2)
+void start_fft()
 {
+    for (uint16_t i = 0; i < FFT_POINTS; i++)
+    fft_vectors[i] = 500 + 400.0 * sin(i / 200.0);
 
-        for (uint8_t s = 0; s < 200; s++)
-        {
-            if (type == 0) dsp_filter_response[s] = 100.0 / (1.0 + pow(s / frq1, order));
-            if (type == 1) dsp_filter_response[s] = 100.0 / ((1.0 + pow(s / frq2, order))*(1.0 + 1.0 / pow(s / frq1, order)));
-            if (type == 2) dsp_filter_response[s] = 100.0 / (1.0 + 1.0 / pow(s / frq1, order));
-            if (type == 3) dsp_filter_response[s] = 100.0 * (pow(s,order)+pow(frq1,order)) / (pow(s, order)+(frq1*s)+pow(frq1,order));
-        }
+    sys_status_refresh();
+    lv_obj_align(sys_status, LV_ALIGN_TOP_RIGHT, 0, 0);
 
+    list = lv_list_create(app_scr);
+    lv_obj_set_size(list, 120, 300);
+    lv_obj_set_align(list, LV_ALIGN_BOTTOM_RIGHT);
+
+    lv_list_add_text(list, "Channels");
+    btn = lv_list_add_btn(list, LV_SYMBOL_VOLUME_MAX, "R CH");
+    //lv_obj_add_event_cb(btn, event_cb, LV_EVENT_CLICKED, "config_r_ch");
+    btn = lv_list_add_btn(list, LV_SYMBOL_VOLUME_MAX, "L CH");
+    //lv_obj_add_event_cb(btn, event_cb, LV_EVENT_CLICKED, "config_l_ch");
+
+    lv_list_add_text(list, "Cursors");
+    btn = lv_list_add_btn(list, NULL, "t1");
+    //lv_obj_add_event_cb(btn, event_cb, LV_EVENT_CLICKED, "set_cursor_t1");
+    btn = lv_list_add_btn(list, NULL, "t2");
+    //lv_obj_add_event_cb(btn, event_cb, LV_EVENT_CLICKED, "set_cursor_t1");
+    btn = lv_list_add_btn(list, NULL, "v1");
+    //lv_obj_add_event_cb(btn, event_cb, LV_EVENT_CLICKED, "set_cursor_v1");
+    btn = lv_list_add_btn(list, NULL, "v2");
+    //lv_obj_add_event_cb(btn, event_cb, LV_EVENT_CLICKED, "set_cursor_v2");
+
+    lv_list_add_text(list, "System");
+    btn = lv_list_add_btn(list, LV_SYMBOL_SETTINGS, NULL);
+    //lv_obj_add_event_cb(btn, event_cb, LV_EVENT_CLICKED, "osc_settings");
+    btn = lv_list_add_btn(list, LV_SYMBOL_POWER, NULL);
+    lv_obj_add_event_cb(btn, reset_app, LV_EVENT_CLICKED, NULL);
+
+    chart = lv_chart_create(app_scr);
+    lv_obj_set_size(chart, 360, 300);
+    lv_obj_align_to(chart, list, LV_ALIGN_OUT_LEFT_TOP, 0, 0);
+    lv_obj_set_style_size(chart, 0, LV_PART_INDICATOR);
+    lv_chart_set_range(chart, LV_CHART_AXIS_PRIMARY_X, 0, FFT_POINTS);
+    lv_chart_set_range(chart, LV_CHART_AXIS_PRIMARY_Y, 0, 1000);
+    ser = lv_chart_add_series(chart, lv_palette_main(LV_PALETTE_RED), LV_CHART_AXIS_PRIMARY_Y);
+    lv_chart_set_point_count(chart, FFT_POINTS);
+    lv_chart_set_ext_y_array(chart, ser, (lv_coord_t*)fft_vectors);
+    lv_obj_set_style_bg_color(chart, lv_color_make(30, 30, 30), LV_PART_MAIN);
 }
