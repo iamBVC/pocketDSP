@@ -33,6 +33,7 @@ void start_main();
 void start_dsp();
 void start_oscilloscope();
 void start_synthesizer();
+void start_fft();
 
 void start_app(lv_event_t* e);
 
@@ -45,13 +46,14 @@ void dsp_refresh_fx_slider(lv_event_t* e);
 void dsp_refresh_fx_list(lv_event_t* e);
 void dsp_open_edit(lv_event_t* e);
 void dsp_close_edit();
+void dsp_filter_response_refresh(uint8_t type, uint8_t order, float frq1, float frq2);
 
 void sys_status_refresh();
 
-void dsp_filter_response_refresh(uint8_t type, uint8_t order, float frq1, float frq2);
+
 
 /**********************
- *      MACROS
+ *      MACROS        *
  **********************/
 
 #ifdef __cplusplus
