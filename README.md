@@ -24,3 +24,7 @@ Synthesizer: send midi commands through the USB interface and create sounds usin
 -- software still under development --
 
 <img src="https://github.com/iamBVC/pocketDSP/blob/main/img/pcb_with_display.png" width="50%"/><img src="https://github.com/iamBVC/pocketDSP/blob/main/img/pcb_without_display.png" width="50%"/>
+
+
+GUI Screens:
+<img src="https://github.com/iamBVC/pocketDSP/blob/main/img/gui_mainscreen.png" width="50%"/>
