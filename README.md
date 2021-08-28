@@ -29,6 +29,4 @@ Synthesizer: send midi commands through the USB interface and create sounds usin
 
 GUI Screens:
 
-<img src="https://github.com/iamBVC/pocketDSP/blob/main/img/gui_mainscreen.png" width="40%"/>
-<img src="https://github.com/iamBVC/pocketDSP/blob/main/img/gui_dspmain.png" width="40%"/><img src="https://github.com/iamBVC/pocketDSP/blob/main/img/gui_dspedit.png" width="40%"/>
-<img src="https://github.com/iamBVC/pocketDSP/blob/main/img/gui_oscilloscope.png" width="40%"/><img src="https://github.com/iamBVC/pocketDSP/blob/main/img/gui_fft.png" width="40%"/>
+<img src="https://github.com/iamBVC/pocketDSP/blob/main/img/gui_mainscreen.png" width="40%"/><img src="https://github.com/iamBVC/pocketDSP/blob/main/img/gui_dspmain.png" width="40%"/><img src="https://github.com/iamBVC/pocketDSP/blob/main/img/gui_dspedit.png" width="40%"/><img src="https://github.com/iamBVC/pocketDSP/blob/main/img/gui_oscilloscope.png" width="40%"/><img src="https://github.com/iamBVC/pocketDSP/blob/main/img/gui_fft.png" width="40%"/>
