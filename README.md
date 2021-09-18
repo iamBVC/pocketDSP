@@ -23,10 +23,10 @@ Synthesizer: send midi commands through the USB interface and create sounds usin
 
 -- software still under development --
 
-<img src="https://github.com/iamBVC/pocketDSP/blob/main/img/pcb_with_display.png" width="40%"/><img src="https://github.com/iamBVC/pocketDSP/blob/main/img/pcb_without_display.png" width="40%"/>
+<img src="https://github.com/iamBVC/pocketDSP/blob/master/img/pcb_with_display.png" width="40%"/><img src="https://github.com/iamBVC/pocketDSP/blob/master/img/pcb_without_display.png" width="40%"/>
 
 
 
 GUI Screens:
 
-<img src="https://github.com/iamBVC/pocketDSP/blob/main/img/gui_mainscreen.png" width="40%"/><img src="https://github.com/iamBVC/pocketDSP/blob/main/img/gui_dspmain.png" width="40%"/><img src="https://github.com/iamBVC/pocketDSP/blob/main/img/gui_dspedit.png" width="40%"/><img src="https://github.com/iamBVC/pocketDSP/blob/main/img/gui_oscilloscope.png" width="40%"/><img src="https://github.com/iamBVC/pocketDSP/blob/main/img/gui_fft.png" width="40%"/>
+<img src="https://github.com/iamBVC/pocketDSP/blob/master/img/gui_mainscreen.png" width="40%"/><img src="https://github.com/iamBVC/pocketDSP/blob/master/img/gui_dspmain.png" width="40%"/><img src="https://github.com/iamBVC/pocketDSP/blob/master/img/gui_dspedit.png" width="40%"/><img src="https://github.com/iamBVC/pocketDSP/blob/master/img/gui_oscilloscope.png" width="40%"/><img src="https://github.com/iamBVC/pocketDSP/blob/master/img/gui_fft.png" width="40%"/>
