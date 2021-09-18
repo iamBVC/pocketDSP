@@ -1,0 +1,4 @@
+lv_example_list_2.c:9:13:event_handler	16	static
+lv_example_list_2.c:57:13:event_handler_dn	16	static
+lv_example_list_2.c:42:13:event_handler_mu	16	static
+lv_example_list_2.c:72:6:lv_example_list_2	24	static

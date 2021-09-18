@@ -1,0 +1,8 @@
+lv_msgbox.c:40:12:lv_msgbox_create	32	static
+lv_msgbox.c:109:12:lv_msgbox_get_title	0	static
+lv_msgbox.c:114:12:lv_msgbox_get_close_btn	8	static
+lv_msgbox.c:121:12:lv_msgbox_get_text	16	static
+lv_msgbox.c:128:12:lv_msgbox_get_btns	8	static
+lv_msgbox.c:133:14:lv_msgbox_get_active_btn_text	8	static
+lv_msgbox.c:139:6:lv_msgbox_close	8	static
+lv_msgbox.c:150:13:msgbox_close_click_event_cb	8	static

@@ -1,0 +1,16 @@
+lv_obj_pos.h:186:20:lv_obj_center	0	static
+dsp.c:75:6:dsp_add_fx	16	static
+lv_obj_style.h:218:20:lv_obj_set_style_size.constprop	8	static
+dsp.c:15:6:start_dsp	240	static
+dsp.c:106:6:dsp_new_project	8	static
+dsp.c:527:6:dsp_close_edit	8	static
+dsp.c:113:6:dsp_open_project	8	static
+dsp.c:90:6:dsp_menu_cb	24	static
+dsp.c:534:6:dsp_filter_response_refresh	88	static
+dsp.c:545:6:dsp_sidechain_response_refresh	40	static
+dsp.c:555:6:dsp_fir_calc	152	static
+dsp.c:125:6:dsp_open_edit	272	static
+dsp.c:493:6:dsp_change_fx	16	static
+dsp.c:501:6:dsp_refresh_fx_slider	24	static
+dsp.c:509:6:dsp_refresh_fx_list	24	static
+dsp.c:518:6:dsp_refresh_fx_roller	24	static
