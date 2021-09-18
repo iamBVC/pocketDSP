@@ -1,0 +1,4 @@
+(sym_lib_table
+  (lib (name Guitar-DSP-rescue)(type Legacy)(uri "${KIPRJMOD}/Guitar DSP-rescue.lib")(options "")(descr ""))
+  (lib (name pocketDSP-rescue)(type Legacy)(uri ${KIPRJMOD}/pocketDSP-rescue.lib)(options "")(descr ""))
+)
