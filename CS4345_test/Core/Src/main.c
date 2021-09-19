@@ -48,8 +48,9 @@ TIM_HandleTypeDef htim17;
 
 /* USER CODE BEGIN PV */
 
-uint32_t audio_buffer[192];
-uint8_t buf_index = 0;
+uint32_t audio_buffer[360];
+uint16_t buf_index = 0;
+
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -91,6 +92,19 @@ int main(void)
 
   /* USER CODE BEGIN SysInit */
 
+  GPIO_InitTypeDef GPIO_InitStruct;
+  __HAL_RCC_GPIOA_CLK_ENABLE();
+  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_6, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_7, GPIO_PIN_RESET);
+  GPIO_InitStruct.Pin = GPIO_PIN_4|GPIO_PIN_5|GPIO_PIN_6|GPIO_PIN_7;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+
+  HAL_Delay(1000);
+
   /* USER CODE END SysInit */
 
   /* Initialize all configured peripherals */
@@ -100,16 +114,20 @@ int main(void)
   MX_TIM13_Init();
   /* USER CODE BEGIN 2 */
 
+  //DAC Init
+  HAL_I2S_Init(&hi2s1);
+  HAL_TIM_PWM_Start(&htim13, TIM_CHANNEL_1);
+  HAL_Delay(100);
 
+  for (uint16_t i = 0; i < 360; i++){
+	  if (sin(i/57.296) >= 0.0)
+		  audio_buffer[i] = 0x00000000 + ((float)(0x007FFFFF) * sin(i/57.296));
+	  else
+		  audio_buffer[i] = 0x00FFFFFF + ((float)(0x007FFFFF) * sin(i/57.296));
+  }
 
-	//Audio buffer fill
-	//for (uint8_t i = 0; i < 192; i++) audio_buffer[i] = (i * 65535) / 192.0;
+  HAL_TIM_Base_Start_IT(&htim17);
 
-
-	HAL_I2S_Init(&hi2s1);
-	HAL_TIM_PWM_Start(&htim13, TIM_CHANNEL_1);
-
-	//HAL_TIM_Base_Start_IT(&htim17);
 
   /* USER CODE END 2 */
 
@@ -119,12 +137,6 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-		static uint32_t data1[] = {0xF0F0F0F0};
-		static uint32_t data2[] = {0x0F0F0F0F};
-		HAL_I2S_Transmit(&hi2s1, (uint16_t*)data1, 1, 0);
-		HAL_Delay(5);
-		HAL_I2S_Transmit(&hi2s1, (uint16_t*)data2, 1, 0);
-		HAL_Delay(5);
 
 	}
   /* USER CODE END 3 */
@@ -248,7 +260,7 @@ static void MX_TIM13_Init(void)
   htim13.Instance = TIM13;
   htim13.Init.Prescaler = 0;
   htim13.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim13.Init.Period = 7;
+  htim13.Init.Period = 15;
   htim13.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim13.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
   if (HAL_TIM_Base_Init(&htim13) != HAL_OK)
@@ -260,7 +272,7 @@ static void MX_TIM13_Init(void)
     Error_Handler();
   }
   sConfigOC.OCMode = TIM_OCMODE_PWM1;
-  sConfigOC.Pulse = 3;
+  sConfigOC.Pulse = 7;
   sConfigOC.OCPolarity = TIM_OCPOLARITY_HIGH;
   sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
   if (HAL_TIM_PWM_ConfigChannel(&htim13, &sConfigOC, TIM_CHANNEL_1) != HAL_OK)
@@ -293,9 +305,9 @@ static void MX_TIM17_Init(void)
 
   /* USER CODE END TIM17_Init 1 */
   htim17.Instance = TIM17;
-  htim17.Init.Prescaler = 99;
+  htim17.Init.Prescaler = 0;
   htim17.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim17.Init.Period = 99;
+  htim17.Init.Period = 1023;
   htim17.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim17.Init.RepetitionCounter = 0;
   htim17.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
@@ -355,12 +367,9 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 
 	if (htim == &htim17) {
 
-		HAL_I2S_Transmit(&hi2s1, (uint16_t*)audio_buffer[buf_index], 1, 0);
 
-		if (buf_index < 191)
-			buf_index++;
-		else
-			buf_index = 0;
+		HAL_I2S_Transmit(&hi2s1, (uint16_t*)(audio_buffer + buf_index), 1, 0);
+		if (buf_index < 359 ) buf_index++; else buf_index = 0;
 
 	}
 }

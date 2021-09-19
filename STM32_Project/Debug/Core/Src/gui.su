@@ -1,0 +1,4 @@
+lv_color.h:615:26:lv_color_make	16	static
+lv_obj_style.h:218:20:lv_obj_set_style_size	24	static
+gui.c:3:6:start_synthesizer	4	static
+gui.c:10:6:start_fft	24	static
