@@ -1,7 +1,7 @@
 (export (version D)
   (design
     (source D:\Documenti\Github\pocketDSP_repo\KiCad_Project\pocketDSP.sch)
-    (date "19/09/2021 15:16:44")
+    (date "19/09/2021 15:40:13")
     (tool "Eeschema (5.0.1)-3")
     (sheet (number 1) (name /) (tstamps /)
       (title_block
@@ -206,7 +206,7 @@
       (tstamp 5F778CBF))
     (comp (ref L3)
       (value 10uH)
-      (footprint Inductor_SMD:L_1210_3225Metric_Pad1.42x2.65mm_HandSolder)
+      (footprint Inductor_SMD:L_Coilcraft_LPS5030)
       (datasheet ~)
       (libsource (lib Device) (part L) (description Inductor))
       (sheetpath (names /) (tstamps /))
@@ -254,7 +254,7 @@
       (tstamp 6103EB1E))
     (comp (ref L2)
       (value 10uH)
-      (footprint Inductor_SMD:L_1210_3225Metric_Pad1.42x2.65mm_HandSolder)
+      (footprint Inductor_SMD:L_Coilcraft_LPS5030)
       (datasheet ~)
       (libsource (lib Device) (part L) (description Inductor))
       (sheetpath (names /) (tstamps /))
