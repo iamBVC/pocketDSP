@@ -1,7 +1,7 @@
 (export (version D)
   (design
-    (source "D:\\Documenti\\PCB Projects\\pocketDSP\\pocketDSP.sch")
-    (date "29/08/2021 10:58:28")
+    (source D:\Documenti\Github\pocketDSP_repo\KiCad_Project\pocketDSP.sch)
+    (date "19/09/2021 15:16:44")
     (tool "Eeschema (5.0.1)-3")
     (sheet (number 1) (name /) (tstamps /)
       (title_block
@@ -475,7 +475,7 @@
       (sheetpath (names /) (tstamps /))
       (tstamp 610FDF53))
     (comp (ref U5)
-      (value LM358)
+      (value OPA2340)
       (footprint Package_SO:SOIC-8_3.9x4.9mm_P1.27mm)
       (datasheet http://www.ti.com/lit/ds/symlink/lm2904-n.pdf)
       (libsource (lib Amplifier_Operational) (part LM358) (description "Low-Power, Dual Operational Amplifiers, DIP-8/SOIC-8/TO-99-8"))
@@ -674,7 +674,7 @@
       (sheetpath (names /) (tstamps /))
       (tstamp 61207B92))
     (comp (ref U8)
-      (value LM358)
+      (value OPA2340)
       (footprint Package_SO:SOIC-8_3.9x4.9mm_P1.27mm)
       (datasheet http://www.ti.com/lit/ds/symlink/lm2904-n.pdf)
       (libsource (lib Amplifier_Operational) (part LM358) (description "Low-Power, Dual Operational Amplifiers, DIP-8/SOIC-8/TO-99-8"))

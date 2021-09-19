@@ -2484,9 +2484,9 @@ Text GLabel 3600 1750 2    50   Input ~ 0
 DAC_SCLK
 Text GLabel 3600 1650 2    50   Input ~ 0
 DAC_LRCK
-Text GLabel 3600 1950 2    50   Input ~ 0
-DAC_MCLK
 Text GLabel 3600 1850 2    50   Input ~ 0
+DAC_MCLK
+Text GLabel 3600 1950 2    50   Input ~ 0
 DAC_SDIN
 Text GLabel 1800 3850 0    50   Input ~ 0
 LCD_D0
