@@ -31,6 +31,6 @@ lv_img.c:362:6:lv_img_get_antialias	24	static
 lv_img.c:371:20:lv_img_get_size_mode	24	static
 lv_img.c:382:13:lv_img_constructor	24	static
 lv_img.c:409:13:lv_img_destructor	24	static
-lv_img.c:420:19:lv_img_get_tranformed_size	56	static
+lv_img.c:420:19:lv_img_get_tranformed_size	64	static
 lv_img.c:436:13:lv_img_event	104	static
 lv_img.c:528:13:draw_img	200	static
