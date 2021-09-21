@@ -83,8 +83,7 @@ void sys_status_refresh()
 	HAL_ADC_ConfigChannel(&hadc1, &sConfig);
 	HAL_ADC_Start(&hadc1);
 	while (HAL_ADC_PollForConversion(&hadc1, HAL_MAX_DELAY) != HAL_OK);
-	battery_charge = HAL_ADC_GetValue(&hadc1) * 3.3 * 1.545 / 1023.0;
-	battery_charge = 100.0 * (battery_charge - 2.7) / (4.1 - 2.7);
+	battery_charge = 100.0 * ((HAL_ADC_GetValue(&hadc1) * 3.3 * 1.545 / 1023.0) - 3.0) / (4.1 - 3.0);
 
 
     if(lv_obj_is_valid(sys_status)) lv_obj_del_async(sys_status);
