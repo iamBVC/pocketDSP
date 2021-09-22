@@ -5,8 +5,6 @@ stm32h7xx_hal_msp.c:176:6:HAL_I2S_MspInit	56	static
 stm32h7xx_hal_msp.c:238:6:HAL_I2S_MspDeInit	16	static
 stm32h7xx_hal_msp.c:287:6:HAL_SPI_MspInit	48	static
 stm32h7xx_hal_msp.c:324:6:HAL_SPI_MspDeInit	16	static
-stm32h7xx_hal_msp.c:354:6:HAL_TIM_PWM_MspInit	24	static
-stm32h7xx_hal_msp.c:376:6:HAL_TIM_Base_MspInit	32	static
-stm32h7xx_hal_msp.c:431:6:HAL_TIM_MspPostInit	48	static
-stm32h7xx_hal_msp.c:483:6:HAL_TIM_PWM_MspDeInit	16	static
-stm32h7xx_hal_msp.c:505:6:HAL_TIM_Base_MspDeInit	16	static
+stm32h7xx_hal_msp.c:354:6:HAL_TIM_Base_MspInit	40	static
+stm32h7xx_hal_msp.c:420:6:HAL_TIM_MspPostInit	48	static
+stm32h7xx_hal_msp.c:472:6:HAL_TIM_Base_MspDeInit	16	static

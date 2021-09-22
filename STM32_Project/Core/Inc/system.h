@@ -47,8 +47,8 @@ double *winRespMag;
 lv_coord_t *dsp_fir_response;
 
 
-uint32_t dac_output[2];
-uint32_t adc_input[2];
+uint32_t dac_input[2];
+uint32_t adc_output[2];
 
 
 

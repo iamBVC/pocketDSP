@@ -179,6 +179,13 @@ int main(void)
 	HAL_TIM_PWM_Start(&htim13, TIM_CHANNEL_1);
 	HAL_Delay(100);
 
+
+	HAL_I2S_Init(&hi2s2);
+	HAL_TIM_PWM_Start(&htim12, TIM_CHANNEL_2);
+	HAL_Delay(100);
+	HAL_GPIO_WritePin (GPIOD, GPIO_PIN_10, GPIO_PIN_SET);
+
+
 	HAL_TIM_Base_Start_IT(&htim14); //sampling timer
 
 	//TFT init
@@ -507,6 +514,7 @@ static void MX_TIM12_Init(void)
 
   /* USER CODE END TIM12_Init 0 */
 
+  TIM_ClockConfigTypeDef sClockSourceConfig = {0};
   TIM_OC_InitTypeDef sConfigOC = {0};
 
   /* USER CODE BEGIN TIM12_Init 1 */
@@ -518,6 +526,15 @@ static void MX_TIM12_Init(void)
   htim12.Init.Period = 15;
   htim12.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim12.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
+  if (HAL_TIM_Base_Init(&htim12) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sClockSourceConfig.ClockSource = TIM_CLOCKSOURCE_INTERNAL;
+  if (HAL_TIM_ConfigClockSource(&htim12, &sClockSourceConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
   if (HAL_TIM_PWM_Init(&htim12) != HAL_OK)
   {
     Error_Handler();
@@ -789,7 +806,10 @@ static void MX_GPIO_Init(void)
                           |SD_CS_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOD, ADC_M0_Pin|ADC_M1_Pin|ADC_RST_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOD, ADC_M0_Pin|ADC_M1_Pin, GPIO_PIN_SET);
+
+  /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(ADC_RST_GPIO_Port, ADC_RST_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pins : PE2 PE3 PE4 PE5
                            PE6 PE15 PE0 PE1 */
@@ -886,7 +906,10 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 	}
 
 	if (htim == &htim14) {
-		HAL_I2S_Transmit(&hi2s1, (uint16_t*)dac_output, 2, 0);
+
+		HAL_I2S_Transmit(&hi2s1, (uint16_t*)dac_input, 2, 0);
+		HAL_I2S_Receive(&hi2s2, (uint16_t*)adc_output, 2, 0);
+
 	}
 
 }
