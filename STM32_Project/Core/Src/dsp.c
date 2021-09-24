@@ -8,10 +8,6 @@
 
 #include "dsp.h"
 
-static const char* fx_list[] = { "None", "IIR Filter", "Reeverb", "Delay", "Sidechain", "Distortion", "FIR Filter" };
-static const char *dsp_main_menu[] = { "New project", "Open project", "Save project", "Settings", "Exit" };
-
-
 void start_dsp()
 {
     sys_status_refresh();

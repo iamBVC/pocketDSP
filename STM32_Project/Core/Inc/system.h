@@ -17,6 +17,7 @@
 #include "gui.h"
 #include "dsp.h"
 #include "oscilloscope.h"
+#include "signal_generator.h"
 
 
 #define FFT_POINTS 256
@@ -26,29 +27,14 @@ lv_coord_t oscilloscope_buffer_r[FFT_POINTS], oscilloscope_buffer_l[FFT_POINTS];
 lv_obj_t *label, *btn, *cont, *menu, *list, *slider, *mbox, *chart, *roller, *app_scr;
 lv_obj_t* sys_status;
 lv_chart_series_t* ser;
-uint8_t battery_charge;
+float battery_voltage;
 uint8_t is_active_usb;
 uint8_t is_active_sd;
 extern const char *app_list[];
 
-#define DSP_MAX_FX_COUNT 16
-#define DSP_MAX_FX_SETTINGS 10
-lv_obj_t * dsp_fx_scr, * dsp_main_cont;
-lv_coord_t dsp_filter_response[200];
-lv_coord_t dsp_sidechain_response[100];
-uint8_t dsp_fx_count;
-uint16_t dsp_fx_settings[DSP_MAX_FX_COUNT][DSP_MAX_FX_SETTINGS + 1];
 
-double *impulseResponse;
-double *window;
-double *windowedImpulseResponse;
-double *frequencyVectorHz;
-double *winRespMag;
-lv_coord_t *dsp_fir_response;
-
-
-uint32_t dac_input[2];
-uint32_t adc_output[2];
+volatile uint32_t dac_input[2];
+volatile uint32_t adc_output[2];
 
 
 
@@ -57,5 +43,10 @@ void reset_app();
 void start_main();
 void start_app(lv_event_t* e);
 void sys_status_refresh();
+
+void Serial_printstr(char* text);
+void Serial_printlnstr(char* text);
+void Serial_printint(int32_t value);
+void Serial_printlnint(int32_t value);
 
 #endif /* INC_SYSTEM_H_ */

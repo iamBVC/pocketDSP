@@ -215,12 +215,19 @@ void HAL_I2S_MspInit(I2S_HandleTypeDef* hi2s)
     PB13     ------> I2S2_CK
     PB14     ------> I2S2_SDI
     */
-    GPIO_InitStruct.Pin = ADC_LRCK_Pin|ADC_SCLK_Pin|ADC_SDOUT_Pin;
+    GPIO_InitStruct.Pin = ADC_LRCK_Pin|ADC_SCLK_Pin;
     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
     GPIO_InitStruct.Pull = GPIO_NOPULL;
     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
     GPIO_InitStruct.Alternate = GPIO_AF5_SPI2;
     HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+
+    GPIO_InitStruct.Pin = ADC_SDOUT_Pin;
+    GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+    GPIO_InitStruct.Pull = GPIO_PULLDOWN;
+    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+    GPIO_InitStruct.Alternate = GPIO_AF5_SPI2;
+    HAL_GPIO_Init(ADC_SDOUT_GPIO_Port, &GPIO_InitStruct);
 
   /* USER CODE BEGIN SPI2_MspInit 1 */
 

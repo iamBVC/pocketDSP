@@ -1,12 +1,12 @@
-lv_refr.c:578:19:lv_refr_get_top_obj	32	static
-lv_refr.c:668:13:lv_refr_obj	64	static
+lv_refr.c:902:13:draw_buf_flush	128	static
+lv_refr.c:668:13:lv_refr_obj.part.0	64	static
 lv_refr.c:618:13:lv_refr_obj_and_children	32	static
-lv_refr.c:902:13:draw_buf_flush	96	static
-lv_refr.c:491:13:lv_refr_area_part	96	static
+lv_refr.c:578:19:lv_refr_get_top_obj.part.0	32	static
+lv_refr.c:491:13:lv_refr_area_part	112	static
 lv_refr.c:72:6:_lv_refr_init	0	static
 lv_refr.c:107:6:_lv_inv_area	32	static
 lv_refr.c:162:13:_lv_refr_get_disp_refreshing	0	static
 lv_refr.c:173:6:_lv_refr_set_disp_refreshing	0	static
-lv_refr.c:182:6:_lv_disp_refr_timer	88	static
+lv_refr.c:182:6:_lv_disp_refr_timer	80	static
 lv_refr.c:84:6:lv_refr_now	8	static
 lv_refr.c:318:10:lv_refr_get_fps_avg	0	static

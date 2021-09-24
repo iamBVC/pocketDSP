@@ -1,9 +1,10 @@
-lv_spinbox.c:407:13:lv_spinbox_updatevalue	72	static
+lv_spinbox.c:407:13:lv_spinbox_updatevalue	64	static
 lv_spinbox.c:292:13:lv_spinbox_constructor	16	static
+lv_spinbox.c:317:13:lv_spinbox_event	24	static
 lv_spinbox.c:47:12:lv_spinbox_create	8	static
-lv_spinbox.c:64:6:lv_spinbox_set_value	0	static
+lv_spinbox.c:64:6:lv_spinbox_set_value	4	static
 lv_spinbox.c:81:6:lv_spinbox_set_rollover	0	static
-lv_spinbox.c:95:6:lv_spinbox_set_digit_format	32	static
+lv_spinbox.c:95:6:lv_spinbox_set_digit_format	40	static
 lv_spinbox.c:121:6:lv_spinbox_set_step	0	static
 lv_spinbox.c:135:6:lv_spinbox_set_range	0	static
 lv_spinbox.c:153:6:lv_spinbox_set_pos	24	static
@@ -14,4 +15,3 @@ lv_spinbox.c:217:6:lv_spinbox_step_prev	0	static
 lv_spinbox.c:232:6:lv_spinbox_get_rollover	0	static
 lv_spinbox.c:243:6:lv_spinbox_increment	4	static
 lv_spinbox.c:268:6:lv_spinbox_decrement	4	static
-lv_spinbox.c:317:13:lv_spinbox_event	24	static

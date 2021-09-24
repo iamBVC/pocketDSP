@@ -95,7 +95,7 @@ Core/Inc/lvgl/src/hal/lv_hal_disp.o: \
  ../Core/Inc/lvgl/src/hal/../core/lv_theme.h \
  ../Core/Inc/lvgl/src/hal/../core/../core/lv_obj.h \
  ../Core/Inc/lvgl/src/hal/../extra/themes/default/lv_theme_default.h \
- d:\documenti\stm32_workspace\pocketdsp\core\inc\lvgl\src\core\lv_obj.h
+ ../Core/Inc/lvgl/src/hal/../extra/themes/default/../../../core/lv_obj.h
 
 ../Core/Inc/lvgl/src/hal/lv_hal.h:
 
@@ -291,4 +291,4 @@ Core/Inc/lvgl/src/hal/lv_hal_disp.o: \
 
 ../Core/Inc/lvgl/src/hal/../extra/themes/default/lv_theme_default.h:
 
-d:\documenti\stm32_workspace\pocketdsp\core\inc\lvgl\src\core\lv_obj.h:
+../Core/Inc/lvgl/src/hal/../extra/themes/default/../../../core/lv_obj.h:

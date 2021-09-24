@@ -9,7 +9,7 @@ Core/Inc/lvgl/src/widgets/lv_btn.o: ../Core/Inc/lvgl/src/widgets/lv_btn.c \
  ../Core/Inc/lvgl/src/widgets/../core/../misc/../font/../lv_conf_internal.h \
  ../Core/Inc/lvgl/src/widgets/../core/../misc/../font/lv_symbol_def.h \
  ../Core/Inc/lvgl/src/widgets/../core/../misc/../font/../misc/lv_area.h \
- d:\documenti\stm32_workspace\pocketdsp\core\inc\lvgl\src\lv_conf_internal.h \
+ ../Core/Inc/lvgl/src/widgets/../core/../misc/../font/../misc/../lv_conf_internal.h \
  ../Core/Inc/lvgl/src/widgets/../core/../misc/lv_color.h \
  ../Core/Inc/lvgl/src/widgets/../core/../misc/../lv_conf_internal.h \
  ../Core/Inc/lvgl/src/widgets/../core/../misc/lv_math.h \
@@ -79,7 +79,7 @@ Core/Inc/lvgl/src/widgets/lv_btn.o: ../Core/Inc/lvgl/src/widgets/lv_btn.c \
  ../Core/Inc/lvgl/src/widgets/../core/lv_group.h \
  ../Core/Inc/lvgl/src/widgets/../core/../misc/lv_ll.h \
  ../Core/Inc/lvgl/src/widgets/../extra/layouts/flex/lv_flex.h \
- d:\documenti\stm32_workspace\pocketdsp\core\inc\lvgl\src\core\lv_obj.h
+ ../Core/Inc/lvgl/src/widgets/../extra/layouts/flex/../../../core/lv_obj.h
 
 ../Core/Inc/lvgl/src/widgets/lv_btn.h:
 
@@ -103,7 +103,7 @@ Core/Inc/lvgl/src/widgets/lv_btn.o: ../Core/Inc/lvgl/src/widgets/lv_btn.c \
 
 ../Core/Inc/lvgl/src/widgets/../core/../misc/../font/../misc/lv_area.h:
 
-d:\documenti\stm32_workspace\pocketdsp\core\inc\lvgl\src\lv_conf_internal.h:
+../Core/Inc/lvgl/src/widgets/../core/../misc/../font/../misc/../lv_conf_internal.h:
 
 ../Core/Inc/lvgl/src/widgets/../core/../misc/lv_color.h:
 
@@ -243,4 +243,4 @@ d:\documenti\stm32_workspace\pocketdsp\core\inc\lvgl\src\lv_conf_internal.h:
 
 ../Core/Inc/lvgl/src/widgets/../extra/layouts/flex/lv_flex.h:
 
-d:\documenti\stm32_workspace\pocketdsp\core\inc\lvgl\src\core\lv_obj.h:
+../Core/Inc/lvgl/src/widgets/../extra/layouts/flex/../../../core/lv_obj.h:

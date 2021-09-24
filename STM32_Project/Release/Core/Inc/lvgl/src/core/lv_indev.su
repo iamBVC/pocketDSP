@@ -1,6 +1,4 @@
-lv_indev.c:1109:13:indev_reset_check	0	static
 lv_indev.c:910:13:indev_proc_release	24	static
-lv_indev.c:962:13:indev_proc_reset_query_handler	0	static
 lv_indev.c:122:6:lv_indev_enable	0	static
 lv_indev.c:129:14:lv_indev_get_act	0	static
 lv_indev.c:134:17:lv_indev_get_type	0	static
@@ -18,6 +16,6 @@ lv_indev.c:252:6:lv_indev_get_vect	0	static
 lv_indev.c:265:6:lv_indev_wait_release	0	static
 lv_indev.c:271:12:lv_indev_get_obj_act	0	static
 lv_indev.c:276:14:lv_indev_get_read_timer	0	static
-lv_indev.c:286:12:lv_indev_search_obj	24	static
-lv_indev.c:774:13:indev_proc_press	32	static
+lv_indev.c:286:12:lv_indev_search_obj	16	static
+lv_indev.c:774:13:indev_proc_press	40	static
 lv_indev.c:64:6:lv_indev_read_timer_cb	56	static

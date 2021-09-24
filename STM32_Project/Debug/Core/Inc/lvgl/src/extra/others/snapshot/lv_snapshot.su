@@ -1,7 +1,0 @@
-lv_mem.h:161:20:lv_memset	24	static
-lv_mem.h:171:20:lv_memset_00	16	static
-lv_obj_style.h:92:20:lv_obj_remove_style_all	16	static
-lv_snapshot.c:46:10:lv_snapshot_buf_size_needed	24	static
-lv_snapshot.c:79:10:lv_snapshot_take_to_buf	136	static
-lv_snapshot.c:167:16:lv_snapshot_take	40	static
-lv_snapshot.c:198:6:lv_snapshot_free	16	static

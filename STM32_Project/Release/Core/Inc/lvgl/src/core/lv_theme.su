@@ -1,6 +1,6 @@
 lv_theme.c:114:13:apply_theme	16	static
 lv_theme.c:36:15:lv_theme_get_from_obj	8	static
-lv_theme.c:47:6:lv_theme_apply	16	static
+lv_theme.c:47:6:lv_theme_apply	32	static
 lv_theme.c:64:6:lv_theme_set_parent	0	static
 lv_theme.c:75:6:lv_theme_set_apply_cb	0	static
 lv_theme.c:80:19:lv_theme_get_font_small	8	static

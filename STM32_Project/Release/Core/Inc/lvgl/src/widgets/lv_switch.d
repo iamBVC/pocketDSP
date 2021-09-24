@@ -10,7 +10,7 @@ Core/Inc/lvgl/src/widgets/lv_switch.o: \
  ../Core/Inc/lvgl/src/widgets/../core/../misc/../font/../lv_conf_internal.h \
  ../Core/Inc/lvgl/src/widgets/../core/../misc/../font/lv_symbol_def.h \
  ../Core/Inc/lvgl/src/widgets/../core/../misc/../font/../misc/lv_area.h \
- d:\documenti\stm32_workspace\pocketdsp\core\inc\lvgl\src\lv_conf_internal.h \
+ ../Core/Inc/lvgl/src/widgets/../core/../misc/../font/../misc/../lv_conf_internal.h \
  ../Core/Inc/lvgl/src/widgets/../core/../misc/lv_color.h \
  ../Core/Inc/lvgl/src/widgets/../core/../misc/../lv_conf_internal.h \
  ../Core/Inc/lvgl/src/widgets/../core/../misc/lv_math.h \
@@ -114,7 +114,7 @@ Core/Inc/lvgl/src/widgets/lv_switch.o: \
 
 ../Core/Inc/lvgl/src/widgets/../core/../misc/../font/../misc/lv_area.h:
 
-d:\documenti\stm32_workspace\pocketdsp\core\inc\lvgl\src\lv_conf_internal.h:
+../Core/Inc/lvgl/src/widgets/../core/../misc/../font/../misc/../lv_conf_internal.h:
 
 ../Core/Inc/lvgl/src/widgets/../core/../misc/lv_color.h:
 

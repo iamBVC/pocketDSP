@@ -1,2 +1,1 @@
-lv_mem.h:171:20:lv_memset_00	0	static
-lv_gc.c:41:6:_lv_gc_clear_roots	8	static
+lv_gc.c:41:6:_lv_gc_clear_roots	16	static

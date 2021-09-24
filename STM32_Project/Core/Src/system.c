@@ -7,13 +7,36 @@
 #include "system.h"
 
 
-const char *app_list[] = { "DSP", "Synthesizer", "Oscilloscope", "FFT", "", "" };
+const char *app_list[] = { "DSP", "Synthesizer", "Oscilloscope", "FFT", "Signal Gen.", "" };
 uint8_t battery_charge = 0;
 uint8_t is_active_usb = 1;
 uint8_t is_active_sd = 1;
 uint8_t dsp_fx_count = 0;
 
 
+void Serial_printstr(char* text){
+	char buf[strlen(text)+1];
+	sprintf(buf, "%s", text);
+	CDC_Transmit_FS(buf, strlen(buf));
+}
+
+void Serial_printint(int32_t value){
+	char buf[16];
+	sprintf(buf,"%d", value);
+	CDC_Transmit_FS(buf, strlen(buf));
+}
+
+void Serial_printlnstr(char* text){
+	char buf[strlen(text)+1];
+	sprintf(buf, "%s\r\n", text);
+	CDC_Transmit_FS(buf, strlen(buf));
+}
+
+void Serial_printlnint(int32_t value){
+	char buf[16];
+	sprintf(buf,"%d\r\n", value);
+	CDC_Transmit_FS(buf, strlen(buf));
+}
 
 void reset_app()
 {
@@ -67,6 +90,7 @@ void start_app(lv_event_t* e)
     if (id == app_list[1]) start_synthesizer();
     if (id == app_list[2]) start_oscilloscope();
     if (id == app_list[3]) start_fft();
+    if (id == app_list[4]) start_signgen();
 }
 
 void sys_status_refresh()
@@ -83,7 +107,7 @@ void sys_status_refresh()
 	HAL_ADC_ConfigChannel(&hadc1, &sConfig);
 	HAL_ADC_Start(&hadc1);
 	while (HAL_ADC_PollForConversion(&hadc1, HAL_MAX_DELAY) != HAL_OK);
-	battery_charge = 100.0 * ((HAL_ADC_GetValue(&hadc1) * 3.3 * 1.545 / 1023.0) - 3.0) / (4.1 - 3.0);
+	battery_voltage = HAL_ADC_GetValue(&hadc1) * 3.3 * 1.407 / 4095.0;
 
 
     if(lv_obj_is_valid(sys_status)) lv_obj_del_async(sys_status);
@@ -92,12 +116,12 @@ void sys_status_refresh()
     lv_obj_remove_style_all(sys_status);
 
     label = lv_label_create(sys_status);
-    lv_obj_align(label, LV_ALIGN_TOP_LEFT, 20, 2);
-    if (battery_charge >= 0 && battery_charge < 20) lv_label_set_text_fmt(label, LV_SYMBOL_BATTERY_EMPTY " %d%%", battery_charge);
-    else if (battery_charge >= 20 && battery_charge < 40) lv_label_set_text_fmt(label, LV_SYMBOL_BATTERY_1 " %d%%", battery_charge);
-    else if (battery_charge >= 40 && battery_charge < 60) lv_label_set_text_fmt(label, LV_SYMBOL_BATTERY_2 " %d%%", battery_charge);
-    else if (battery_charge >= 60 && battery_charge < 80) lv_label_set_text_fmt(label, LV_SYMBOL_BATTERY_3 " %d%%", battery_charge);
-    else if (battery_charge >= 80 && battery_charge <= 100) lv_label_set_text_fmt(label, LV_SYMBOL_BATTERY_FULL " %d%%", battery_charge);
+    lv_obj_align(label, LV_ALIGN_TOP_LEFT, 10, 2);
+    if (battery_voltage < 3.0) lv_label_set_text_fmt(label, LV_SYMBOL_BATTERY_EMPTY " %.2fV", battery_voltage);
+    else if (battery_voltage >= 3.0 && battery_voltage < 3.2) lv_label_set_text_fmt(label, LV_SYMBOL_BATTERY_1 " %.2fV", battery_voltage);
+    else if (battery_voltage >= 3.2 && battery_voltage < 3.4) lv_label_set_text_fmt(label, LV_SYMBOL_BATTERY_2 " %.2fV", battery_voltage);
+    else if (battery_voltage >= 3.4 && battery_voltage < 3.6) lv_label_set_text_fmt(label, LV_SYMBOL_BATTERY_3 " %.2fV", battery_voltage);
+    else if (battery_voltage >= 3.6) lv_label_set_text_fmt(label, LV_SYMBOL_BATTERY_FULL " %.2fV", battery_voltage);
 
     label = lv_label_create(sys_status);
     lv_obj_align(label, LV_ALIGN_TOP_LEFT, 80, 2);

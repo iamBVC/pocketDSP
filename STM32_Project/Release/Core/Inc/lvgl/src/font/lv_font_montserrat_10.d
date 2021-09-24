@@ -20,7 +20,7 @@ Core/Inc/lvgl/src/font/lv_font_montserrat_10.o: \
  ../Core/Inc/lvgl/src/font/../../src/hal/lv_hal.h \
  ../Core/Inc/lvgl/src/font/../../src/hal/../draw/lv_img_buf.h \
  ../Core/Inc/lvgl/src/font/../../src/hal/../draw/../misc/lv_color.h \
- d:\documenti\stm32_workspace\pocketdsp\core\inc\lvgl\src\lv_conf_internal.h \
+ ../Core/Inc/lvgl/src/font/../../src/hal/../draw/../misc/../lv_conf_internal.h \
  ../Core/Inc/lvgl/src/font/../../src/hal/../draw/../misc/lv_math.h \
  ../Core/Inc/lvgl/src/font/../../src/hal/../draw/../misc/lv_types.h \
  ../Core/Inc/lvgl/src/font/../../src/hal/../draw/../misc/lv_area.h \
@@ -35,9 +35,9 @@ Core/Inc/lvgl/src/font/lv_font_montserrat_10.o: \
  ../Core/Inc/lvgl/src/font/../../src/core/../lv_conf_internal.h \
  ../Core/Inc/lvgl/src/font/../../src/core/../misc/lv_style.h \
  ../Core/Inc/lvgl/src/font/../../src/core/../misc/../font/lv_font.h \
- d:\documenti\stm32_workspace\pocketdsp\core\inc\lvgl\src\lv_conf_internal.h \
+ ../Core/Inc/lvgl/src/font/../../src/core/../misc/../font/../lv_conf_internal.h \
  ../Core/Inc/lvgl/src/font/../../src/core/../misc/../font/lv_symbol_def.h \
- d:\documenti\stm32_workspace\pocketdsp\core\inc\lvgl\src\misc\lv_area.h \
+ ../Core/Inc/lvgl/src/font/../../src/core/../misc/../font/../misc/lv_area.h \
  ../Core/Inc/lvgl/src/font/../../src/core/../misc/lv_color.h \
  ../Core/Inc/lvgl/src/font/../../src/core/../misc/lv_area.h \
  ../Core/Inc/lvgl/src/font/../../src/core/../misc/lv_anim.h \
@@ -68,7 +68,7 @@ Core/Inc/lvgl/src/font/lv_font_montserrat_10.o: \
  ../Core/Inc/lvgl/src/font/../../src/core/../draw/lv_img_decoder.h \
  ../Core/Inc/lvgl/src/font/../../src/core/../draw/lv_img_buf.h \
  ../Core/Inc/lvgl/src/font/../../src/core/../draw/../misc/lv_fs.h \
- d:\documenti\stm32_workspace\pocketdsp\core\inc\lvgl\src\lv_conf_internal.h \
+ ../Core/Inc/lvgl/src/font/../../src/core/../draw/../misc/../lv_conf_internal.h \
  ../Core/Inc/lvgl/src/font/../../src/core/../draw/../misc/lv_types.h \
  ../Core/Inc/lvgl/src/font/../../src/core/../draw/../misc/lv_area.h \
  ../Core/Inc/lvgl/src/font/../../src/core/../draw/lv_img_cache.h \
@@ -137,58 +137,58 @@ Core/Inc/lvgl/src/font/lv_font_montserrat_10.o: \
  ../Core/Inc/lvgl/src/font/../../src/extra/lv_extra.h \
  ../Core/Inc/lvgl/src/font/../../src/extra/widgets/lv_widgets.h \
  ../Core/Inc/lvgl/src/font/../../src/extra/widgets/animimg/lv_animimg.h \
- d:\documenti\stm32_workspace\pocketdsp\core\inc\lvgl\src\lvgl.h \
- d:\documenti\stm32_workspace\pocketdsp\core\inc\lvgl\lvgl.h \
+ ../Core/Inc/lvgl/src/font/../../src/extra/widgets/animimg/../../../lvgl.h \
+ d:\documenti\github\pocketdsp_repo\stm32_project\core\inc\lvgl\lvgl.h \
  ../Core/Inc/lvgl/src/font/../../src/extra/widgets/calendar/lv_calendar.h \
- d:\documenti\stm32_workspace\pocketdsp\core\inc\lvgl\src\widgets\lv_btnmatrix.h \
+ d:\documenti\github\pocketdsp_repo\stm32_project\core\inc\lvgl\src\widgets\lv_btnmatrix.h \
  ../Core/Inc/lvgl/src/font/../../src/extra/widgets/calendar/lv_calendar_header_arrow.h \
- d:\documenti\stm32_workspace\pocketdsp\core\inc\lvgl\src\core\lv_obj.h \
+ d:\documenti\github\pocketdsp_repo\stm32_project\core\inc\lvgl\src\core\lv_obj.h \
  ../Core/Inc/lvgl/src/font/../../src/extra/widgets/calendar/lv_calendar_header_dropdown.h \
  ../Core/Inc/lvgl/src/font/../../src/extra/widgets/chart/lv_chart.h \
- d:\documenti\stm32_workspace\pocketdsp\core\inc\lvgl\src\lvgl.h \
+ ../Core/Inc/lvgl/src/font/../../src/extra/widgets/chart/../../../lvgl.h \
  ../Core/Inc/lvgl/src/font/../../src/extra/widgets/keyboard/lv_keyboard.h \
- d:\documenti\stm32_workspace\pocketdsp\core\inc\lvgl\src\widgets\lv_btnmatrix.h \
+ d:\documenti\github\pocketdsp_repo\stm32_project\core\inc\lvgl\src\widgets\lv_btnmatrix.h \
  ../Core/Inc/lvgl/src/font/../../src/extra/widgets/list/lv_list.h \
- d:\documenti\stm32_workspace\pocketdsp\core\inc\lvgl\src\core\lv_obj.h \
+ ../Core/Inc/lvgl/src/font/../../src/extra/widgets/list/../../../core/lv_obj.h \
  ../Core/Inc/lvgl/src/font/../../src/extra/widgets/list/../../layouts/flex/lv_flex.h \
- d:\documenti\stm32_workspace\pocketdsp\core\inc\lvgl\src\core\lv_obj.h \
+ d:\documenti\github\pocketdsp_repo\stm32_project\core\inc\lvgl\src\core\lv_obj.h \
  ../Core/Inc/lvgl/src/font/../../src/extra/widgets/msgbox/lv_msgbox.h \
- d:\documenti\stm32_workspace\pocketdsp\core\inc\lvgl\src\lvgl.h \
+ ../Core/Inc/lvgl/src/font/../../src/extra/widgets/msgbox/../../../lvgl.h \
  ../Core/Inc/lvgl/src/font/../../src/extra/widgets/meter/lv_meter.h \
- d:\documenti\stm32_workspace\pocketdsp\core\inc\lvgl\src\lvgl.h \
+ ../Core/Inc/lvgl/src/font/../../src/extra/widgets/meter/../../../lvgl.h \
  ../Core/Inc/lvgl/src/font/../../src/extra/widgets/spinbox/lv_spinbox.h \
- d:\documenti\stm32_workspace\pocketdsp\core\inc\lvgl\src\lvgl.h \
+ ../Core/Inc/lvgl/src/font/../../src/extra/widgets/spinbox/../../../lvgl.h \
  ../Core/Inc/lvgl/src/font/../../src/extra/widgets/spinner/lv_spinner.h \
- d:\documenti\stm32_workspace\pocketdsp\core\inc\lvgl\src\lvgl.h \
+ ../Core/Inc/lvgl/src/font/../../src/extra/widgets/spinner/../../../lvgl.h \
  ../Core/Inc/lvgl/src/font/../../src/extra/widgets/tabview/lv_tabview.h \
- d:\documenti\stm32_workspace\pocketdsp\core\inc\lvgl\src\lvgl.h \
+ ../Core/Inc/lvgl/src/font/../../src/extra/widgets/tabview/../../../lvgl.h \
  ../Core/Inc/lvgl/src/font/../../src/extra/widgets/tileview/lv_tileview.h \
- d:\documenti\stm32_workspace\pocketdsp\core\inc\lvgl\src\core\lv_obj.h \
+ d:\documenti\github\pocketdsp_repo\stm32_project\core\inc\lvgl\src\core\lv_obj.h \
  ../Core/Inc/lvgl/src/font/../../src/extra/widgets/win/lv_win.h \
- d:\documenti\stm32_workspace\pocketdsp\core\inc\lvgl\src\lvgl.h \
+ ../Core/Inc/lvgl/src/font/../../src/extra/widgets/win/../../../lvgl.h \
  ../Core/Inc/lvgl/src/font/../../src/extra/widgets/colorwheel/lv_colorwheel.h \
- d:\documenti\stm32_workspace\pocketdsp\core\inc\lvgl\src\lvgl.h \
+ d:\documenti\github\pocketdsp_repo\stm32_project\core\inc\lvgl\src\lvgl.h \
  ../Core/Inc/lvgl/src/font/../../src/extra/widgets/led/lv_led.h \
- d:\documenti\stm32_workspace\pocketdsp\core\inc\lvgl\src\lvgl.h \
+ ../Core/Inc/lvgl/src/font/../../src/extra/widgets/led/../../../lvgl.h \
  ../Core/Inc/lvgl/src/font/../../src/extra/widgets/imgbtn/lv_imgbtn.h \
- d:\documenti\stm32_workspace\pocketdsp\core\inc\lvgl\src\lvgl.h \
+ ../Core/Inc/lvgl/src/font/../../src/extra/widgets/imgbtn/../../../lvgl.h \
  ../Core/Inc/lvgl/src/font/../../src/extra/widgets/span/lv_span.h \
- d:\documenti\stm32_workspace\pocketdsp\core\inc\lvgl\src\lvgl.h \
+ ../Core/Inc/lvgl/src/font/../../src/extra/widgets/span/../../../lvgl.h \
  ../Core/Inc/lvgl/src/font/../../src/extra/layouts/lv_layouts.h \
  ../Core/Inc/lvgl/src/font/../../src/extra/layouts/flex/lv_flex.h \
  ../Core/Inc/lvgl/src/font/../../src/extra/layouts/grid/lv_grid.h \
- d:\documenti\stm32_workspace\pocketdsp\core\inc\lvgl\src\core\lv_obj.h \
+ ../Core/Inc/lvgl/src/font/../../src/extra/layouts/grid/../../../core/lv_obj.h \
  ../Core/Inc/lvgl/src/font/../../src/extra/themes/lv_themes.h \
  ../Core/Inc/lvgl/src/font/../../src/extra/themes/default/lv_theme_default.h \
- d:\documenti\stm32_workspace\pocketdsp\core\inc\lvgl\src\core\lv_obj.h \
+ ../Core/Inc/lvgl/src/font/../../src/extra/themes/default/../../../core/lv_obj.h \
  ../Core/Inc/lvgl/src/font/../../src/extra/themes/mono/lv_theme_mono.h \
- d:\documenti\stm32_workspace\pocketdsp\core\inc\lvgl\src\core\lv_obj.h \
+ ../Core/Inc/lvgl/src/font/../../src/extra/themes/mono/../../../core/lv_obj.h \
  ../Core/Inc/lvgl/src/font/../../src/extra/themes/basic/lv_theme_basic.h \
- d:\documenti\stm32_workspace\pocketdsp\core\inc\lvgl\src\core\lv_obj.h \
+ ../Core/Inc/lvgl/src/font/../../src/extra/themes/basic/../../../core/lv_obj.h \
  ../Core/Inc/lvgl/src/font/../../src/extra/others/lv_others.h \
  ../Core/Inc/lvgl/src/font/../../src/extra/others/snapshot/lv_snapshot.h \
- d:\documenti\stm32_workspace\pocketdsp\core\inc\lvgl\src\lv_conf_internal.h \
- d:\documenti\stm32_workspace\pocketdsp\core\inc\lvgl\src\core\lv_obj.h
+ ../Core/Inc/lvgl/src/font/../../src/extra/others/snapshot/../../../lv_conf_internal.h \
+ ../Core/Inc/lvgl/src/font/../../src/extra/others/snapshot/../../../core/lv_obj.h
 
 ../Core/Inc/lvgl/src/font/../../lvgl.h:
 
@@ -230,7 +230,7 @@ Core/Inc/lvgl/src/font/lv_font_montserrat_10.o: \
 
 ../Core/Inc/lvgl/src/font/../../src/hal/../draw/../misc/lv_color.h:
 
-d:\documenti\stm32_workspace\pocketdsp\core\inc\lvgl\src\lv_conf_internal.h:
+../Core/Inc/lvgl/src/font/../../src/hal/../draw/../misc/../lv_conf_internal.h:
 
 ../Core/Inc/lvgl/src/font/../../src/hal/../draw/../misc/lv_math.h:
 
@@ -260,11 +260,11 @@ d:\documenti\stm32_workspace\pocketdsp\core\inc\lvgl\src\lv_conf_internal.h:
 
 ../Core/Inc/lvgl/src/font/../../src/core/../misc/../font/lv_font.h:
 
-d:\documenti\stm32_workspace\pocketdsp\core\inc\lvgl\src\lv_conf_internal.h:
+../Core/Inc/lvgl/src/font/../../src/core/../misc/../font/../lv_conf_internal.h:
 
 ../Core/Inc/lvgl/src/font/../../src/core/../misc/../font/lv_symbol_def.h:
 
-d:\documenti\stm32_workspace\pocketdsp\core\inc\lvgl\src\misc\lv_area.h:
+../Core/Inc/lvgl/src/font/../../src/core/../misc/../font/../misc/lv_area.h:
 
 ../Core/Inc/lvgl/src/font/../../src/core/../misc/lv_color.h:
 
@@ -326,7 +326,7 @@ d:\documenti\stm32_workspace\pocketdsp\core\inc\lvgl\src\misc\lv_area.h:
 
 ../Core/Inc/lvgl/src/font/../../src/core/../draw/../misc/lv_fs.h:
 
-d:\documenti\stm32_workspace\pocketdsp\core\inc\lvgl\src\lv_conf_internal.h:
+../Core/Inc/lvgl/src/font/../../src/core/../draw/../misc/../lv_conf_internal.h:
 
 ../Core/Inc/lvgl/src/font/../../src/core/../draw/../misc/lv_types.h:
 
@@ -464,79 +464,79 @@ d:\documenti\stm32_workspace\pocketdsp\core\inc\lvgl\src\lv_conf_internal.h:
 
 ../Core/Inc/lvgl/src/font/../../src/extra/widgets/animimg/lv_animimg.h:
 
-d:\documenti\stm32_workspace\pocketdsp\core\inc\lvgl\src\lvgl.h:
+../Core/Inc/lvgl/src/font/../../src/extra/widgets/animimg/../../../lvgl.h:
 
-d:\documenti\stm32_workspace\pocketdsp\core\inc\lvgl\lvgl.h:
+d:\documenti\github\pocketdsp_repo\stm32_project\core\inc\lvgl\lvgl.h:
 
 ../Core/Inc/lvgl/src/font/../../src/extra/widgets/calendar/lv_calendar.h:
 
-d:\documenti\stm32_workspace\pocketdsp\core\inc\lvgl\src\widgets\lv_btnmatrix.h:
+d:\documenti\github\pocketdsp_repo\stm32_project\core\inc\lvgl\src\widgets\lv_btnmatrix.h:
 
 ../Core/Inc/lvgl/src/font/../../src/extra/widgets/calendar/lv_calendar_header_arrow.h:
 
-d:\documenti\stm32_workspace\pocketdsp\core\inc\lvgl\src\core\lv_obj.h:
+d:\documenti\github\pocketdsp_repo\stm32_project\core\inc\lvgl\src\core\lv_obj.h:
 
 ../Core/Inc/lvgl/src/font/../../src/extra/widgets/calendar/lv_calendar_header_dropdown.h:
 
 ../Core/Inc/lvgl/src/font/../../src/extra/widgets/chart/lv_chart.h:
 
-d:\documenti\stm32_workspace\pocketdsp\core\inc\lvgl\src\lvgl.h:
+../Core/Inc/lvgl/src/font/../../src/extra/widgets/chart/../../../lvgl.h:
 
 ../Core/Inc/lvgl/src/font/../../src/extra/widgets/keyboard/lv_keyboard.h:
 
-d:\documenti\stm32_workspace\pocketdsp\core\inc\lvgl\src\widgets\lv_btnmatrix.h:
+d:\documenti\github\pocketdsp_repo\stm32_project\core\inc\lvgl\src\widgets\lv_btnmatrix.h:
 
 ../Core/Inc/lvgl/src/font/../../src/extra/widgets/list/lv_list.h:
 
-d:\documenti\stm32_workspace\pocketdsp\core\inc\lvgl\src\core\lv_obj.h:
+../Core/Inc/lvgl/src/font/../../src/extra/widgets/list/../../../core/lv_obj.h:
 
 ../Core/Inc/lvgl/src/font/../../src/extra/widgets/list/../../layouts/flex/lv_flex.h:
 
-d:\documenti\stm32_workspace\pocketdsp\core\inc\lvgl\src\core\lv_obj.h:
+d:\documenti\github\pocketdsp_repo\stm32_project\core\inc\lvgl\src\core\lv_obj.h:
 
 ../Core/Inc/lvgl/src/font/../../src/extra/widgets/msgbox/lv_msgbox.h:
 
-d:\documenti\stm32_workspace\pocketdsp\core\inc\lvgl\src\lvgl.h:
+../Core/Inc/lvgl/src/font/../../src/extra/widgets/msgbox/../../../lvgl.h:
 
 ../Core/Inc/lvgl/src/font/../../src/extra/widgets/meter/lv_meter.h:
 
-d:\documenti\stm32_workspace\pocketdsp\core\inc\lvgl\src\lvgl.h:
+../Core/Inc/lvgl/src/font/../../src/extra/widgets/meter/../../../lvgl.h:
 
 ../Core/Inc/lvgl/src/font/../../src/extra/widgets/spinbox/lv_spinbox.h:
 
-d:\documenti\stm32_workspace\pocketdsp\core\inc\lvgl\src\lvgl.h:
+../Core/Inc/lvgl/src/font/../../src/extra/widgets/spinbox/../../../lvgl.h:
 
 ../Core/Inc/lvgl/src/font/../../src/extra/widgets/spinner/lv_spinner.h:
 
-d:\documenti\stm32_workspace\pocketdsp\core\inc\lvgl\src\lvgl.h:
+../Core/Inc/lvgl/src/font/../../src/extra/widgets/spinner/../../../lvgl.h:
 
 ../Core/Inc/lvgl/src/font/../../src/extra/widgets/tabview/lv_tabview.h:
 
-d:\documenti\stm32_workspace\pocketdsp\core\inc\lvgl\src\lvgl.h:
+../Core/Inc/lvgl/src/font/../../src/extra/widgets/tabview/../../../lvgl.h:
 
 ../Core/Inc/lvgl/src/font/../../src/extra/widgets/tileview/lv_tileview.h:
 
-d:\documenti\stm32_workspace\pocketdsp\core\inc\lvgl\src\core\lv_obj.h:
+d:\documenti\github\pocketdsp_repo\stm32_project\core\inc\lvgl\src\core\lv_obj.h:
 
 ../Core/Inc/lvgl/src/font/../../src/extra/widgets/win/lv_win.h:
 
-d:\documenti\stm32_workspace\pocketdsp\core\inc\lvgl\src\lvgl.h:
+../Core/Inc/lvgl/src/font/../../src/extra/widgets/win/../../../lvgl.h:
 
 ../Core/Inc/lvgl/src/font/../../src/extra/widgets/colorwheel/lv_colorwheel.h:
 
-d:\documenti\stm32_workspace\pocketdsp\core\inc\lvgl\src\lvgl.h:
+d:\documenti\github\pocketdsp_repo\stm32_project\core\inc\lvgl\src\lvgl.h:
 
 ../Core/Inc/lvgl/src/font/../../src/extra/widgets/led/lv_led.h:
 
-d:\documenti\stm32_workspace\pocketdsp\core\inc\lvgl\src\lvgl.h:
+../Core/Inc/lvgl/src/font/../../src/extra/widgets/led/../../../lvgl.h:
 
 ../Core/Inc/lvgl/src/font/../../src/extra/widgets/imgbtn/lv_imgbtn.h:
 
-d:\documenti\stm32_workspace\pocketdsp\core\inc\lvgl\src\lvgl.h:
+../Core/Inc/lvgl/src/font/../../src/extra/widgets/imgbtn/../../../lvgl.h:
 
 ../Core/Inc/lvgl/src/font/../../src/extra/widgets/span/lv_span.h:
 
-d:\documenti\stm32_workspace\pocketdsp\core\inc\lvgl\src\lvgl.h:
+../Core/Inc/lvgl/src/font/../../src/extra/widgets/span/../../../lvgl.h:
 
 ../Core/Inc/lvgl/src/font/../../src/extra/layouts/lv_layouts.h:
 
@@ -544,26 +544,26 @@ d:\documenti\stm32_workspace\pocketdsp\core\inc\lvgl\src\lvgl.h:
 
 ../Core/Inc/lvgl/src/font/../../src/extra/layouts/grid/lv_grid.h:
 
-d:\documenti\stm32_workspace\pocketdsp\core\inc\lvgl\src\core\lv_obj.h:
+../Core/Inc/lvgl/src/font/../../src/extra/layouts/grid/../../../core/lv_obj.h:
 
 ../Core/Inc/lvgl/src/font/../../src/extra/themes/lv_themes.h:
 
 ../Core/Inc/lvgl/src/font/../../src/extra/themes/default/lv_theme_default.h:
 
-d:\documenti\stm32_workspace\pocketdsp\core\inc\lvgl\src\core\lv_obj.h:
+../Core/Inc/lvgl/src/font/../../src/extra/themes/default/../../../core/lv_obj.h:
 
 ../Core/Inc/lvgl/src/font/../../src/extra/themes/mono/lv_theme_mono.h:
 
-d:\documenti\stm32_workspace\pocketdsp\core\inc\lvgl\src\core\lv_obj.h:
+../Core/Inc/lvgl/src/font/../../src/extra/themes/mono/../../../core/lv_obj.h:
 
 ../Core/Inc/lvgl/src/font/../../src/extra/themes/basic/lv_theme_basic.h:
 
-d:\documenti\stm32_workspace\pocketdsp\core\inc\lvgl\src\core\lv_obj.h:
+../Core/Inc/lvgl/src/font/../../src/extra/themes/basic/../../../core/lv_obj.h:
 
 ../Core/Inc/lvgl/src/font/../../src/extra/others/lv_others.h:
 
 ../Core/Inc/lvgl/src/font/../../src/extra/others/snapshot/lv_snapshot.h:
 
-d:\documenti\stm32_workspace\pocketdsp\core\inc\lvgl\src\lv_conf_internal.h:
+../Core/Inc/lvgl/src/font/../../src/extra/others/snapshot/../../../lv_conf_internal.h:
 
-d:\documenti\stm32_workspace\pocketdsp\core\inc\lvgl\src\core\lv_obj.h:
+../Core/Inc/lvgl/src/font/../../src/extra/others/snapshot/../../../core/lv_obj.h:

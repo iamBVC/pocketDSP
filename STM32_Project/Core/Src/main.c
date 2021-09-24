@@ -58,8 +58,8 @@ TIM_HandleTypeDef htim17;
 /* USER CODE BEGIN PV */
 
 lv_disp_draw_buf_t draw_buf;
-lv_color_t buf1[480 * 20];
-lv_color_t buf2[480 * 20];
+lv_color_t buf1[480 * 32];
+lv_color_t buf2[480 * 32];
 lv_disp_drv_t disp_drv;
 lv_indev_drv_t indev_drv;
 uint16_t ts_x, ts_y, ts_z;
@@ -95,7 +95,7 @@ void my_disp_flush(lv_disp_drv_t *disp, lv_area_t *area, lv_color_t *color_p) {
 void my_touchpad_read(lv_indev_t *indev, lv_indev_data_t *data) {
 
 	readTouch(&ts_x, &ts_y, &ts_z);
-	if (ts_z > 200)
+	if (ts_z > 250)
 		data->state = LV_INDEV_STATE_PR;
 	else
 		data->state = LV_INDEV_STATE_REL;
@@ -174,20 +174,6 @@ int main(void)
 	HAL_ADC_Start(&hadc1); //internal DAC start
 	HAL_TIM_Base_Start(&htim16); //delay us timer
 
-	//DAC Init
-	HAL_I2S_Init(&hi2s1);
-	HAL_TIM_PWM_Start(&htim13, TIM_CHANNEL_1);
-	HAL_Delay(100);
-
-
-	HAL_I2S_Init(&hi2s2);
-	HAL_TIM_PWM_Start(&htim12, TIM_CHANNEL_2);
-	HAL_Delay(100);
-	HAL_GPIO_WritePin (GPIOD, GPIO_PIN_10, GPIO_PIN_SET);
-
-
-	HAL_TIM_Base_Start_IT(&htim14); //sampling timer
-
 	//TFT init
 	uint16_t ID = readID();
 	HAL_Delay(100);
@@ -198,7 +184,7 @@ int main(void)
 
 	//gui init
 	lv_init();
-	lv_disp_draw_buf_init(&draw_buf, buf1, buf2, 480 * 20);
+	lv_disp_draw_buf_init(&draw_buf, buf1, buf2, 480 * 32);
 	lv_disp_drv_init(&disp_drv);
 	disp_drv.flush_cb = my_disp_flush;
 	disp_drv.draw_buf = &draw_buf;
@@ -209,6 +195,20 @@ int main(void)
 	indev_drv.type = LV_INDEV_TYPE_POINTER;
 	indev_drv.read_cb = my_touchpad_read;
 	lv_indev_drv_register(&indev_drv);
+
+	//DAC Init
+	HAL_I2S_Init(&hi2s1);
+	HAL_TIM_PWM_Start(&htim13, TIM_CHANNEL_1);
+	HAL_Delay(100);
+
+	//ADC Init
+	HAL_TIM_PWM_Init(&htim12);
+	HAL_I2S_Init(&hi2s2);
+	HAL_TIM_PWM_Start(&htim12, TIM_CHANNEL_2);
+	HAL_Delay(100);
+	HAL_GPIO_WritePin (GPIOD, GPIO_PIN_10, GPIO_PIN_SET);
+
+	HAL_TIM_Base_Start_IT(&htim14); //sampling timer
 
 	HAL_TIM_Base_Start_IT(&htim17); //lvgl tick timer
 	reset_app(); //start gui
@@ -277,13 +277,13 @@ void SystemClock_Config(void)
                               |RCC_CLOCKTYPE_D3PCLK1|RCC_CLOCKTYPE_D1PCLK1;
   RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
   RCC_ClkInitStruct.SYSCLKDivider = RCC_SYSCLK_DIV1;
-  RCC_ClkInitStruct.AHBCLKDivider = RCC_HCLK_DIV4;
-  RCC_ClkInitStruct.APB3CLKDivider = RCC_APB3_DIV1;
-  RCC_ClkInitStruct.APB1CLKDivider = RCC_APB1_DIV1;
-  RCC_ClkInitStruct.APB2CLKDivider = RCC_APB2_DIV1;
-  RCC_ClkInitStruct.APB4CLKDivider = RCC_APB4_DIV1;
+  RCC_ClkInitStruct.AHBCLKDivider = RCC_HCLK_DIV2;
+  RCC_ClkInitStruct.APB3CLKDivider = RCC_APB3_DIV2;
+  RCC_ClkInitStruct.APB1CLKDivider = RCC_APB1_DIV2;
+  RCC_ClkInitStruct.APB2CLKDivider = RCC_APB2_DIV2;
+  RCC_ClkInitStruct.APB4CLKDivider = RCC_APB4_DIV2;
 
-  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_1) != HAL_OK)
+  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_2) != HAL_OK)
   {
     Error_Handler();
   }
@@ -523,7 +523,7 @@ static void MX_TIM12_Init(void)
   htim12.Instance = TIM12;
   htim12.Init.Prescaler = 0;
   htim12.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim12.Init.Period = 15;
+  htim12.Init.Period = 7;
   htim12.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim12.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
   if (HAL_TIM_Base_Init(&htim12) != HAL_OK)
@@ -540,7 +540,7 @@ static void MX_TIM12_Init(void)
     Error_Handler();
   }
   sConfigOC.OCMode = TIM_OCMODE_PWM1;
-  sConfigOC.Pulse = 7;
+  sConfigOC.Pulse = 3;
   sConfigOC.OCPolarity = TIM_OCPOLARITY_HIGH;
   sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
   if (HAL_TIM_PWM_ConfigChannel(&htim12, &sConfigOC, TIM_CHANNEL_2) != HAL_OK)
@@ -620,7 +620,7 @@ static void MX_TIM14_Init(void)
   htim14.Instance = TIM14;
   htim14.Init.Prescaler = 0;
   htim14.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim14.Init.Period = 511;
+  htim14.Init.Period = 1023;
   htim14.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim14.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
   if (HAL_TIM_Base_Init(&htim14) != HAL_OK)
@@ -664,7 +664,7 @@ static void MX_TIM16_Init(void)
 
   /* USER CODE END TIM16_Init 1 */
   htim16.Instance = TIM16;
-  htim16.Init.Prescaler = 99;
+  htim16.Init.Prescaler = 199;
   htim16.Init.CounterMode = TIM_COUNTERMODE_UP;
   htim16.Init.Period = 65535;
   htim16.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
@@ -726,7 +726,7 @@ static void MX_TIM17_Init(void)
 
   /* USER CODE END TIM17_Init 1 */
   htim17.Instance = TIM17;
-  htim17.Init.Prescaler = 99;
+  htim17.Init.Prescaler = 199;
   htim17.Init.CounterMode = TIM_COUNTERMODE_UP;
   htim17.Init.Period = 999;
   htim17.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
@@ -907,8 +907,11 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 
 	if (htim == &htim14) {
 
-		HAL_I2S_Transmit(&hi2s1, (uint16_t*)dac_input, 2, 0);
+		dac_input[0] = adc_output[0];
+		dac_input[1] = adc_output[1];
 		HAL_I2S_Receive(&hi2s2, (uint16_t*)adc_output, 2, 0);
+		HAL_I2S_Transmit(&hi2s1, (uint16_t*)dac_input, 2, 0);
+
 
 	}
 

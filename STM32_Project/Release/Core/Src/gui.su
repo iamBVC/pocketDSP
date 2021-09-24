@@ -1,2 +1,2 @@
 gui.c:3:6:start_synthesizer	0	static
-gui.c:10:6:start_fft	48	static
+gui.c:10:6:start_fft	56	static

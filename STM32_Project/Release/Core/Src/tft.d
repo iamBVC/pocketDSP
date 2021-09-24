@@ -165,7 +165,7 @@ Core/Src/tft.o: ../Core/Src/tft.c \
  ../Core/Inc/lvgl/src/extra/widgets/lv_widgets.h \
  ../Core/Inc/lvgl/src/extra/widgets/animimg/lv_animimg.h \
  ../Core/Inc/lvgl/src/extra/widgets/animimg/../../../lvgl.h \
- d:\documenti\stm32_workspace\pocketdsp\core\inc\lvgl\lvgl.h \
+ ../Core/Inc/lvgl/src/extra/widgets/animimg/../../../../lvgl.h \
  ../Core/Inc/lvgl/src/extra/widgets/calendar/lv_calendar.h \
  ../Core/Inc/lvgl/src/extra/widgets/calendar/../../../widgets/lv_btnmatrix.h \
  ../Core/Inc/lvgl/src/extra/widgets/calendar/lv_calendar_header_arrow.h \
@@ -178,7 +178,7 @@ Core/Src/tft.o: ../Core/Src/tft.c \
  ../Core/Inc/lvgl/src/extra/widgets/list/lv_list.h \
  ../Core/Inc/lvgl/src/extra/widgets/list/../../../core/lv_obj.h \
  ../Core/Inc/lvgl/src/extra/widgets/list/../../layouts/flex/lv_flex.h \
- d:\documenti\stm32_workspace\pocketdsp\core\inc\lvgl\src\core\lv_obj.h \
+ d:\documenti\github\pocketdsp_repo\stm32_project\core\inc\lvgl\src\core\lv_obj.h \
  ../Core/Inc/lvgl/src/extra/widgets/msgbox/lv_msgbox.h \
  ../Core/Inc/lvgl/src/extra/widgets/msgbox/../../../lvgl.h \
  ../Core/Inc/lvgl/src/extra/widgets/meter/lv_meter.h \
@@ -574,7 +574,7 @@ Core/Src/tft.o: ../Core/Src/tft.c \
 
 ../Core/Inc/lvgl/src/extra/widgets/animimg/../../../lvgl.h:
 
-d:\documenti\stm32_workspace\pocketdsp\core\inc\lvgl\lvgl.h:
+../Core/Inc/lvgl/src/extra/widgets/animimg/../../../../lvgl.h:
 
 ../Core/Inc/lvgl/src/extra/widgets/calendar/lv_calendar.h:
 
@@ -600,7 +600,7 @@ d:\documenti\stm32_workspace\pocketdsp\core\inc\lvgl\lvgl.h:
 
 ../Core/Inc/lvgl/src/extra/widgets/list/../../layouts/flex/lv_flex.h:
 
-d:\documenti\stm32_workspace\pocketdsp\core\inc\lvgl\src\core\lv_obj.h:
+d:\documenti\github\pocketdsp_repo\stm32_project\core\inc\lvgl\src\core\lv_obj.h:
 
 ../Core/Inc/lvgl/src/extra/widgets/msgbox/lv_msgbox.h:
 
