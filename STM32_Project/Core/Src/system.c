@@ -40,11 +40,6 @@ void Serial_printlnint(int32_t value){
 
 void reset_app()
 {
-    dsp_fx_count = 0;
-    for (uint8_t i = 0; i < DSP_MAX_FX_COUNT; i++)
-        for (uint8_t j = 0; j <= DSP_MAX_FX_SETTINGS; j++)
-            dsp_fx_settings[i][j] = 0;
-
     reset_scr();
     start_main();
 }

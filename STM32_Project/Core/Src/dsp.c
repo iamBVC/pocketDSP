@@ -10,6 +10,7 @@
 
 void start_dsp()
 {
+
     sys_status_refresh();
     lv_obj_align(sys_status, LV_ALIGN_TOP_LEFT, 0, 0);
 
@@ -96,7 +97,15 @@ void dsp_menu_cb(lv_event_t* e)
     if (selected == 1) dsp_open_project();
     if (selected == 2);
     if (selected == 3);
-    if (selected == 4) reset_app();
+    if (selected == 4){
+
+    	dsp_fx_count = 0;
+        for (uint8_t i = 0; i < DSP_MAX_FX_COUNT; i++)
+            for (uint8_t j = 0; j <= DSP_MAX_FX_SETTINGS; j++)
+                dsp_fx_settings[i][j] = 0;
+
+    	reset_app();
+    }
 }
 
 void dsp_new_project()

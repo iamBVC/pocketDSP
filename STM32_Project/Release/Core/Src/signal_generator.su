@@ -1,2 +1,2 @@
-signal_generator.c:75:6:event_cb	16	static
-signal_generator.c:11:6:start_signgen	240	static
+signal_generator.c:128:6:event_cb	16	static
+signal_generator.c:11:6:start_signgen	248	static
