@@ -13,6 +13,16 @@ uint8_t is_active_usb = 1;
 uint8_t is_active_sd = 1;
 uint8_t dsp_fx_count = 0;
 
+void empty_void(){
+	HAL_I2S_Receive(&hi2s2, (uint16_t*)adc_output, 2, 0);
+	HAL_I2S_Transmit(&hi2s1, (uint16_t*)dac_input, 2, 0);
+}
+void direct_pass(){
+	dac_input[0] = adc_output[0];
+	dac_input[1] = adc_output[1];
+	HAL_I2S_Receive(&hi2s2, (uint16_t*)adc_output, 2, 0);
+	HAL_I2S_Transmit(&hi2s1, (uint16_t*)dac_input, 2, 0);
+}
 
 void Serial_printstr(char* text){
 	char buf[strlen(text)+1];
@@ -40,6 +50,7 @@ void Serial_printlnint(int32_t value){
 
 void reset_app()
 {
+	sample_callback = &empty_void;
     reset_scr();
     start_main();
 }

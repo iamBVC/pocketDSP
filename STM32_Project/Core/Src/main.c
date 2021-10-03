@@ -171,6 +171,8 @@ int main(void)
   MX_TIM12_Init();
   /* USER CODE BEGIN 2 */
 
+  sample_callback = &empty_void;
+
 	HAL_ADC_Start(&hadc1); //internal DAC start
 	HAL_TIM_Base_Start(&htim16); //delay us timer
 
@@ -907,11 +909,14 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 
 	if (htim == &htim14) {
 
+		/*
 		dac_input[0] = adc_output[0];
 		dac_input[1] = adc_output[1];
 		HAL_I2S_Receive(&hi2s2, (uint16_t*)adc_output, 2, 0);
 		HAL_I2S_Transmit(&hi2s1, (uint16_t*)dac_input, 2, 0);
+		*/
 
+		sample_callback();
 
 	}
 

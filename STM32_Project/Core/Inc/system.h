@@ -25,6 +25,7 @@ lv_coord_t fft_vectors[FFT_POINTS];
 lv_coord_t oscilloscope_buffer_r[FFT_POINTS], oscilloscope_buffer_l[FFT_POINTS];
 
 lv_obj_t *label, *btn, *cont, *menu, *list, *slider, *mbox, *chart, *roller, *app_scr;
+lv_timer_t *timer;
 lv_obj_t* sys_status;
 lv_chart_series_t* ser;
 float battery_voltage;
@@ -36,7 +37,9 @@ extern const char *app_list[];
 volatile uint32_t dac_input[2];
 volatile uint32_t adc_output[2];
 
-
+void empty_void();
+void direct_pass();
+void (*sample_callback)(void);
 
 void reset_scr();
 void reset_app();

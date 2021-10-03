@@ -72,4 +72,7 @@ void start_oscilloscope()
     lv_chart_set_ext_y_array(chart, ser, (lv_coord_t*)oscilloscope_buffer_l);
     lv_obj_set_style_bg_color(chart, lv_color_make(30, 30, 30), LV_PART_MAIN);
 
+
 }
+
+

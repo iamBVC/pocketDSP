@@ -6,10 +6,12 @@
  */
 
 
-#include "dsp.h"
+#include "system.h"
 
 void start_dsp()
 {
+
+	sample_callback = &direct_pass;
 
     sys_status_refresh();
     lv_obj_align(sys_status, LV_ALIGN_TOP_LEFT, 0, 0);
