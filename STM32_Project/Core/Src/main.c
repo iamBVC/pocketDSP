@@ -95,7 +95,7 @@ void my_disp_flush(lv_disp_drv_t *disp, lv_area_t *area, lv_color_t *color_p) {
 void my_touchpad_read(lv_indev_t *indev, lv_indev_data_t *data) {
 
 	readTouch(&ts_x, &ts_y, &ts_z);
-	if (ts_z > 250)
+	if (ts_z > 220)
 		data->state = LV_INDEV_STATE_PR;
 	else
 		data->state = LV_INDEV_STATE_REL;
@@ -153,7 +153,7 @@ int main(void)
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
-  HAL_Delay(1000);
+  HAL_Delay(500);
 
   /* USER CODE END SysInit */
 
@@ -171,7 +171,7 @@ int main(void)
   MX_TIM12_Init();
   /* USER CODE BEGIN 2 */
 
-  sample_callback = &empty_void;
+    sample_callback = &empty_void;
 
 	HAL_ADC_Start(&hadc1); //internal DAC start
 	HAL_TIM_Base_Start(&htim16); //delay us timer
@@ -182,7 +182,6 @@ int main(void)
 	tft_init(ID);
 	setRotation(1);
 	fillScreen(BLACK);
-
 
 	//gui init
 	lv_init();
@@ -197,22 +196,12 @@ int main(void)
 	indev_drv.type = LV_INDEV_TYPE_POINTER;
 	indev_drv.read_cb = my_touchpad_read;
 	lv_indev_drv_register(&indev_drv);
+	HAL_TIM_Base_Start_IT(&htim17); //lvgl tick timer
 
-	//DAC Init
-	HAL_I2S_Init(&hi2s1);
-	HAL_TIM_PWM_Start(&htim13, TIM_CHANNEL_1);
-	HAL_Delay(100);
-
-	//ADC Init
-	HAL_TIM_PWM_Init(&htim12);
-	HAL_I2S_Init(&hi2s2);
-	HAL_TIM_PWM_Start(&htim12, TIM_CHANNEL_2);
-	HAL_Delay(100);
-	HAL_GPIO_WritePin (GPIOD, GPIO_PIN_10, GPIO_PIN_SET);
-
+	DAC_Init();
+	ADC_Init();
 	HAL_TIM_Base_Start_IT(&htim14); //sampling timer
 
-	HAL_TIM_Base_Start_IT(&htim17); //lvgl tick timer
 	reset_app(); //start gui
 
 
@@ -908,13 +897,6 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 	}
 
 	if (htim == &htim14) {
-
-		/*
-		dac_input[0] = adc_output[0];
-		dac_input[1] = adc_output[1];
-		HAL_I2S_Receive(&hi2s2, (uint16_t*)adc_output, 2, 0);
-		HAL_I2S_Transmit(&hi2s1, (uint16_t*)dac_input, 2, 0);
-		*/
 
 		sample_callback();
 

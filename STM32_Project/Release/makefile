@@ -92,6 +92,7 @@ RM := rm -rf
 -include Core/Inc/lvgl/examples/event/subdir.mk
 -include Core/Inc/lvgl/examples/assets/subdir.mk
 -include Core/Inc/lvgl/examples/anim/subdir.mk
+-include Core/Inc/FX/subdir.mk
 -include subdir.mk
 -include objects.mk
 

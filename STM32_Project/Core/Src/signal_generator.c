@@ -123,6 +123,8 @@ void start_signgen(){
     lv_label_set_text_fmt(label_amp2, "%dmV", sg_settings[1][2]);
     lv_obj_align_to(label_amp2, slider_amp2, LV_ALIGN_OUT_TOP_MID, 0, 0);
 
+    sample_callback = &sg_sample_callback;
+
 }
 
 void event_cb(lv_event_t* e){
@@ -157,4 +159,29 @@ void event_cb(lv_event_t* e){
 		if (lv_event_get_target(e) == roller_wave2){
 		sg_settings[1][3] = lv_roller_get_selected(lv_event_get_target(e));
 	}
+}
+
+void sg_sample_callback(){
+	static uint32_t t = 0;
+	static float r_ch, l_ch = 0;
+
+	if (l_ch >= 0) dac_input[0] = l_ch; else dac_input[0] = 0xFFFFFF + l_ch + 1;
+	if (r_ch >= 0) dac_input[1] = r_ch; else dac_input[1] = 0xFFFFFF + r_ch + 1;
+
+	HAL_I2S_Transmit(&hi2s1, (uint16_t*)dac_input, 2, 0);
+
+	if (sg_settings[0][3] == 0) r_ch = 0;
+	if (sg_settings[0][3] == 1) r_ch = 4000.0 * sg_settings[0][2] * sin((3.1416 / 180.0)*((sg_settings[0][0] * 360.0 * t / 192000.0)+sg_settings[0][1]));
+
+	if (sg_settings[0][3] == 5) r_ch = sg_settings[0][2] * ((rand() % 8001) - 4000);
+
+
+
+	if (sg_settings[1][3] == 0) l_ch = 0;
+	if (sg_settings[1][3] == 1) l_ch = 4000.0 * sg_settings[1][2] * sin((3.1416 / 180.0)*((sg_settings[1][0] * 360.0 * t / 192000.0)+sg_settings[1][1]));
+
+	if (sg_settings[1][3] == 5) l_ch = sg_settings[1][2] * ((rand() % 8001) - 4000);
+
+	if (t == 192000 - 1) t = 0; else t++;
+
 }

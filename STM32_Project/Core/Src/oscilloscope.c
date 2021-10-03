@@ -10,12 +10,6 @@
 
 void start_oscilloscope()
 {
-    for (uint16_t i = 0; i < FFT_POINTS; i++)
-    {
-        oscilloscope_buffer_r[i] = 500 + 400.0 * sin(i/50.0);
-        oscilloscope_buffer_l[i] = 500 + 50.0 * cos(i/20.0);
-    }
-
 
     sys_status_refresh();
     lv_obj_align(sys_status, LV_ALIGN_TOP_LEFT, 0, 0);
@@ -62,17 +56,50 @@ void start_oscilloscope()
     lv_obj_set_size(chart, 360, 300);
     lv_obj_align(chart, LV_ALIGN_BOTTOM_LEFT, 0, 0);
     lv_obj_set_style_size(chart, 0, LV_PART_INDICATOR);
-    lv_chart_set_range(chart, LV_CHART_AXIS_PRIMARY_X, 0, FFT_POINTS);
-    lv_chart_set_range(chart, LV_CHART_AXIS_PRIMARY_Y, 0, 1000);
+    lv_chart_set_range(chart, LV_CHART_AXIS_PRIMARY_X, 0, OSC_BUF_SIZE);
+    lv_chart_set_range(chart, LV_CHART_AXIS_PRIMARY_Y, -1000, 1000);
+    lv_chart_set_div_line_count(chart, 9, 5);
     lv_chart_set_zoom_x(chart,256*1);
-    lv_chart_set_point_count(chart, FFT_POINTS);
+    lv_chart_set_point_count(chart, 256);
     ser = lv_chart_add_series(chart, lv_palette_main(LV_PALETTE_RED), LV_CHART_AXIS_PRIMARY_Y);
     lv_chart_set_ext_y_array(chart, ser, (lv_coord_t*)oscilloscope_buffer_r);
     ser = lv_chart_add_series(chart, lv_palette_main(LV_PALETTE_GREEN), LV_CHART_AXIS_PRIMARY_Y);
     lv_chart_set_ext_y_array(chart, ser, (lv_coord_t*)oscilloscope_buffer_l);
     lv_obj_set_style_bg_color(chart, lv_color_make(30, 30, 30), LV_PART_MAIN);
 
+    sample_callback = &osc_sample_callback;
 
 }
 
+void osc_sample_callback(){
 
+	static uint16_t index = 0;
+	static uint32_t elapsed = 0;
+	static uint32_t prev = 0;
+	static uint8_t triggered = 0;
+
+	prev = adc_output[0];
+	HAL_I2S_Receive(&hi2s2, (uint16_t*)adc_output, 2, 0);
+	adc_output[0] = adc_output[0] / 8388.608;
+	adc_output[1] = adc_output[1] / 8388.608;
+
+	if (elapsed >= 192000 / 10 && adc_output[0] < 1000 && prev == 0 && adc_output[0] > prev && triggered == 0) triggered = 1;
+
+	if (elapsed >= 192000 / 10 && triggered == 1){
+
+		if (adc_output[0] < 1000) oscilloscope_buffer_r[index] = adc_output[0]; else oscilloscope_buffer_r[index] = adc_output[0] - 2000;
+		if (adc_output[1] < 1000) oscilloscope_buffer_l[index] = adc_output[1]; else oscilloscope_buffer_l[index] = adc_output[1] - 2000;
+
+		if (index == OSC_BUF_SIZE - 1){
+			triggered = 0;
+			index = 0;
+			elapsed = 0;
+			lv_chart_refresh(chart);
+		}else{
+			index++;
+		}
+	}
+
+	elapsed++;
+
+}

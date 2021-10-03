@@ -1,1 +1,2 @@
-oscilloscope.c:11:6:start_oscilloscope	88	static
+oscilloscope.c:74:6:osc_sample_callback	24	static
+oscilloscope.c:11:6:start_oscilloscope	40	static

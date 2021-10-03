@@ -14,7 +14,7 @@ extern "C" {
 #include "system.h"
 
 void start_synthesizer();
-void start_fft();
+
 
 
 #ifdef __cplusplus

@@ -20,6 +20,7 @@ OBJCOPY_BIN :=
 
 # Every subdirectory with source files must be described here
 SUBDIRS := \
+Core/Inc/FX \
 Core/Inc/lvgl/examples/anim \
 Core/Inc/lvgl/examples/assets \
 Core/Inc/lvgl/examples/event \

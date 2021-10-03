@@ -19,10 +19,13 @@
 #include "oscilloscope.h"
 #include "signal_generator.h"
 
-
-#define FFT_POINTS 256
-lv_coord_t fft_vectors[FFT_POINTS];
-lv_coord_t oscilloscope_buffer_r[FFT_POINTS], oscilloscope_buffer_l[FFT_POINTS];
+#include "FX/allpass_filter.h"
+#include "FX/comb_filter.h"
+#include "FX/reverb.h"
+#include "FX/FIR_filter.h"
+#include "FX/phaser.h"
+#include "FX/delay.h"
+#include "FX/distorsion.h"
 
 lv_obj_t *label, *btn, *cont, *menu, *list, *slider, *mbox, *chart, *roller, *app_scr;
 lv_timer_t *timer;

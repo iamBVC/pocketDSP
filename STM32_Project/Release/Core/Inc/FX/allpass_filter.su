@@ -1,0 +1,2 @@
+allpass_filter.c:11:6:ALLPASSFilter_Init	16	static
+allpass_filter.c:23:7:ALLPASSFilter_Update	16	static

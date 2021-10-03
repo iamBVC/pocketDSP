@@ -13,7 +13,6 @@
 extern I2S_HandleTypeDef hi2s1;
 extern TIM_HandleTypeDef htim13;
 
-void DAC_Start();
-void DAC_Stop();
+void DAC_Init();
 
 #endif /* INC_DAC_H_ */

@@ -1,0 +1,2 @@
+phaser.c:14:6:Phaser_Init	24	static
+phaser.c:26:7:Phaser_Update	32	static

@@ -8,6 +8,7 @@ C_SRCS += \
 ../Core/Src/adc.c \
 ../Core/Src/dac.c \
 ../Core/Src/dsp.c \
+../Core/Src/fft.c \
 ../Core/Src/gui.c \
 ../Core/Src/main.c \
 ../Core/Src/oscilloscope.c \
@@ -24,6 +25,7 @@ OBJS += \
 ./Core/Src/adc.o \
 ./Core/Src/dac.o \
 ./Core/Src/dsp.o \
+./Core/Src/fft.o \
 ./Core/Src/gui.o \
 ./Core/Src/main.o \
 ./Core/Src/oscilloscope.o \
@@ -40,6 +42,7 @@ C_DEPS += \
 ./Core/Src/adc.d \
 ./Core/Src/dac.d \
 ./Core/Src/dsp.d \
+./Core/Src/fft.d \
 ./Core/Src/gui.d \
 ./Core/Src/main.d \
 ./Core/Src/oscilloscope.d \

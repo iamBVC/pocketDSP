@@ -18,9 +18,8 @@
 #define RST_PIN  GPIO_PIN_10
 
 extern I2S_HandleTypeDef hi2s2;
-extern TIM_HandleTypeDef htim8;
+extern TIM_HandleTypeDef htim12;
 
-void ADC_Start();
-void ADC_Stop();
+void ADC_Init();
 
 #endif /* INC_ADC_H_ */

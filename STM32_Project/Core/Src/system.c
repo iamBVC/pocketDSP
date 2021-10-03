@@ -14,8 +14,7 @@ uint8_t is_active_sd = 1;
 uint8_t dsp_fx_count = 0;
 
 void empty_void(){
-	HAL_I2S_Receive(&hi2s2, (uint16_t*)adc_output, 2, 0);
-	HAL_I2S_Transmit(&hi2s1, (uint16_t*)dac_input, 2, 0);
+	HAL_I2S_Transmit(&hi2s1, (uint16_t*)0, 2, 0);
 }
 void direct_pass(){
 	dac_input[0] = adc_output[0];

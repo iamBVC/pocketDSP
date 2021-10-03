@@ -21,5 +21,6 @@ float output[2];
 
 void start_signgen();
 void event_cb(lv_event_t* e);
+void sg_sample_callback();
 
 #endif /* INC_SIGNAL_GENERATOR_H_ */
