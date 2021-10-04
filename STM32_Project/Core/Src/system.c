@@ -7,11 +7,10 @@
 #include "system.h"
 
 
-const char *app_list[] = { "DSP", "Synthesizer", "Oscilloscope", "FFT", "Signal Gen.", "" };
+const char *app_list[] = { "DSP", "Synthesizer", "Oscilloscope", "FFT", "Signal Generator", "Freq. Response" };
 uint8_t battery_charge = 0;
 uint8_t is_active_usb = 1;
 uint8_t is_active_sd = 1;
-uint8_t dsp_fx_count = 0;
 
 void empty_void(){
 	HAL_I2S_Transmit(&hi2s1, (uint16_t*)0, 2, 0);
@@ -92,10 +91,11 @@ void start_app(lv_event_t* e)
     char* id = lv_event_get_user_data(e);
     reset_scr();
     if (id == app_list[0]) start_dsp();
-    if (id == app_list[1]) start_synthesizer();
+    if (id == app_list[1]);
     if (id == app_list[2]) start_oscilloscope();
     if (id == app_list[3]) start_fft();
     if (id == app_list[4]) start_signgen();
+    if (id == app_list[5]) start_freqresp();
 }
 
 void sys_status_refresh()

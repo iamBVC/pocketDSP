@@ -15,18 +15,18 @@ static const char *dsp_main_menu[] = { "New project", "Open project", "Save proj
 
 #define DSP_MAX_FX_COUNT 16
 #define DSP_MAX_FX_SETTINGS 10
-lv_obj_t * dsp_fx_scr, * dsp_main_cont;
-lv_coord_t dsp_filter_response[200];
-lv_coord_t dsp_sidechain_response[100];
-uint8_t dsp_fx_count;
-uint16_t dsp_fx_settings[DSP_MAX_FX_COUNT][DSP_MAX_FX_SETTINGS + 1];
+static lv_obj_t * dsp_fx_scr, * dsp_main_cont;
+static lv_coord_t dsp_filter_response[200];
+static lv_coord_t dsp_sidechain_response[100];
+static uint8_t dsp_fx_count;
+static uint16_t dsp_fx_settings[DSP_MAX_FX_COUNT][DSP_MAX_FX_SETTINGS + 1];
 
-double *impulseResponse;
-double *window;
-double *windowedImpulseResponse;
-double *frequencyVectorHz;
-double *winRespMag;
-lv_coord_t *dsp_fir_response;
+static double *impulseResponse;
+static double *window;
+static double *windowedImpulseResponse;
+static double *frequencyVectorHz;
+static double *winRespMag;
+static lv_coord_t *dsp_fir_response;
 
 void start_dsp();
 void dsp_menu_cb(lv_event_t* e);

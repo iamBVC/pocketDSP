@@ -10,11 +10,11 @@
 
 #include <stdio.h>
 #include <math.h>
+#include <complex.h>
 #include "stm32h7xx_hal.h"
 #include "lvgl/lvgl.h"
 #include "adc.h"
 #include "dac.h"
-#include "gui.h"
 #include "dsp.h"
 #include "oscilloscope.h"
 #include "signal_generator.h"

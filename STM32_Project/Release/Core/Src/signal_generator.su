@@ -1,3 +1,3 @@
-signal_generator.c:130:6:event_cb	16	static
-signal_generator.c:164:6:sg_sample_callback	24	static
-signal_generator.c:11:6:start_signgen	248	static
+signal_generator.c:135:6:event_cb	16	static
+signal_generator.c:173:6:sg_sample_callback	32	static
+signal_generator.c:16:6:start_signgen	248	static

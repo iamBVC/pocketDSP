@@ -8,6 +8,11 @@
 
 #include "signal_generator.h"
 
+static const char *waveform_list[] = { "None", "Sine", "Saw", "Triangle", "Square", "Noise" };
+static uint32_t t_rch, t_lch = 0;
+static float r_ch, l_ch = 0;
+static const uint16_t peak_value = 8080;
+
 void start_signgen(){
 
     for (uint8_t i = 0; i < 2; i++)
@@ -159,29 +164,67 @@ void event_cb(lv_event_t* e){
 		if (lv_event_get_target(e) == roller_wave2){
 		sg_settings[1][3] = lv_roller_get_selected(lv_event_get_target(e));
 	}
+
+	t_rch = 0;
+	t_lch = 0;
+
 }
 
 void sg_sample_callback(){
-	static uint32_t t = 0;
-	static float r_ch, l_ch = 0;
-
-	if (l_ch >= 0) dac_input[0] = l_ch; else dac_input[0] = 0xFFFFFF + l_ch + 1;
-	if (r_ch >= 0) dac_input[1] = r_ch; else dac_input[1] = 0xFFFFFF + r_ch + 1;
-
 	HAL_I2S_Transmit(&hi2s1, (uint16_t*)dac_input, 2, 0);
 
 	if (sg_settings[0][3] == 0) r_ch = 0;
-	if (sg_settings[0][3] == 1) r_ch = 4000.0 * sg_settings[0][2] * sin((3.1416 / 180.0)*((sg_settings[0][0] * 360.0 * t / 192000.0)+sg_settings[0][1]));
-
-	if (sg_settings[0][3] == 5) r_ch = sg_settings[0][2] * ((rand() % 8001) - 4000);
+	if (sg_settings[0][3] == 1){
+		r_ch = peak_value * sg_settings[0][2] * sin((3.1416 / 180.0)*((sg_settings[0][0] * 360.0 * t_rch / 192000.0)+sg_settings[0][1]));
+		if (t_rch >= 192000 - 1) t_rch = 0; else t_rch++;
+	}
+	if (sg_settings[0][3] == 2){
+		r_ch = peak_value * sg_settings[0][2] * ((t_rch * sg_settings[0][0] * 2.0 / 192000.0) - 1.0);
+		if (t_rch >= (192000.0 / sg_settings[0][0]) - 1) t_rch = 0; else t_rch++;
+	}
+	if (sg_settings[0][3] == 3){
+		if (t_rch * sg_settings[0][0] <= 96000)
+			r_ch = peak_value * sg_settings[0][2] * ((t_rch * sg_settings[0][0] * 4.0 / 192000.0) - 1.0);
+		else
+			r_ch = peak_value * sg_settings[0][2] * (3.0 - (t_rch * sg_settings[0][0] * 4.0 / 192000.0));
+		if (t_rch >= (192000.0 / sg_settings[0][0]) - 1) t_rch = 0; else t_rch++;
+	}
+	if (sg_settings[0][3] == 4){
+		if (t_rch * sg_settings[0][0] <= 96000) r_ch = peak_value * sg_settings[0][2]; else r_ch = (0.0 - peak_value) * sg_settings[0][2];
+		if (t_rch >= (192000.0 / sg_settings[0][0]) - 1) t_rch = 0; else t_rch++;
+	}
+	if (sg_settings[0][3] == 5) r_ch = sg_settings[0][2] * ((rand() % (2*peak_value - 1)) - peak_value);
 
 
 
 	if (sg_settings[1][3] == 0) l_ch = 0;
-	if (sg_settings[1][3] == 1) l_ch = 4000.0 * sg_settings[1][2] * sin((3.1416 / 180.0)*((sg_settings[1][0] * 360.0 * t / 192000.0)+sg_settings[1][1]));
+	if (sg_settings[1][3] == 1){
+		l_ch = peak_value * sg_settings[1][2] * sin((3.1416 / 180.0)*((sg_settings[1][0] * 360.0 * t_lch / 192000.0)+sg_settings[1][1]));
+		if (t_lch >= 192000 - 1) t_lch = 0; else t_lch++;
+	}
+	if (sg_settings[1][3] == 2){
+		l_ch = peak_value * sg_settings[1][2] * ((t_lch * sg_settings[1][0] * 2.0 / 192000.0) - 1.0);
+		if (t_lch >= (192000.0 / sg_settings[1][0]) - 1) t_lch = 0; else t_lch++;
+	}
+	if (sg_settings[1][3] == 3){
+		if (t_lch * sg_settings[1][0] <= 96000)
+			l_ch = peak_value * sg_settings[1][2] * ((t_lch * sg_settings[1][0] * 4.0 / 192000.0) - 1.0);
+		else
+			l_ch = peak_value * sg_settings[1][2] * (3.0 - (t_lch * sg_settings[1][0] * 4.0 / 192000.0));
+		if (t_lch >= (192000.0 / sg_settings[1][0]) - 1) t_lch = 0; else t_lch++;
+	}
+	if (sg_settings[1][3] == 4){
+		if (t_lch * sg_settings[1][0] <= 96000) l_ch = peak_value * sg_settings[1][2]; else l_ch = (0.0 - peak_value) * sg_settings[1][2];
+		if (t_lch >= (192000.0 / sg_settings[1][0]) - 1) t_lch = 0; else t_lch++;
+	}
+	if (sg_settings[1][3] == 5) l_ch = sg_settings[1][2] * ((rand() % (2*peak_value + 1)) - peak_value);
 
-	if (sg_settings[1][3] == 5) l_ch = sg_settings[1][2] * ((rand() % 8001) - 4000);
 
-	if (t == 192000 - 1) t = 0; else t++;
+
+
+
+
+	if (l_ch >= 0) dac_input[0] = l_ch; else dac_input[0] = 0xFFFFFF + l_ch + 1;
+	if (r_ch >= 0) dac_input[1] = r_ch; else dac_input[1] = 0xFFFFFF + r_ch + 1;
 
 }

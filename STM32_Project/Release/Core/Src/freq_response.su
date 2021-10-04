@@ -1,0 +1,2 @@
+freq_response.c:48:6:freqresp_sample_callback	32	static
+freq_response.c:15:6:start_freqresp	24	static

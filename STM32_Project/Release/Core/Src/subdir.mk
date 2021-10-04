@@ -9,7 +9,7 @@ C_SRCS += \
 ../Core/Src/dac.c \
 ../Core/Src/dsp.c \
 ../Core/Src/fft.c \
-../Core/Src/gui.c \
+../Core/Src/freq_response.c \
 ../Core/Src/main.c \
 ../Core/Src/oscilloscope.c \
 ../Core/Src/signal_generator.c \
@@ -26,7 +26,7 @@ OBJS += \
 ./Core/Src/dac.o \
 ./Core/Src/dsp.o \
 ./Core/Src/fft.o \
-./Core/Src/gui.o \
+./Core/Src/freq_response.o \
 ./Core/Src/main.o \
 ./Core/Src/oscilloscope.o \
 ./Core/Src/signal_generator.o \
@@ -43,7 +43,7 @@ C_DEPS += \
 ./Core/Src/dac.d \
 ./Core/Src/dsp.d \
 ./Core/Src/fft.d \
-./Core/Src/gui.d \
+./Core/Src/freq_response.d \
 ./Core/Src/main.d \
 ./Core/Src/oscilloscope.d \
 ./Core/Src/signal_generator.d \

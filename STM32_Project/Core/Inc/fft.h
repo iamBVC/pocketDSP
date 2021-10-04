@@ -8,13 +8,12 @@
 #ifndef INC_FFT_H_
 #define INC_FFT_H_
 
-#include <complex.h>
 #include "system.h"
 
 #define FFT_POINTS 1024
-lv_coord_t fft_graph[FFT_POINTS];
-float timevalues[FFT_POINTS];
-double complex fft_vectors[FFT_POINTS];
+static lv_coord_t fft_graph[FFT_POINTS];
+static float timevalues[FFT_POINTS];
+static double complex fft_vectors[FFT_POINTS];
 
 void start_fft();
 void fft_sample_callback();

@@ -7,7 +7,6 @@
 #include "adc.h"
 
 void ADC_Init(){
-	//ADC Init
 	HAL_TIM_PWM_Init(&htim12);
 	HAL_I2S_Init(&hi2s2);
 	HAL_TIM_PWM_Start(&htim12, TIM_CHANNEL_2);

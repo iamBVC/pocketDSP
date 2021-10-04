@@ -95,7 +95,7 @@ void my_disp_flush(lv_disp_drv_t *disp, lv_area_t *area, lv_color_t *color_p) {
 void my_touchpad_read(lv_indev_t *indev, lv_indev_data_t *data) {
 
 	readTouch(&ts_x, &ts_y, &ts_z);
-	if (ts_z > 220)
+	if (ts_z >= 300)
 		data->state = LV_INDEV_STATE_PR;
 	else
 		data->state = LV_INDEV_STATE_REL;
