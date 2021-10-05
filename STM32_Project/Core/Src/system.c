@@ -16,8 +16,8 @@ void empty_void(){
 	HAL_I2S_Transmit(&hi2s1, (uint16_t*)0, 2, 0);
 }
 void direct_pass(){
-	dac_input[0] = adc_output[0];
-	dac_input[1] = adc_output[1];
+	dac_input[0] = adc_output[1];
+	dac_input[1] = adc_output[0];
 	HAL_I2S_Receive(&hi2s2, (uint16_t*)adc_output, 2, 0);
 	HAL_I2S_Transmit(&hi2s1, (uint16_t*)dac_input, 2, 0);
 }
@@ -172,11 +172,11 @@ void play_startup_sound(){
 	if (i >= 7){
 		i = 0;
 
-		output = (noice_raw[t] << 8)|(noice_raw[t+1] << 16);
+		output = (sound_raw[t] << 8)|(sound_raw[t+1] << 16);
 		dac_input[0] = output;
 		dac_input[1] = output;
 
-		if (t < noice_raw_size - 2) t += 2;
+		if (t < sound_raw_size - 2) t += 2;
 	}else{
 		i++;
 	}

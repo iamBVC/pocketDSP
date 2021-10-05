@@ -2,9 +2,8 @@
 #ifndef __startup_sound_h_included
 #define __startup_sound_h_included
 
-#include "stm32h7xx_hal.h"
-
-const uint32_t noice_raw_size;
-const uint16_t noice_raw[90422];
+/* Contents of file noice.raw */
+extern const long int sound_raw_size;
+extern const unsigned char sound_raw[90422];
 
 #endif    /* __startup_sound_h_included */
