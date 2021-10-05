@@ -8,11 +8,15 @@
 #ifndef INC_SYSTEM_H_
 #define INC_SYSTEM_H_
 
+#define SOFTWARE_REV 1.1
+
 #include <stdio.h>
 #include <math.h>
 #include <complex.h>
 #include "stm32h7xx_hal.h"
 #include "lvgl/lvgl.h"
+#include "logo.h"
+#include "startup_sound.h"
 #include "adc.h"
 #include "dac.h"
 #include "dsp.h"
@@ -27,7 +31,7 @@
 #include "FX/delay.h"
 #include "FX/distorsion.h"
 
-lv_obj_t *label, *btn, *cont, *menu, *list, *slider, *mbox, *chart, *roller, *app_scr;
+lv_obj_t *label, *btn, *cont, *menu, *list, *slider, *mbox, *chart, *img, *roller, *app_scr;
 lv_timer_t *timer;
 lv_obj_t* sys_status;
 lv_chart_series_t* ser;
@@ -42,8 +46,10 @@ volatile uint32_t adc_output[2];
 
 void empty_void();
 void direct_pass();
+void play_startup_sound();
 void (*sample_callback)(void);
 
+void logo_screen();
 void reset_scr();
 void reset_app();
 void start_main();

@@ -1,4 +1,4 @@
 lv_snapshot.c:46:10:lv_snapshot_buf_size_needed	16	static
-lv_snapshot.c:79:10:lv_snapshot_take_to_buf	152	static
+lv_snapshot.c:79:10:lv_snapshot_take_to_buf	144	static
 lv_snapshot.c:167:16:lv_snapshot_take	32	static
 lv_snapshot.c:198:6:lv_snapshot_free	8	static

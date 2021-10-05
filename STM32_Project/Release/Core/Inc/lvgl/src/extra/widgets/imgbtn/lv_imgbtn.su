@@ -1,4 +1,4 @@
-lv_imgbtn.c:146:13:lv_imgbtn_constructor	0	static
+lv_imgbtn.c:146:13:lv_imgbtn_constructor	8	static
 lv_imgbtn.c:304:26:suggest_state	0	static
 lv_imgbtn.c:159:13:lv_imgbtn_event	96	static
 lv_imgbtn.c:56:12:lv_imgbtn_create	8	static

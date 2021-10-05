@@ -10,9 +10,11 @@ C_SRCS += \
 ../Core/Src/dsp.c \
 ../Core/Src/fft.c \
 ../Core/Src/freq_response.c \
+../Core/Src/logo.c \
 ../Core/Src/main.c \
 ../Core/Src/oscilloscope.c \
 ../Core/Src/signal_generator.c \
+../Core/Src/startup_sound.c \
 ../Core/Src/stm32h7xx_hal_msp.c \
 ../Core/Src/stm32h7xx_it.c \
 ../Core/Src/syscalls.c \
@@ -27,9 +29,11 @@ OBJS += \
 ./Core/Src/dsp.o \
 ./Core/Src/fft.o \
 ./Core/Src/freq_response.o \
+./Core/Src/logo.o \
 ./Core/Src/main.o \
 ./Core/Src/oscilloscope.o \
 ./Core/Src/signal_generator.o \
+./Core/Src/startup_sound.o \
 ./Core/Src/stm32h7xx_hal_msp.o \
 ./Core/Src/stm32h7xx_it.o \
 ./Core/Src/syscalls.o \
@@ -44,9 +48,11 @@ C_DEPS += \
 ./Core/Src/dsp.d \
 ./Core/Src/fft.d \
 ./Core/Src/freq_response.d \
+./Core/Src/logo.d \
 ./Core/Src/main.d \
 ./Core/Src/oscilloscope.d \
 ./Core/Src/signal_generator.d \
+./Core/Src/startup_sound.d \
 ./Core/Src/stm32h7xx_hal_msp.d \
 ./Core/Src/stm32h7xx_it.d \
 ./Core/Src/syscalls.d \

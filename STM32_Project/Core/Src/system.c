@@ -4,8 +4,8 @@
  *  Created on: 3 set 2021
  *      Author: Brian
  */
-#include "system.h"
 
+#include "system.h"
 
 const char *app_list[] = { "DSP", "Synthesizer", "Oscilloscope", "FFT", "Signal Generator", "Freq. Response" };
 uint8_t battery_charge = 0;
@@ -58,7 +58,6 @@ void reset_scr()
     if (lv_obj_is_valid(app_scr)) lv_obj_del_async(app_scr);
     app_scr = lv_obj_create(NULL);
     lv_scr_load(app_scr);
-    //lv_scr_load_anim(app_scr, LV_SCR_LOAD_ANIM_FADE_ON, 200, 0, 1);
 }
 
 
@@ -135,4 +134,51 @@ void sys_status_refresh()
     label = lv_label_create(sys_status);
     lv_obj_align(label, LV_ALIGN_TOP_LEFT, 100, 2);
     if (is_active_usb) lv_label_set_text(label, LV_SYMBOL_USB);
+}
+
+void logo_screen(){
+
+    cont = lv_obj_create(lv_scr_act());
+    lv_obj_set_size(cont, 480, 320);
+    lv_obj_center(cont);
+    lv_obj_set_style_bg_color(cont, lv_color_make(0, 0, 0), LV_PART_MAIN);
+
+    LV_IMG_DECLARE(logo);
+    img = lv_img_create(cont);
+    lv_img_set_src(img, &logo);
+    lv_obj_align(img, LV_ALIGN_TOP_MID, 0, 20);
+
+    label = lv_label_create(cont);
+    lv_obj_align(label, LV_ALIGN_TOP_LEFT, 20, 150);
+    lv_label_set_recolor(label, true);
+    lv_obj_set_height(label, 20);
+    lv_label_set_text_fmt(label, "#00ff00 DEVICE ID =# #ffff00 0x%x#", DBGMCU->IDCODE);
+
+    label = lv_label_create(cont);
+    lv_obj_align(label, LV_ALIGN_TOP_LEFT, 20, 180);
+    lv_label_set_recolor(label, 1);
+    lv_obj_set_height(label, 20);
+    lv_label_set_text_fmt(label, "#00ff00 FIRMWARE =# #ffff00 v%.2f#", SOFTWARE_REV);
+
+
+	lv_task_handler();
+	HAL_Delay(2000);
+}
+
+void play_startup_sound(){
+	HAL_I2S_Transmit(&hi2s1, (uint16_t*)dac_input, 2, 0);
+	static uint32_t t,i = 0;
+	uint32_t output = 0;
+	if (i >= 7){
+		i = 0;
+
+		output = (noice_raw[t] << 8)|(noice_raw[t+1] << 16);
+		dac_input[0] = output;
+		dac_input[1] = output;
+
+		if (t < noice_raw_size - 2) t += 2;
+	}else{
+		i++;
+	}
+
 }

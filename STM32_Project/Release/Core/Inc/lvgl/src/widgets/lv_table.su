@@ -7,7 +7,7 @@ lv_table.c:468:13:lv_table_event	40	static
 lv_table.c:64:12:lv_table_create	8	static
 lv_table.c:205:6:lv_table_set_row_cnt	24	static
 lv_table.c:114:6:lv_table_set_cell_value_fmt	76	static
-lv_table.c:241:6:lv_table_set_col_cnt	40	static
+lv_table.c:241:6:lv_table_set_col_cnt	48	static
 lv_table.c:76:6:lv_table_set_cell_value	32	static
 lv_table.c:295:6:lv_table_set_col_width	16	static
 lv_table.c:308:6:lv_table_add_cell_ctrl	32	static

@@ -171,8 +171,6 @@ int main(void)
   MX_TIM12_Init();
   /* USER CODE BEGIN 2 */
 
-    sample_callback = &empty_void;
-
 	HAL_ADC_Start(&hadc1); //internal DAC start
 	HAL_TIM_Base_Start(&htim16); //delay us timer
 
@@ -200,8 +198,9 @@ int main(void)
 
 	DAC_Init();
 	ADC_Init();
+	sample_callback = &play_startup_sound;
 	HAL_TIM_Base_Start_IT(&htim14); //sampling timer
-
+	logo_screen();
 	reset_app(); //start gui
 
 

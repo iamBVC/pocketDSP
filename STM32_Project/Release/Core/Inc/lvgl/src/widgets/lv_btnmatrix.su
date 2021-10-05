@@ -1,5 +1,5 @@
 lv_btnmatrix.c:878:17:get_button_from_point	80	static
-lv_btnmatrix.c:629:13:draw_main	352	static
+lv_btnmatrix.c:629:13:draw_main	360	static
 lv_btnmatrix.c:367:13:lv_btnmatrix_destructor	8	static
 lv_btnmatrix.c:931:13:invalidate_button_area.part.0	40	static
 lv_btnmatrix.c:92:6:lv_btnmatrix_set_map.part.0	128	static

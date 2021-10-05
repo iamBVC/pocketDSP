@@ -6,6 +6,7 @@ lv_obj.c:822:13:lv_obj_set_state	80	static
 lv_obj.c:667:13:lv_obj_event	24	static
 lv_obj.c:87:6:lv_is_initialized	0	static
 lv_obj.c:92:6:lv_init	8	static
+lv_obj.c:179:6:lv_deinit	8	static
 lv_obj.c:195:12:lv_obj_create	8	static
 lv_obj.c:211:6:lv_obj_add_flag	16	static
 lv_obj.c:230:6:lv_obj_clear_flag	16	static
@@ -16,7 +17,7 @@ lv_obj.c:281:6:lv_obj_has_flag_any	0	static
 lv_obj.c:288:12:lv_obj_get_state	0	static
 lv_obj.c:295:6:lv_obj_has_state	0	static
 lv_obj.c:302:8:lv_obj_get_group	0	static
-lv_obj.c:314:6:lv_obj_allocate_spec_attr	16	static
+lv_obj.c:314:6:lv_obj_allocate_spec_attr	8	static
 lv_obj.c:332:6:lv_obj_check_type	0	static
 lv_obj.c:338:6:lv_obj_has_class	0	static
 lv_obj.c:349:24:lv_obj_get_class	0	static

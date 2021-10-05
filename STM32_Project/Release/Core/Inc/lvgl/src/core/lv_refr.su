@@ -7,6 +7,6 @@ lv_refr.c:72:6:_lv_refr_init	0	static
 lv_refr.c:107:6:_lv_inv_area	32	static
 lv_refr.c:162:13:_lv_refr_get_disp_refreshing	0	static
 lv_refr.c:173:6:_lv_refr_set_disp_refreshing	0	static
-lv_refr.c:182:6:_lv_disp_refr_timer	80	static
+lv_refr.c:182:6:_lv_disp_refr_timer	104	static
 lv_refr.c:84:6:lv_refr_now	8	static
 lv_refr.c:318:10:lv_refr_get_fps_avg	0	static

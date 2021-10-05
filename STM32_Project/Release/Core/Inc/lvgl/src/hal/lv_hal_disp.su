@@ -5,7 +5,7 @@ lv_hal_disp.c:500:13:set_px_cb_alpha8	40	static
 lv_hal_disp.c:458:13:set_px_cb_alpha1	40	static
 lv_hal_disp.c:472:13:set_px_cb_alpha2	40	static
 lv_hal_disp.c:74:6:lv_disp_drv_init	8	static
-lv_hal_disp.c:101:6:lv_disp_draw_buf_init	4	static
+lv_hal_disp.c:101:6:lv_disp_draw_buf_init	24	static
 lv_hal_disp.c:117:13:lv_disp_drv_register	40	static
 lv_hal_disp.c:184:6:lv_disp_drv_update	32	static
 lv_hal_disp.c:224:6:lv_disp_remove	24	static
