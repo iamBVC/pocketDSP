@@ -30,25 +30,15 @@ void start_dsp()
     lv_obj_set_flex_flow(dsp_main_cont, LV_FLEX_FLOW_ROW);
     lv_obj_align(dsp_main_cont, LV_ALIGN_CENTER, 0, 0);
 
-    for (uint8_t i = 0; i < dsp_fx_count; i++)
+    for (uint8_t i = 0; i < DSP_MAX_FX_COUNT; i++)
     {
         btn = lv_btn_create(dsp_main_cont);
         lv_obj_set_size(btn, 150, 150);
         lv_obj_add_event_cb(btn, dsp_open_edit, LV_EVENT_CLICKED, i);
         label = lv_label_create(btn);
-        //lv_label_set_text(dsp_fx_label[i], fx_list[(uint8_t)dsp_fx_settings[i][0]]);
         lv_label_set_text_fmt(label, "FX %d\n\n%s", i, fx_list[(uint8_t)dsp_fx_settings[i][0]]);
         lv_obj_center(label);
     }
-
-    btn = lv_btn_create(app_scr);
-    lv_obj_set_size(btn, 50, 50);
-    lv_obj_add_flag(btn, LV_OBJ_FLAG_FLOATING);
-    lv_obj_align(btn, LV_ALIGN_BOTTOM_RIGHT, -10, -10);
-    lv_obj_add_event_cb(btn, dsp_add_fx, LV_EVENT_CLICKED, 0);
-    lv_obj_set_style_radius(btn, LV_RADIUS_CIRCLE, 0);
-    lv_obj_set_style_bg_img_src(btn, LV_SYMBOL_PLUS, 0);
-    lv_obj_set_style_text_font(btn, lv_theme_get_font_large(btn), 0);
 
     menu = lv_dropdown_create(app_scr);
     lv_obj_set_size(menu, 140, 40);
@@ -71,22 +61,7 @@ void start_dsp()
     lv_obj_set_style_bg_color(app_scr, lv_color_make(220, 220, 255), LV_PART_MAIN);
 }
 
-void dsp_add_fx(lv_event_t* e)
-{
-    if (dsp_fx_count < DSP_MAX_FX_COUNT)
-    {
-        uint8_t id = lv_event_get_user_data(e);
-        btn = lv_btn_create(dsp_main_cont);
-        lv_obj_set_size(btn, 150, 150);
-        lv_obj_add_event_cb(btn, dsp_open_edit, LV_EVENT_CLICKED, dsp_fx_count);
-        label = lv_label_create(btn);
-        lv_label_set_text_fmt(label, "FX %d\n\n%s", dsp_fx_count, fx_list[id]);
-        lv_obj_center(label);
-        dsp_fx_count++;
-    }
-}
-
-void dsp_menu_cb(lv_event_t* e)
+static void dsp_menu_cb(lv_event_t* e)
 {
     uint16_t selected = lv_dropdown_get_selected(lv_event_get_target(e));
     if (selected == 0)
@@ -100,24 +75,25 @@ void dsp_menu_cb(lv_event_t* e)
     if (selected == 2);
     if (selected == 3);
     if (selected == 4){
-
-    	dsp_fx_count = 0;
-        for (uint8_t i = 0; i < DSP_MAX_FX_COUNT; i++)
-            for (uint8_t j = 0; j <= DSP_MAX_FX_SETTINGS; j++)
-                dsp_fx_settings[i][j] = 0;
-
+    	reset_dsp();
     	reset_app();
     }
 }
 
-void dsp_new_project()
+static void reset_dsp(){
+    for (uint8_t i = 0; i < DSP_MAX_FX_COUNT; i++)
+        for (uint8_t j = 0; j <= DSP_MAX_FX_SETTINGS; j++)
+            dsp_fx_settings[i][j] = 0;
+}
+
+static void dsp_new_project()
 {
-    reset_app();
-    reset_scr();
+	reset_dsp();
+	reset_scr();
     start_dsp();
 }
 
-void dsp_open_project()
+static void dsp_open_project()
 {
     /*
     dsp_fx_count = 1;
@@ -129,7 +105,7 @@ void dsp_open_project()
     start_dsp();
 }
 
-void dsp_open_edit(lv_event_t* e)
+static void dsp_open_edit(lv_event_t* e)
 {
     uint8_t id = lv_event_get_user_data(e);
     uint8_t fx = 1;
@@ -497,7 +473,7 @@ void dsp_open_edit(lv_event_t* e)
 
 }
 
-void dsp_change_fx(lv_event_t* e)
+static void dsp_change_fx(lv_event_t* e)
 {
     uint8_t id = lv_event_get_user_data(e);
     dsp_fx_settings[id][0] = lv_dropdown_get_selected(lv_event_get_target(e));
@@ -505,7 +481,7 @@ void dsp_change_fx(lv_event_t* e)
     dsp_open_edit(e);
 }
 
-void dsp_refresh_fx_slider(lv_event_t* e)
+static void dsp_refresh_fx_slider(lv_event_t* e)
 {
     lv_obj_t *target = lv_event_get_target(e);
     uint8_t id = lv_event_get_user_data(e);
@@ -513,7 +489,7 @@ void dsp_refresh_fx_slider(lv_event_t* e)
     dsp_fx_settings[id][fx] = lv_slider_get_value(target);
     dsp_open_edit(e);
 }
-void dsp_refresh_fx_list(lv_event_t* e)
+static void dsp_refresh_fx_list(lv_event_t* e)
 {
     lv_obj_t* target = lv_event_get_target(e);
     uint8_t id = lv_event_get_user_data(e);
@@ -522,7 +498,7 @@ void dsp_refresh_fx_list(lv_event_t* e)
     dsp_open_edit(e);
 }
 
-void dsp_refresh_fx_roller(lv_event_t* e)
+static void dsp_refresh_fx_roller(lv_event_t* e)
 {
     lv_obj_t* target = lv_event_get_target(e);
     uint8_t id = lv_event_get_user_data(e);
@@ -531,14 +507,14 @@ void dsp_refresh_fx_roller(lv_event_t* e)
     dsp_open_edit(e);
 }
 
-void dsp_close_edit()
+static void dsp_close_edit()
 {
     lv_obj_del_async(dsp_fx_scr);
     reset_scr();
     start_dsp();
 }
 
-void dsp_filter_response_refresh(uint8_t type, uint8_t order, float frq1, float frq2)
+static void dsp_filter_response_refresh(uint8_t type, uint8_t order, float frq1, float frq2)
 {
     for (uint8_t s = 0; s < 200; s++)
     {
@@ -549,7 +525,7 @@ void dsp_filter_response_refresh(uint8_t type, uint8_t order, float frq1, float 
     }
 }
 
-void dsp_sidechain_response_refresh(uint8_t type, uint8_t width, uint8_t slope)
+static void dsp_sidechain_response_refresh(uint8_t type, uint8_t width, uint8_t slope)
 {
     for (uint8_t t = 0; t < 100; t++)
     {
@@ -559,7 +535,7 @@ void dsp_sidechain_response_refresh(uint8_t type, uint8_t width, uint8_t slope)
 }
 
 
-void dsp_fir_calc(uint8_t FILT_TYPE, uint8_t WIN_TYPE, uint16_t NUM_TOTAL_SAMPLES, uint16_t NUM_SHIFT_SAMPLES, double SAMPLE_TIME_S, double CUTOFF_FREQUENCY_HZ, double CUTOFF_FREQUENCY2_HZ){
+static void dsp_fir_calc(uint8_t FILT_TYPE, uint8_t WIN_TYPE, uint16_t NUM_TOTAL_SAMPLES, uint16_t NUM_SHIFT_SAMPLES, double SAMPLE_TIME_S, double CUTOFF_FREQUENCY_HZ, double CUTOFF_FREQUENCY2_HZ){
 
     impulseResponse = (double*)calloc(NUM_TOTAL_SAMPLES, sizeof(double));
     window = (double*)calloc(NUM_TOTAL_SAMPLES, sizeof(double));
