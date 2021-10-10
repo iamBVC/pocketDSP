@@ -10,8 +10,8 @@
 
 void start_dsp()
 {
-
-	sample_callback = &direct_pass;
+	dsp_fx_init();
+	sample_callback = &DSP_sample_callback;
 
     sys_status_refresh();
     lv_obj_align(sys_status, LV_ALIGN_TOP_LEFT, 0, 0);
@@ -107,6 +107,8 @@ static void dsp_open_project()
 
 static void dsp_open_edit(lv_event_t* e)
 {
+	dsp_fx_init();
+
     uint8_t id = lv_event_get_user_data(e);
     uint8_t fx = 1;
 
@@ -294,11 +296,12 @@ static void dsp_open_edit(lv_event_t* e)
         slider = lv_slider_create(dsp_fx_scr);
         lv_obj_set_width(slider, 200);
         lv_obj_align(slider, LV_ALIGN_LEFT_MID, 100, -80);
+        lv_slider_set_range(slider, 0, 1920);
         lv_slider_set_value(slider, dsp_fx_settings[id][fx], LV_ANIM_OFF);
         lv_obj_set_user_data(slider, fx);
         lv_obj_add_event_cb(slider, dsp_refresh_fx_slider, LV_EVENT_VALUE_CHANGED, id);
         label = lv_label_create(dsp_fx_scr);
-        lv_label_set_text_fmt(label, "%d%%", dsp_fx_settings[id][fx++]);
+        lv_label_set_text_fmt(label, "%d Samples", dsp_fx_settings[id][fx++]);
         lv_obj_align_to(label, slider, LV_ALIGN_OUT_RIGHT_MID, 10, 0);
 
         label = lv_label_create(dsp_fx_scr);
@@ -476,6 +479,7 @@ static void dsp_open_edit(lv_event_t* e)
 static void dsp_change_fx(lv_event_t* e)
 {
     uint8_t id = lv_event_get_user_data(e);
+
     dsp_fx_settings[id][0] = lv_dropdown_get_selected(lv_event_get_target(e));
     for (uint8_t i = 1; i <= DSP_MAX_FX_SETTINGS; i++) dsp_fx_settings[id][i] = 0;
     dsp_open_edit(e);
@@ -589,5 +593,50 @@ static void dsp_fir_calc(uint8_t FILT_TYPE, uint8_t WIN_TYPE, uint16_t NUM_TOTAL
         winRespMag[fIndex] = 100.0 * sqrt(reWin * reWin + imWin * imWin);
         dsp_fir_response[fIndex] = winRespMag[fIndex];
     }
+
+}
+
+
+void DSP_sample_callback(){
+	HAL_I2S_Receive(&hi2s2, (uint16_t*)adc_output, 2, 0);
+	HAL_I2S_Transmit(&hi2s1, (uint16_t*)dac_input, 2, 0);
+
+	dsp_fx_output[0][0] = dsp_fx_sample(0, int24_to_float(adc_output[1]));
+	dsp_fx_output[0][1] = dsp_fx_sample(0, int24_to_float(adc_output[0]));
+	for (uint8_t i = 1; i < DSP_MAX_FX_COUNT; i++) dsp_fx_output[i][0] = dsp_fx_sample(i, dsp_fx_output[i-1][0]);
+	for (uint8_t i = 1; i < DSP_MAX_FX_COUNT; i++) dsp_fx_output[i][1] = dsp_fx_sample(i, dsp_fx_output[i-1][1]);
+	dac_input[0] = float_to_int24(dsp_fx_output[DSP_MAX_FX_COUNT-1][0]);
+	dac_input[1] = float_to_int24(dsp_fx_output[DSP_MAX_FX_COUNT-1][1]);
+
+}
+
+static float dsp_fx_sample(uint8_t id, float input){
+	float output;
+	uint8_t fx_type = (uint8_t)dsp_fx_settings[id][0];
+
+	if(fx_type == 0) output = input;
+	else if(fx_type == 1) output = input;
+	else if(fx_type == 2) output = Reverb_Update(fx_ptr_struct[id], input);
+	else if(fx_type == 3) output = Delay_Update(fx_ptr_struct[id], input);
+
+	return output;
+}
+
+static void dsp_fx_init(){
+
+	for (uint8_t id = 0; id < DSP_MAX_FX_COUNT; id++){
+		uint8_t fx_type = dsp_fx_settings[id][0];
+		free(fx_ptr_struct[id]);
+
+		if (fx_type == 0){
+		} else if (fx_type == 2){
+			fx_ptr_struct[id] = malloc(sizeof(Reverb));
+			Reverb_Init((Reverb*)fx_ptr_struct[id], (uint16_t)dsp_fx_settings[id][2], dsp_fx_settings[id][1]/100.0, dsp_fx_settings[id][3]/100.0, dsp_fx_settings[id][4]/100.0);
+		} else if (fx_type == 3){
+			fx_ptr_struct[id] = malloc(sizeof(Delay));
+			Delay_Init((Delay*)fx_ptr_struct[id], (uint16_t)dsp_fx_settings[id][1], dsp_fx_settings[id][3]/100.0, dsp_fx_settings[id][2]/100.0);
+		}
+
+	}
 
 }

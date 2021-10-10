@@ -221,10 +221,7 @@ void sg_sample_callback(){
 
 
 
-
-
-
-	if (l_ch >= 0) dac_input[0] = l_ch; else dac_input[0] = 0xFFFFFF + l_ch + 1;
-	if (r_ch >= 0) dac_input[1] = r_ch; else dac_input[1] = 0xFFFFFF + r_ch + 1;
+	dac_input[0] = float_to_int24(l_ch);
+	dac_input[1] = float_to_int24(r_ch);
 
 }

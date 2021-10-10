@@ -13,6 +13,7 @@ uint8_t is_active_usb = 1;
 uint8_t is_active_sd = 1;
 
 void empty_void(){
+	HAL_I2S_Receive(&hi2s2, (uint16_t*)adc_output, 2, 0);
 	HAL_I2S_Transmit(&hi2s1, (uint16_t*)0, 2, 0);
 }
 void direct_pass(){
@@ -20,6 +21,18 @@ void direct_pass(){
 	dac_input[1] = adc_output[0];
 	HAL_I2S_Receive(&hi2s2, (uint16_t*)adc_output, 2, 0);
 	HAL_I2S_Transmit(&hi2s1, (uint16_t*)dac_input, 2, 0);
+}
+
+uint32_t float_to_int24(float float_in){
+	uint32_t int24_out = 0;
+	if (float_in >= 0) int24_out = float_in; else int24_out = 0xFFFFFF + float_in + 1;
+	return int24_out;
+}
+
+float int24_to_float(uint32_t int24_in){
+	float float_out = 0.0;
+	if (int24_in < 0x800000) float_out = int24_in; else float_out = int24_in - 0xFFFFFF - 1.0;
+	return float_out;
 }
 
 void Serial_printstr(char* text){

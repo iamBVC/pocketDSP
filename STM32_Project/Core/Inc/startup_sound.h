@@ -2,7 +2,7 @@
 #ifndef __startup_sound_h_included
 #define __startup_sound_h_included
 
-/* Contents of file noice.raw */
+/* Contents of file sound.raw */
 extern const long int sound_raw_size;
 extern const unsigned char sound_raw[90422];
 

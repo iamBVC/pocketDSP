@@ -10,8 +10,10 @@
 
 typedef struct {
 	float out;
+	float wet;
+	float dry;
 } Reverb;
-void Reverb_Init(Reverb *rvb, uint16_t D1, uint16_t D2, uint16_t D3, uint16_t D4, uint16_t D5, uint16_t D6, float G1, float G2, float G3, float G4, float G5, float G6);
+void Reverb_Init(Reverb *rvb, uint16_t size, float decay, float wet, float dry);
 float Reverb_Update(Reverb *rvb, float inp);
 
 #endif /* INC_REVERB_H_ */

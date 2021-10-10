@@ -31,6 +31,8 @@
 #include "FX/delay.h"
 #include "FX/distorsion.h"
 
+#define SAMPLE_FREQ 192000
+
 lv_obj_t *label, *btn, *cont, *menu, *list, *slider, *mbox, *chart, *img, *roller, *app_scr;
 lv_timer_t *timer;
 lv_obj_t* sys_status;
@@ -39,7 +41,6 @@ float battery_voltage;
 uint8_t is_active_usb;
 uint8_t is_active_sd;
 extern const char *app_list[];
-
 
 volatile uint32_t dac_input[2];
 volatile uint32_t adc_output[2];
@@ -60,5 +61,8 @@ void Serial_printstr(char* text);
 void Serial_printlnstr(char* text);
 void Serial_printint(int32_t value);
 void Serial_printlnint(int32_t value);
+
+uint32_t float_to_int24(float float_in);
+float int24_to_float(uint32_t int24_in);
 
 #endif /* INC_SYSTEM_H_ */
