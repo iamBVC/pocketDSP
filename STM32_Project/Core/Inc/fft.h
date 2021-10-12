@@ -11,9 +11,9 @@
 #include "system.h"
 
 #define FFT_POINTS 1024
-static lv_coord_t fft_graph[FFT_POINTS];
-static float timevalues[FFT_POINTS];
-static double complex fft_vectors[FFT_POINTS];
+__attribute__ ((section(".RAMD2"),used)) static lv_coord_t fft_graph[FFT_POINTS];
+__attribute__ ((section(".RAMD2"),used)) static float timevalues[FFT_POINTS];
+__attribute__ ((section(".RAMD2"),used)) static double complex fft_vectors[FFT_POINTS];
 
 void start_fft();
 void fft_sample_callback();

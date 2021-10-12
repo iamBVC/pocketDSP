@@ -1,2 +1,2 @@
-reverb.c:16:6:Reverb_Init	32	static
-reverb.c:39:7:Reverb_Update	40	static
+reverb.c:16:6:Reverb_Init	56	static
+reverb.c:26:7:Reverb_Update	40	static

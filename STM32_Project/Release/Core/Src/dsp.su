@@ -1,10 +1,10 @@
-dsp.c:625:13:dsp_fx_init	32	static
+dsp.c:622:13:dsp_fx_init	56	static
 dsp.c:108:13:dsp_open_edit	480	static
 dsp.c:488:13:dsp_refresh_fx_slider	16	static
 dsp.c:505:13:dsp_refresh_fx_roller	16	static
 dsp.c:496:13:dsp_refresh_fx_list	16	static
 dsp.c:479:13:dsp_change_fx	16	static
-dsp.c:600:6:DSP_sample_callback	16	static
+dsp.c:600:6:DSP_sample_callback	24	static
 dsp.c:11:6:start_dsp	240	static
 dsp.c:89:13:dsp_new_project	8	static
 dsp.c:64:13:dsp_menu_cb	24	static

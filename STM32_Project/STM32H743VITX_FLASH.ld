@@ -178,6 +178,26 @@ SECTIONS
     libm.a ( * )
     libgcc.a ( * )
   }
+  
+    .RAMDTCM(NOLOAD) :
+  {
+  	. = ALIGN (1);
+  } > DTCMRAM
+  
+    .RAMITCM(NOLOAD) :
+  {
+  	. = ALIGN (1);
+  } > ITCMRAM
+  
+  .RAMD2(NOLOAD) :
+  {
+  	. = ALIGN (1);
+  } > RAM_D2
+  
+    .RAMD3(NOLOAD) :
+  {
+  	. = ALIGN (1);
+  } > RAM_D3
 
   .ARM.attributes 0 : { *(.ARM.attributes) }
 }

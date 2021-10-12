@@ -58,8 +58,8 @@ TIM_HandleTypeDef htim17;
 /* USER CODE BEGIN PV */
 
 lv_disp_draw_buf_t draw_buf;
-lv_color_t buf1[480 * 40];
-lv_color_t buf2[480 * 40];
+__attribute__ ((section(".RAMD3"),used)) lv_color_t buf1[480 * 32];
+__attribute__ ((section(".RAMD3"),used)) lv_color_t buf2[480 * 32];
 lv_disp_drv_t disp_drv;
 lv_indev_drv_t indev_drv;
 uint16_t ts_x, ts_y, ts_z;
@@ -170,6 +170,7 @@ int main(void)
   MX_TIM14_Init();
   MX_TIM12_Init();
   /* USER CODE BEGIN 2 */
+
 
 	HAL_ADC_Start(&hadc1); //internal DAC start
 	HAL_TIM_Base_Start(&htim16); //delay us timer
@@ -905,9 +906,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 	}
 
 	if (htim == &htim14) {
-
 		sample_callback();
-
 	}
 
 }

@@ -601,13 +601,10 @@ void DSP_sample_callback(){
 	HAL_I2S_Receive(&hi2s2, (uint16_t*)adc_output, 2, 0);
 	HAL_I2S_Transmit(&hi2s1, (uint16_t*)dac_input, 2, 0);
 
-	dsp_fx_output[0][0] = dsp_fx_sample(0, int24_to_float(adc_output[1]));
-	dsp_fx_output[0][1] = dsp_fx_sample(0, int24_to_float(adc_output[0]));
-	for (uint8_t i = 1; i < DSP_MAX_FX_COUNT; i++) dsp_fx_output[i][0] = dsp_fx_sample(i, dsp_fx_output[i-1][0]);
-	for (uint8_t i = 1; i < DSP_MAX_FX_COUNT; i++) dsp_fx_output[i][1] = dsp_fx_sample(i, dsp_fx_output[i-1][1]);
-	dac_input[0] = float_to_int24(dsp_fx_output[DSP_MAX_FX_COUNT-1][0]);
-	dac_input[1] = float_to_int24(dsp_fx_output[DSP_MAX_FX_COUNT-1][1]);
-
+	dsp_fx_output[0] = dsp_fx_sample(0, (int24_to_float(adc_output[0])+int24_to_float(adc_output[1]))/2.0);
+	for (uint8_t i = 1; i < DSP_MAX_FX_COUNT; i++) dsp_fx_output[i] = dsp_fx_sample(i, dsp_fx_output[i-1]);
+	dac_input[0] = float_to_int24(dsp_fx_output[DSP_MAX_FX_COUNT-1]);
+	dac_input[1] = dac_input[0];
 }
 
 static float dsp_fx_sample(uint8_t id, float input){
@@ -631,7 +628,8 @@ static void dsp_fx_init(){
 		if (fx_type == 0){
 		} else if (fx_type == 2){
 			fx_ptr_struct[id] = malloc(sizeof(Reverb));
-			Reverb_Init((Reverb*)fx_ptr_struct[id], (uint16_t)dsp_fx_settings[id][2], dsp_fx_settings[id][1]/100.0, dsp_fx_settings[id][3]/100.0, dsp_fx_settings[id][4]/100.0);
+			Reverb_Init((Reverb*)fx_ptr_struct[id], 2673, 2691, 2709, 2739, 1331, 307, 0.8, 0.8, 0.8, 0.8, 0.7, 0.7);
+			//Reverb_Init((Reverb*)fx_ptr_struct[id], (uint16_t)dsp_fx_settings[id][2], dsp_fx_settings[id][1]/100.0, dsp_fx_settings[id][3]/100.0, dsp_fx_settings[id][4]/100.0);
 		} else if (fx_type == 3){
 			fx_ptr_struct[id] = malloc(sizeof(Delay));
 			Delay_Init((Delay*)fx_ptr_struct[id], (uint16_t)dsp_fx_settings[id][1], dsp_fx_settings[id][3]/100.0, dsp_fx_settings[id][2]/100.0);

@@ -30,7 +30,7 @@ static lv_coord_t *dsp_fir_response;
 static void *fx_ptr_struct[DSP_MAX_FX_COUNT];
 static void dsp_fx_init();
 void DSP_sample_callback();
-static float dsp_fx_output[DSP_MAX_FX_COUNT][2];
+static float dsp_fx_output[DSP_MAX_FX_COUNT];
 static float dsp_fx_sample(uint8_t id, float input);
 
 void start_dsp();
