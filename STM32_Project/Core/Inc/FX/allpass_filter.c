@@ -15,8 +15,8 @@ void ALLPASSFilter_Init(ALLPASSFilter *apf, uint16_t D, float G){
 	apf->out = 0.0f;
 	apf->delayIndex = 0;
 	apf->bufSize = D+1;
-	apf->bufx = calloc(D+1, sizeof(float));
-	apf->bufy = calloc(D+1, sizeof(float));
+	apf->bufx = calloc(apf->bufSize, sizeof(float));
+	apf->bufy = calloc(apf->bufSize, sizeof(float));
 
 }
 

@@ -184,7 +184,7 @@ void play_startup_sound(){
 	HAL_I2S_Transmit(&hi2s1, (uint16_t*)dac_input, 2, 0);
 	static uint32_t t,i = 0;
 	uint32_t output = 0;
-	if (i >= 7){
+	if (i >= 1){
 		i = 0;
 
 		output = (sound_raw[t] << 8)|(sound_raw[t+1] << 16);

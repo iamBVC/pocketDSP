@@ -220,6 +220,7 @@ Core/Src/freq_response.o: ../Core/Src/freq_response.c \
  ../Core/Inc/dac.h ../Core/Inc/dsp.h ../Core/Inc/oscilloscope.h \
  ../Core/Inc/signal_generator.h ../Core/Inc/FX/allpass_filter.h \
  ../Core/Inc/FX/comb_filter.h ../Core/Inc/FX/reverb.h \
+ ../Core/Inc/FX/allpass_filter.h ../Core/Inc/FX/comb_filter.h \
  ../Core/Inc/FX/FIR_filter.h ../Core/Inc/FX/phaser.h \
  ../Core/Inc/FX/delay.h ../Core/Inc/FX/distorsion.h
 
@@ -702,6 +703,10 @@ d:\documenti\github\pocketdsp_repo\stm32_project\core\inc\lvgl\src\core\lv_obj.h
 ../Core/Inc/FX/comb_filter.h:
 
 ../Core/Inc/FX/reverb.h:
+
+../Core/Inc/FX/allpass_filter.h:
+
+../Core/Inc/FX/comb_filter.h:
 
 ../Core/Inc/FX/FIR_filter.h:
 

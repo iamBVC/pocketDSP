@@ -8,10 +8,17 @@
 #ifndef INC_REVERB_H_
 #define INC_REVERB_H_
 
+#include "allpass_filter.h"
+#include "comb_filter.h"
+
 typedef struct {
 	float out;
+	float dry;
+	float wet;
+	ALLPASSFilter apf_rvb_1,apf_rvb_2;
+	COMBFilter cbf_rvb_1,cbf_rvb_2,cbf_rvb_3,cbf_rvb_4;
 } Reverb;
-void Reverb_Init(Reverb *rvb, uint16_t D1, uint16_t D2, uint16_t D3, uint16_t D4, uint16_t D5, uint16_t D6, float G1, float G2, float G3, float G4, float G5, float G6);
+void Reverb_Init(Reverb *rvb, uint16_t size, float decay, float dry, float wet);
 float Reverb_Update(Reverb *rvb, float inp);
 
 #endif /* INC_REVERB_H_ */

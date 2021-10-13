@@ -1,2 +1,2 @@
 delay.c:14:6:Delay_Init	16	static
-delay.c:19:7:Delay_Update	24	static
+delay.c:19:7:Delay_Update	16	static

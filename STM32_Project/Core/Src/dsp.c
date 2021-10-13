@@ -8,8 +8,16 @@
 
 #include "system.h"
 
+Distorsion dist;
+Phaser phs;
+
+FIRFilter filt;
+__attribute__ ((section(".RAMD2"),used)) Delay dly;
+__attribute__ ((section(".RAMD2"),used)) Reverb rvb;
+
 void start_dsp()
 {
+
 	dsp_fx_init();
 	sample_callback = &DSP_sample_callback;
 
@@ -30,13 +38,13 @@ void start_dsp()
     lv_obj_set_flex_flow(dsp_main_cont, LV_FLEX_FLOW_ROW);
     lv_obj_align(dsp_main_cont, LV_ALIGN_CENTER, 0, 0);
 
-    for (uint8_t i = 0; i < DSP_MAX_FX_COUNT; i++)
+    for (uint8_t i = 0; i < sizeof(fx_list)/sizeof(fx_list[0]); i++)
     {
         btn = lv_btn_create(dsp_main_cont);
         lv_obj_set_size(btn, 150, 150);
         lv_obj_add_event_cb(btn, dsp_open_edit, LV_EVENT_CLICKED, i);
         label = lv_label_create(btn);
-        lv_label_set_text_fmt(label, "FX %d\n\n%s", i, fx_list[(uint8_t)dsp_fx_settings[i][0]]);
+        lv_label_set_text_fmt(label, "%s", fx_list[i]);
         lv_obj_center(label);
     }
 
@@ -107,10 +115,10 @@ static void dsp_open_project()
 
 static void dsp_open_edit(lv_event_t* e)
 {
-	dsp_fx_init();
 
     uint8_t id = lv_event_get_user_data(e);
-    uint8_t fx = 1;
+    dsp_fx_setup(id);
+    uint8_t fx = 0;
 
     if (lv_obj_is_valid(dsp_fx_scr)) lv_obj_del_async(dsp_fx_scr);
     dsp_fx_scr = lv_obj_create(NULL);
@@ -127,113 +135,11 @@ static void dsp_open_edit(lv_event_t* e)
 
     label = lv_label_create(dsp_fx_scr);
     lv_obj_align(label, LV_ALIGN_TOP_MID, 0, 15);
-    char buf1[6];
-    lv_snprintf(buf1, sizeof(buf1), "FX %d", id);
+    char buf1[20];
+    lv_snprintf(buf1, sizeof(buf1), "%s", fx_list[id]);
     lv_label_set_text(label, buf1);
 
-    list = lv_dropdown_create(dsp_fx_scr);
-    char buf2[200];
-    sprintf(buf2, "");
-    for (uint8_t i = 0; i < sizeof(fx_list) / sizeof(fx_list[0]); i++)
-    {
-        sprintf(buf2 + strlen(buf2), "%s", fx_list[i]);
-        if (i + 1 < sizeof(fx_list) / sizeof(fx_list[0])) sprintf(buf2 + strlen(buf2), "\n");
-    }
-    lv_dropdown_set_options(list, buf2);
-    lv_dropdown_set_selected(list, dsp_fx_settings[id][0]);
-    lv_obj_set_size(list, 140, 40);
-    lv_obj_align(list, LV_ALIGN_TOP_RIGHT, 0, 0);
-    lv_obj_add_event_cb(list, dsp_change_fx, LV_EVENT_VALUE_CHANGED, id);
-    lv_obj_align(list, LV_ALIGN_TOP_RIGHT, 0, 0);
-    lv_obj_set_style_bg_color(dsp_fx_scr, lv_color_make(220, 255, 220), LV_PART_MAIN);
-
-
-    if (dsp_fx_settings[id][0] == 1) //Filter
-    {
-        chart = lv_chart_create(dsp_fx_scr);
-        lv_obj_set_size(chart, 200, 150);
-        lv_obj_align(chart, LV_ALIGN_LEFT_MID, 50, 50);
-        lv_obj_set_style_size(chart, 0, LV_PART_INDICATOR);
-        lv_chart_set_range(chart, LV_CHART_AXIS_PRIMARY_X, 0, 20000);
-        lv_chart_set_range(chart, LV_CHART_AXIS_PRIMARY_Y, 0, 100);
-        lv_chart_set_axis_tick(chart, LV_CHART_AXIS_PRIMARY_X, 10, 5, 21, 1, false, 50);
-        lv_chart_set_axis_tick(chart, LV_CHART_AXIS_PRIMARY_Y, 10, 5, 5, 2, true, 50);
-        ser = lv_chart_add_series(chart, lv_palette_main(LV_PALETTE_RED), LV_CHART_AXIS_PRIMARY_Y);
-        lv_chart_set_point_count(chart, 200);
-        dsp_filter_response_refresh(dsp_fx_settings[id][1], dsp_fx_settings[id][2] + 1, dsp_fx_settings[id][3], dsp_fx_settings[id][4]);
-        lv_chart_set_ext_y_array(chart, ser, (lv_coord_t*)dsp_filter_response);
-
-        const char* opts1 =
-            "Low Pass\n"
-            "Band Pass\n"
-            "High Pass\n"
-            "Band Stop";
-        list = lv_dropdown_create(dsp_fx_scr);
-        lv_dropdown_set_options_static(list, opts1);
-        lv_obj_set_size(list, 110, 40);
-        lv_obj_align_to(list, chart, LV_ALIGN_OUT_TOP_RIGHT, 0, 0);
-        lv_dropdown_set_selected(list, dsp_fx_settings[id][fx]);
-        lv_obj_set_user_data(list, fx++);
-        lv_obj_add_event_cb(list, dsp_refresh_fx_list, LV_EVENT_VALUE_CHANGED, id);
-
-        const char* opts2 =
-            "1° order\n"
-            "2° order\n"
-            "3° order\n"
-            "4° order\n"
-            "5° order\n"
-            "6° order\n"
-            "7° order\n"
-            "8° order\n"
-            "9° order\n"
-            "10° order\n"
-            "11° order\n"
-            "12° order\n"
-            "13° order\n"
-            "14° order\n"
-            "15° order\n"
-            "16° order\n"
-            "17° order\n"
-            "18° order\n"
-            "19° order\n"
-            "20° order";
-
-        roller = lv_roller_create(dsp_fx_scr);
-        lv_roller_set_options(roller, opts2, LV_ROLLER_MODE_NORMAL);
-        lv_roller_set_visible_row_count(roller, 2);
-        lv_obj_set_width(roller, 90);
-        lv_obj_set_style_text_align(roller, LV_TEXT_ALIGN_LEFT, 0);
-        lv_obj_align_to(roller, chart, LV_ALIGN_OUT_TOP_LEFT, 0, 0);
-        lv_roller_set_selected(roller, dsp_fx_settings[id][fx], LV_ANIM_OFF);
-        lv_obj_set_user_data(roller, fx++);
-        lv_obj_add_event_cb(roller, dsp_refresh_fx_roller, LV_EVENT_VALUE_CHANGED, id);
-
-        label = lv_label_create(dsp_fx_scr);
-        lv_label_set_text(label, "LF");
-        lv_obj_align_to(label, chart, LV_ALIGN_OUT_RIGHT_MID, 10, -40);
-        slider = lv_slider_create(dsp_fx_scr);
-        lv_obj_set_width(slider, 140);
-        lv_slider_set_range(slider, 0, 480);
-        lv_obj_align_to(slider, label, LV_ALIGN_OUT_RIGHT_MID, 20, 0);
-        lv_slider_set_value(slider, dsp_fx_settings[id][fx], LV_ANIM_OFF);
-        lv_obj_set_user_data(slider, fx++);
-        lv_obj_add_event_cb(slider, dsp_refresh_fx_slider, LV_EVENT_VALUE_CHANGED, id);
-
-        label = lv_label_create(dsp_fx_scr);
-        lv_label_set_text(label, "HF");
-        lv_obj_align_to(label, chart, LV_ALIGN_OUT_RIGHT_MID, 10, 40);
-        slider = lv_slider_create(dsp_fx_scr);
-        lv_obj_set_width(slider, 140);
-        lv_slider_set_range(slider, 0, 480);
-        lv_obj_align_to(slider, label, LV_ALIGN_OUT_RIGHT_MID, 20, 0);
-        lv_slider_set_value(slider, dsp_fx_settings[id][fx], LV_ANIM_OFF);
-        lv_obj_set_user_data(slider, fx++);
-        lv_obj_add_event_cb(slider, dsp_refresh_fx_slider, LV_EVENT_VALUE_CHANGED, id);
-
-    }
-
-
-    if (dsp_fx_settings[id][0] == 2) //Reeverb
+    if (fx_list[id] == "Reeverb") //Reeverb
     {
         label = lv_label_create(dsp_fx_scr);
         lv_label_set_text(label, "Decay");
@@ -249,7 +155,7 @@ static void dsp_open_edit(lv_event_t* e)
         lv_obj_align_to(label, slider, LV_ALIGN_OUT_RIGHT_MID, 10, 0);
 
         label = lv_label_create(dsp_fx_scr);
-        lv_label_set_text(label, "Delay");
+        lv_label_set_text(label, "Size");
         lv_obj_align(label, LV_ALIGN_LEFT_MID, 20, -40);
         slider = lv_slider_create(dsp_fx_scr);
         lv_obj_set_width(slider, 200);
@@ -288,7 +194,7 @@ static void dsp_open_edit(lv_event_t* e)
         lv_obj_align_to(label, slider, LV_ALIGN_OUT_RIGHT_MID, 10, 0);
     }
 
-    if (dsp_fx_settings[id][0] == 3) //Delay
+    if (fx_list[id] == "Delay") //Delay
     {
         label = lv_label_create(dsp_fx_scr);
         lv_label_set_text(label, "Delay");
@@ -296,7 +202,7 @@ static void dsp_open_edit(lv_event_t* e)
         slider = lv_slider_create(dsp_fx_scr);
         lv_obj_set_width(slider, 200);
         lv_obj_align(slider, LV_ALIGN_LEFT_MID, 100, -80);
-        lv_slider_set_range(slider, 0, 1920);
+        lv_slider_set_range(slider, 0, 24000);
         lv_slider_set_value(slider, dsp_fx_settings[id][fx], LV_ANIM_OFF);
         lv_obj_set_user_data(slider, fx);
         lv_obj_add_event_cb(slider, dsp_refresh_fx_slider, LV_EVENT_VALUE_CHANGED, id);
@@ -331,7 +237,7 @@ static void dsp_open_edit(lv_event_t* e)
         lv_obj_align_to(label, slider, LV_ALIGN_OUT_RIGHT_MID, 10, 0);
     }
 
-    if (dsp_fx_settings[id][0] == 4) //Sidechain
+    if (fx_list[id] == "Sidechain") //Sidechain
     {
         uint8_t type = dsp_fx_settings[id][1];
         uint8_t width = dsp_fx_settings[id][2];
@@ -386,7 +292,7 @@ static void dsp_open_edit(lv_event_t* e)
     }
 
 
-    if (dsp_fx_settings[id][0] == 6) //FIR Filter
+    if (fx_list[id] == "FIR Filter") //FIR Filter
     {
         if (dsp_fx_settings[id][5] == 0) dsp_fx_settings[id][5] = 2;
         chart = lv_chart_create(dsp_fx_scr);
@@ -476,14 +382,6 @@ static void dsp_open_edit(lv_event_t* e)
 
 }
 
-static void dsp_change_fx(lv_event_t* e)
-{
-    uint8_t id = lv_event_get_user_data(e);
-
-    dsp_fx_settings[id][0] = lv_dropdown_get_selected(lv_event_get_target(e));
-    for (uint8_t i = 1; i <= DSP_MAX_FX_SETTINGS; i++) dsp_fx_settings[id][i] = 0;
-    dsp_open_edit(e);
-}
 
 static void dsp_refresh_fx_slider(lv_event_t* e)
 {
@@ -514,8 +412,7 @@ static void dsp_refresh_fx_roller(lv_event_t* e)
 static void dsp_close_edit()
 {
     lv_obj_del_async(dsp_fx_scr);
-    reset_scr();
-    start_dsp();
+    lv_scr_load(app_scr);
 }
 
 static void dsp_filter_response_refresh(uint8_t type, uint8_t order, float frq1, float frq2)
@@ -603,38 +500,41 @@ void DSP_sample_callback(){
 
 	dsp_fx_output[0] = dsp_fx_sample(0, (int24_to_float(adc_output[0])+int24_to_float(adc_output[1]))/2.0);
 	for (uint8_t i = 1; i < DSP_MAX_FX_COUNT; i++) dsp_fx_output[i] = dsp_fx_sample(i, dsp_fx_output[i-1]);
+
 	dac_input[0] = float_to_int24(dsp_fx_output[DSP_MAX_FX_COUNT-1]);
 	dac_input[1] = dac_input[0];
 }
 
 static float dsp_fx_sample(uint8_t id, float input){
-	float output;
-	uint8_t fx_type = (uint8_t)dsp_fx_settings[id][0];
+	float output = input;
 
-	if(fx_type == 0) output = input;
-	else if(fx_type == 1) output = input;
-	else if(fx_type == 2) output = Reverb_Update(fx_ptr_struct[id], input);
-	else if(fx_type == 3) output = Delay_Update(fx_ptr_struct[id], input);
+	if(fx_list[id] == "Delay") output = Delay_Update(&dly, input);
+	if(fx_list[id] == "Reeverb") output = Reverb_Update(&rvb, input);
 
 	return output;
 }
 
 static void dsp_fx_init(){
 
-	for (uint8_t id = 0; id < DSP_MAX_FX_COUNT; id++){
-		uint8_t fx_type = dsp_fx_settings[id][0];
-		free(fx_ptr_struct[id]);
+	Delay_Init(&dly, 24000, 0.0, 0.0);
+	Reverb_Init(&rvb, 5000, 0.0, 1.0, 0.0);
 
-		if (fx_type == 0){
-		} else if (fx_type == 2){
-			fx_ptr_struct[id] = malloc(sizeof(Reverb));
-			Reverb_Init((Reverb*)fx_ptr_struct[id], 2673, 2691, 2709, 2739, 1331, 307, 0.8, 0.8, 0.8, 0.8, 0.7, 0.7);
-			//Reverb_Init((Reverb*)fx_ptr_struct[id], (uint16_t)dsp_fx_settings[id][2], dsp_fx_settings[id][1]/100.0, dsp_fx_settings[id][3]/100.0, dsp_fx_settings[id][4]/100.0);
-		} else if (fx_type == 3){
-			fx_ptr_struct[id] = malloc(sizeof(Delay));
-			Delay_Init((Delay*)fx_ptr_struct[id], (uint16_t)dsp_fx_settings[id][1], dsp_fx_settings[id][3]/100.0, dsp_fx_settings[id][2]/100.0);
-		}
+}
 
+static void dsp_fx_setup(uint8_t id){
+	if (fx_list[id] == "Delay"){
+		dly.cbf_dly.Ndelay = dsp_fx_settings[id][0];
+		dly.cbf_dly.gain = dsp_fx_settings[id][1]/100.0;
+		dly.DryWet = dsp_fx_settings[id][2]/100.0;
 	}
-
+	if (fx_list[id] == "Reeverb"){
+		rvb.apf_rvb_1.gain = dsp_fx_settings[id][0]/100.0;
+		rvb.apf_rvb_2.gain = dsp_fx_settings[id][0]/100.0;
+		rvb.cbf_rvb_1.gain = dsp_fx_settings[id][0]/100.0;
+		rvb.cbf_rvb_2.gain = dsp_fx_settings[id][0]/100.0;
+		rvb.cbf_rvb_3.gain = dsp_fx_settings[id][0]/100.0;
+		rvb.cbf_rvb_4.gain = dsp_fx_settings[id][0]/100.0;
+		rvb.wet = dsp_fx_settings[id][2]/100.0;
+		rvb.dry = dsp_fx_settings[id][3]/100.0;
+	}
 }
