@@ -49,10 +49,10 @@ void freqresp_sample_callback(){
 	HAL_I2S_Receive(&hi2s2, (uint16_t*)adc_output, 2, 0);
 	HAL_I2S_Transmit(&hi2s1, (uint16_t*)dac_input, 2, 0);
 
-	output = peak_value * sin(2.0 * 3.1416 * t / 192000.0);
+	output = peak_value * sin(2.0 * 3.1416 * t / (float)SAMPLE_FREQ);
 	if (output >= 0) dac_input[1] = output; else dac_input[1] = 0xFFFFFF + output + 1;
 	t += frequency;
-	if (t >= 192000) t -= 192000;
+	if (t >= SAMPLE_FREQ) t -= SAMPLE_FREQ;
 
 
 	if (adc_output[0] >= 0x800000) input = adc_output[0] - 0xFFFFFF - 1; else input = adc_output[0];

@@ -175,23 +175,23 @@ void sg_sample_callback(){
 
 	if (sg_settings[0][3] == 0) r_ch = 0;
 	if (sg_settings[0][3] == 1){
-		r_ch = peak_value * sg_settings[0][2] * sin((3.1416 / 180.0)*((sg_settings[0][0] * 360.0 * t_rch / 192000.0)+sg_settings[0][1]));
-		if (t_rch >= 192000 - 1) t_rch = 0; else t_rch++;
+		r_ch = peak_value * sg_settings[0][2] * sin((3.1416 / 180.0)*((sg_settings[0][0] * 360.0 * t_rch / (float)SAMPLE_FREQ)+sg_settings[0][1]));
+		if (t_rch >= SAMPLE_FREQ - 1) t_rch = 0; else t_rch++;
 	}
 	if (sg_settings[0][3] == 2){
-		r_ch = peak_value * sg_settings[0][2] * ((t_rch * sg_settings[0][0] * 2.0 / 192000.0) - 1.0);
-		if (t_rch >= (192000.0 / sg_settings[0][0]) - 1) t_rch = 0; else t_rch++;
+		r_ch = peak_value * sg_settings[0][2] * ((t_rch * sg_settings[0][0] * 2.0 / (float)SAMPLE_FREQ) - 1.0);
+		if (t_rch >= ((float)SAMPLE_FREQ / sg_settings[0][0]) - 1) t_rch = 0; else t_rch++;
 	}
 	if (sg_settings[0][3] == 3){
-		if (t_rch * sg_settings[0][0] <= 96000)
-			r_ch = peak_value * sg_settings[0][2] * ((t_rch * sg_settings[0][0] * 4.0 / 192000.0) - 1.0);
+		if (t_rch * sg_settings[0][0] <= SAMPLE_FREQ/2)
+			r_ch = peak_value * sg_settings[0][2] * ((t_rch * sg_settings[0][0] * 4.0 / (float)SAMPLE_FREQ) - 1.0);
 		else
-			r_ch = peak_value * sg_settings[0][2] * (3.0 - (t_rch * sg_settings[0][0] * 4.0 / 192000.0));
-		if (t_rch >= (192000.0 / sg_settings[0][0]) - 1) t_rch = 0; else t_rch++;
+			r_ch = peak_value * sg_settings[0][2] * (3.0 - (t_rch * sg_settings[0][0] * 4.0 / (float)SAMPLE_FREQ));
+		if (t_rch >= ((float)SAMPLE_FREQ / sg_settings[0][0]) - 1) t_rch = 0; else t_rch++;
 	}
 	if (sg_settings[0][3] == 4){
-		if (t_rch * sg_settings[0][0] <= 96000) r_ch = peak_value * sg_settings[0][2]; else r_ch = (0.0 - peak_value) * sg_settings[0][2];
-		if (t_rch >= (192000.0 / sg_settings[0][0]) - 1) t_rch = 0; else t_rch++;
+		if (t_rch * sg_settings[0][0] <= SAMPLE_FREQ/2) r_ch = peak_value * sg_settings[0][2]; else r_ch = (0.0 - peak_value) * sg_settings[0][2];
+		if (t_rch >= ((float)SAMPLE_FREQ / sg_settings[0][0]) - 1) t_rch = 0; else t_rch++;
 	}
 	if (sg_settings[0][3] == 5) r_ch = sg_settings[0][2] * ((rand() % (2*peak_value - 1)) - peak_value);
 
@@ -199,23 +199,23 @@ void sg_sample_callback(){
 
 	if (sg_settings[1][3] == 0) l_ch = 0;
 	if (sg_settings[1][3] == 1){
-		l_ch = peak_value * sg_settings[1][2] * sin((3.1416 / 180.0)*((sg_settings[1][0] * 360.0 * t_lch / 192000.0)+sg_settings[1][1]));
-		if (t_lch >= 192000 - 1) t_lch = 0; else t_lch++;
+		l_ch = peak_value * sg_settings[1][2] * sin((3.1416 / 180.0)*((sg_settings[1][0] * 360.0 * t_lch / (float)SAMPLE_FREQ)+sg_settings[1][1]));
+		if (t_lch >= SAMPLE_FREQ - 1) t_lch = 0; else t_lch++;
 	}
 	if (sg_settings[1][3] == 2){
-		l_ch = peak_value * sg_settings[1][2] * ((t_lch * sg_settings[1][0] * 2.0 / 192000.0) - 1.0);
-		if (t_lch >= (192000.0 / sg_settings[1][0]) - 1) t_lch = 0; else t_lch++;
+		l_ch = peak_value * sg_settings[1][2] * ((t_lch * sg_settings[1][0] * 2.0 / (float)SAMPLE_FREQ) - 1.0);
+		if (t_lch >= ((float)SAMPLE_FREQ / sg_settings[1][0]) - 1) t_lch = 0; else t_lch++;
 	}
 	if (sg_settings[1][3] == 3){
-		if (t_lch * sg_settings[1][0] <= 96000)
-			l_ch = peak_value * sg_settings[1][2] * ((t_lch * sg_settings[1][0] * 4.0 / 192000.0) - 1.0);
+		if (t_lch * sg_settings[1][0] <= SAMPLE_FREQ/2)
+			l_ch = peak_value * sg_settings[1][2] * ((t_lch * sg_settings[1][0] * 4.0 / (float)SAMPLE_FREQ) - 1.0);
 		else
-			l_ch = peak_value * sg_settings[1][2] * (3.0 - (t_lch * sg_settings[1][0] * 4.0 / 192000.0));
-		if (t_lch >= (192000.0 / sg_settings[1][0]) - 1) t_lch = 0; else t_lch++;
+			l_ch = peak_value * sg_settings[1][2] * (3.0 - (t_lch * sg_settings[1][0] * 4.0 / (float)SAMPLE_FREQ));
+		if (t_lch >= ((float)SAMPLE_FREQ / sg_settings[1][0]) - 1) t_lch = 0; else t_lch++;
 	}
 	if (sg_settings[1][3] == 4){
-		if (t_lch * sg_settings[1][0] <= 96000) l_ch = peak_value * sg_settings[1][2]; else l_ch = (0.0 - peak_value) * sg_settings[1][2];
-		if (t_lch >= (192000.0 / sg_settings[1][0]) - 1) t_lch = 0; else t_lch++;
+		if (t_lch * sg_settings[1][0] <= SAMPLE_FREQ/2) l_ch = peak_value * sg_settings[1][2]; else l_ch = (0.0 - peak_value) * sg_settings[1][2];
+		if (t_lch >= ((float)SAMPLE_FREQ / sg_settings[1][0]) - 1) t_lch = 0; else t_lch++;
 	}
 	if (sg_settings[1][3] == 5) l_ch = sg_settings[1][2] * ((rand() % (2*peak_value + 1)) - peak_value);
 

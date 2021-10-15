@@ -69,7 +69,7 @@ void fft_sample_callback(){
 	HAL_I2S_Receive(&hi2s2, (uint16_t*)adc_output, 2, 0);
 	HAL_I2S_Transmit(&hi2s1, (uint16_t*)adc_output, 2, 0);
 
-	if (elapsed >= 192000 / 5.0){
+	if (elapsed >= SAMPLE_FREQ / 5.0){
 		if (adc_output[0] < 0x800000) timevalues[index] = adc_output[0]; else timevalues[index] = adc_output[0] - (float)(0xFFFFFF) - 1.0;
 		fft_vectors[index] = timevalues[index] / 0.8388608 + 0.0*I;
 
@@ -77,7 +77,7 @@ void fft_sample_callback(){
 		if (index == FFT_POINTS - 1){
 			index = 0;
 			elapsed = 0;
-			FFT(fft_vectors, FFT_POINTS, 0.02 / 192000.0);
+			FFT(fft_vectors, FFT_POINTS, 0.02 / (float)SAMPLE_FREQ);
 			for (uint32_t n = 0; n < FFT_POINTS/2; n++) fft_graph[n] = 333.3 * log(sqrt((creal(fft_vectors[n])*creal(fft_vectors[n])) + (cimag(fft_vectors[n])*cimag(fft_vectors[n])))+1);
 			lv_chart_refresh(chart);
 		}else{

@@ -31,7 +31,7 @@
 #include "FX/delay.h"
 #include "FX/distorsion.h"
 
-#define SAMPLE_FREQ 192000
+#define SAMPLE_FREQ 48000
 
 lv_obj_t *label, *btn, *cont, *menu, *list, *slider, *mbox, *chart, *img, *roller, *app_scr;
 lv_timer_t *timer;

@@ -8,16 +8,15 @@
 
 #include "system.h"
 
-Distorsion dist;
-Phaser phs;
+static Distorsion dist __attribute__ ((section(".RAMD2"),used));
+static Phaser phs __attribute__ ((section(".RAMD2"),used));
 
-FIRFilter filt;
-__attribute__ ((section(".RAMD2"),used)) Delay dly;
-__attribute__ ((section(".RAMD2"),used)) Reverb rvb;
+static FIRFilter fir __attribute__ ((section(".RAMD2"),used));
+static Delay dly __attribute__ ((section(".RAMD2"),used));
+static Reverb rvb __attribute__ ((section(".RAMD2"),used));
 
 void start_dsp()
 {
-
 	dsp_fx_init();
 	sample_callback = &DSP_sample_callback;
 
@@ -160,11 +159,12 @@ static void dsp_open_edit(lv_event_t* e)
         slider = lv_slider_create(dsp_fx_scr);
         lv_obj_set_width(slider, 200);
         lv_obj_align(slider, LV_ALIGN_LEFT_MID, 100, -40);
+        lv_slider_set_range(slider, 0, 5000);
         lv_slider_set_value(slider, dsp_fx_settings[id][fx], LV_ANIM_OFF);
         lv_obj_set_user_data(slider, fx);
         lv_obj_add_event_cb(slider, dsp_refresh_fx_slider, LV_EVENT_VALUE_CHANGED, id);
         label = lv_label_create(dsp_fx_scr);
-        lv_label_set_text_fmt(label, "%d%%", dsp_fx_settings[id][fx++]);
+        lv_label_set_text_fmt(label, "%d Samples", dsp_fx_settings[id][fx++]);
         lv_obj_align_to(label, slider, LV_ALIGN_OUT_RIGHT_MID, 10, 0);
 
         label = lv_label_create(dsp_fx_scr);
@@ -294,7 +294,7 @@ static void dsp_open_edit(lv_event_t* e)
 
     if (fx_list[id] == "FIR Filter") //FIR Filter
     {
-        if (dsp_fx_settings[id][5] == 0) dsp_fx_settings[id][5] = 2;
+        if (dsp_fx_settings[id][4] == 0) dsp_fx_settings[id][4] = 2;
         chart = lv_chart_create(dsp_fx_scr);
         lv_obj_set_size(chart, 200, 150);
         lv_obj_align(chart, LV_ALIGN_LEFT_MID, 50, 50);
@@ -304,8 +304,8 @@ static void dsp_open_edit(lv_event_t* e)
         lv_chart_set_axis_tick(chart, LV_CHART_AXIS_PRIMARY_X, 10, 5, 21, 1, false, 50);
         lv_chart_set_axis_tick(chart, LV_CHART_AXIS_PRIMARY_Y, 10, 5, 5, 2, true, 50);
         ser = lv_chart_add_series(chart, lv_palette_main(LV_PALETTE_RED), LV_CHART_AXIS_PRIMARY_Y);
-        lv_chart_set_point_count(chart, dsp_fx_settings[id][5]);
-        dsp_fir_calc(dsp_fx_settings[id][1], dsp_fx_settings[id][2], dsp_fx_settings[id][5], dsp_fx_settings[id][5]/2.0, 1.0 / 192000.0, dsp_fx_settings[id][3], dsp_fx_settings[id][4]);
+        lv_chart_set_point_count(chart, dsp_fx_settings[id][4]);
+        dsp_fir_calc(dsp_fx_settings[id][0], dsp_fx_settings[id][1], dsp_fx_settings[id][4], dsp_fx_settings[id][4]/2.0, 1.0 / (float)(SAMPLE_FREQ), dsp_fx_settings[id][2], dsp_fx_settings[id][3]);
         lv_chart_set_ext_y_array(chart, ser, (lv_coord_t*)dsp_fir_response);
 
         const char* opts1 =
@@ -371,7 +371,7 @@ static void dsp_open_edit(lv_event_t* e)
         lv_obj_align_to(label, chart, LV_ALIGN_OUT_RIGHT_MID, 10, 40);
         slider = lv_slider_create(dsp_fx_scr);
         lv_obj_set_width(slider, 140);
-        lv_slider_set_range(slider, 2, 1024);
+        lv_slider_set_range(slider, 2, 512);
         lv_obj_align_to(slider, label, LV_ALIGN_OUT_RIGHT_MID, 20, 0);
         lv_slider_set_value(slider, dsp_fx_settings[id][fx], LV_ANIM_OFF);
         lv_obj_set_user_data(slider, fx++);
@@ -415,17 +415,6 @@ static void dsp_close_edit()
     lv_scr_load(app_scr);
 }
 
-static void dsp_filter_response_refresh(uint8_t type, uint8_t order, float frq1, float frq2)
-{
-    for (uint8_t s = 0; s < 200; s++)
-    {
-        if (type == 0) dsp_filter_response[s] = 100.0 / (1.0 + pow(s / frq1, order));
-        if (type == 1) dsp_filter_response[s] = 100.0 / ((1.0 + pow(s / frq2, order)) * (1.0 + 1.0 / pow(s / frq1, order)));
-        if (type == 2) dsp_filter_response[s] = 100.0 / (1.0 + 1.0 / pow(s / frq1, order));
-        if (type == 3) dsp_filter_response[s] = 100.0 * (pow(s, order) + pow(frq1, order)) / (pow(s, order) + (frq1 * s) + pow(frq1, order));
-    }
-}
-
 static void dsp_sidechain_response_refresh(uint8_t type, uint8_t width, uint8_t slope)
 {
     for (uint8_t t = 0; t < 100; t++)
@@ -438,6 +427,14 @@ static void dsp_sidechain_response_refresh(uint8_t type, uint8_t width, uint8_t 
 
 static void dsp_fir_calc(uint8_t FILT_TYPE, uint8_t WIN_TYPE, uint16_t NUM_TOTAL_SAMPLES, uint16_t NUM_SHIFT_SAMPLES, double SAMPLE_TIME_S, double CUTOFF_FREQUENCY_HZ, double CUTOFF_FREQUENCY2_HZ){
 
+	if (sizeof(impulseResponse) > 1){
+		free(impulseResponse);
+		free(window);
+		free(windowedImpulseResponse);
+		free(frequencyVectorHz);
+		free(winRespMag);
+		free(dsp_fir_response);
+	}
     impulseResponse = (double*)calloc(NUM_TOTAL_SAMPLES, sizeof(double));
     window = (double*)calloc(NUM_TOTAL_SAMPLES, sizeof(double));
     windowedImpulseResponse = (double*)calloc(NUM_TOTAL_SAMPLES, sizeof(double));
@@ -517,17 +514,34 @@ static float dsp_fx_sample(uint8_t id, float input){
 static void dsp_fx_init(){
 
 	Delay_Init(&dly, 24000, 0.0, 0.0);
-	Reverb_Init(&rvb, 5000, 0.0, 1.0, 0.0);
+
+	Reverb_Init(&rvb, 5000, 0.7, 1.0, 1.0);
+	dsp_fx_settings[5][0] = 0.7;
+	dsp_fx_settings[5][1] = 5000;
+	dsp_fx_settings[5][2] = 100;
+	dsp_fx_settings[5][3] = 100;
 
 }
 
 static void dsp_fx_setup(uint8_t id){
+
+	sample_callback = &empty_void;
+
 	if (fx_list[id] == "Delay"){
 		dly.cbf_dly.Ndelay = dsp_fx_settings[id][0];
 		dly.cbf_dly.gain = dsp_fx_settings[id][1]/100.0;
 		dly.DryWet = dsp_fx_settings[id][2]/100.0;
 	}
 	if (fx_list[id] == "Reeverb"){
+		//Reverb_Init(&rvb, dsp_fx_settings[id][1], dsp_fx_settings[id][0]/100.0, dsp_fx_settings[id][3]/100.0, dsp_fx_settings[id][2]/100.0);
+		/*
+		rvb.cbf_rvb_1.Ndelay = dsp_fx_settings[id][1]*1.0/100.0;
+		rvb.cbf_rvb_2.Ndelay = dsp_fx_settings[id][1]*0.967/100.0;
+		rvb.cbf_rvb_3.Ndelay = dsp_fx_settings[id][1]*0.923/100.0;
+		rvb.cbf_rvb_4.Ndelay = dsp_fx_settings[id][1]*0.871/100.0;
+		rvb.apf_rvb_1.Ndelay = dsp_fx_settings[id][1]*0.171/100.0;
+		rvb.apf_rvb_2.Ndelay = dsp_fx_settings[id][1]*0.057/100.0;
+		*/
 		rvb.apf_rvb_1.gain = dsp_fx_settings[id][0]/100.0;
 		rvb.apf_rvb_2.gain = dsp_fx_settings[id][0]/100.0;
 		rvb.cbf_rvb_1.gain = dsp_fx_settings[id][0]/100.0;
@@ -536,5 +550,8 @@ static void dsp_fx_setup(uint8_t id){
 		rvb.cbf_rvb_4.gain = dsp_fx_settings[id][0]/100.0;
 		rvb.wet = dsp_fx_settings[id][2]/100.0;
 		rvb.dry = dsp_fx_settings[id][3]/100.0;
+
 	}
+
+	sample_callback = &DSP_sample_callback;
 }

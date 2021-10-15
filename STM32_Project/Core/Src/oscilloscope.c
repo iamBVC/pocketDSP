@@ -83,9 +83,9 @@ void osc_sample_callback(){
 	adc_output[0] = adc_output[0] / 8388.608;
 	adc_output[1] = adc_output[1] / 8388.608;
 
-	if (elapsed >= 192000 / 10 && adc_output[0] < 1000 && prev == 0 && adc_output[0] > prev && triggered == 0) triggered = 1;
+	if (elapsed >= SAMPLE_FREQ / 10 && adc_output[0] < 1000 && prev == 0 && adc_output[0] > prev && triggered == 0) triggered = 1;
 
-	if (elapsed >= 192000 / 10 && triggered == 1){
+	if (elapsed >= SAMPLE_FREQ / 10 && triggered == 1){
 
 		if (adc_output[0] < 1000) oscilloscope_buffer_r[index] = adc_output[0]; else oscilloscope_buffer_r[index] = adc_output[0] - 2000;
 		if (adc_output[1] < 1000) oscilloscope_buffer_l[index] = adc_output[1]; else oscilloscope_buffer_l[index] = adc_output[1] - 2000;
