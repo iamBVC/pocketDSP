@@ -8,7 +8,7 @@
 
 #include "system.h"
 
-static Distorsion dist __attribute__ ((section(".RAMD2"),used));
+static Distortion dist __attribute__ ((section(".RAMD2"),used));
 static Phaser phs __attribute__ ((section(".RAMD2"),used));
 
 static FIRFilter fir __attribute__ ((section(".RAMD2"),used));
@@ -138,6 +138,52 @@ static void dsp_open_edit(lv_event_t* e)
     lv_snprintf(buf1, sizeof(buf1), "%s", fx_list[id]);
     lv_label_set_text(label, buf1);
 
+
+    if (fx_list[id] == "Distortion") //Distortion
+        {
+            label = lv_label_create(dsp_fx_scr);
+            lv_label_set_text(label, "InGain");
+            lv_obj_align(label, LV_ALIGN_LEFT_MID, 20, -80);
+            slider = lv_slider_create(dsp_fx_scr);
+            lv_obj_set_width(slider, 200);
+            lv_obj_align(slider, LV_ALIGN_LEFT_MID, 100, -80);
+            lv_slider_set_range(slider, 0, 1000);
+            lv_slider_set_value(slider, dsp_fx_settings[id][fx], LV_ANIM_OFF);
+            lv_obj_set_user_data(slider, fx);
+            lv_obj_add_event_cb(slider, dsp_refresh_fx_slider, LV_EVENT_VALUE_CHANGED, id);
+            label = lv_label_create(dsp_fx_scr);
+            lv_label_set_text_fmt(label, "%.2f", dsp_fx_settings[id][fx++]/100.0);
+            lv_obj_align_to(label, slider, LV_ALIGN_OUT_RIGHT_MID, 10, 0);
+
+            label = lv_label_create(dsp_fx_scr);
+            lv_label_set_text(label, "Threshold");
+            lv_obj_align(label, LV_ALIGN_LEFT_MID, 20, -40);
+            slider = lv_slider_create(dsp_fx_scr);
+            lv_obj_set_width(slider, 200);
+            lv_obj_align(slider, LV_ALIGN_LEFT_MID, 100, -40);
+            lv_slider_set_value(slider, dsp_fx_settings[id][fx], LV_ANIM_OFF);
+            lv_obj_set_user_data(slider, fx);
+            lv_obj_add_event_cb(slider, dsp_refresh_fx_slider, LV_EVENT_VALUE_CHANGED, id);
+            label = lv_label_create(dsp_fx_scr);
+            lv_label_set_text_fmt(label, "%.2f", dsp_fx_settings[id][fx++]/100.0);
+            lv_obj_align_to(label, slider, LV_ALIGN_OUT_RIGHT_MID, 10, 0);
+
+            label = lv_label_create(dsp_fx_scr);
+            lv_label_set_text(label, "OutGain");
+            lv_obj_align(label, LV_ALIGN_LEFT_MID, 20, 0);
+            slider = lv_slider_create(dsp_fx_scr);
+            lv_obj_set_width(slider, 200);
+            lv_obj_align(slider, LV_ALIGN_LEFT_MID, 100, 0);
+            lv_slider_set_range(slider, 0, 1000);
+            lv_slider_set_value(slider, dsp_fx_settings[id][fx], LV_ANIM_OFF);
+            lv_obj_set_user_data(slider, fx);
+            lv_obj_add_event_cb(slider, dsp_refresh_fx_slider, LV_EVENT_VALUE_CHANGED, id);
+            label = lv_label_create(dsp_fx_scr);
+            lv_label_set_text_fmt(label, "%.2f", dsp_fx_settings[id][fx++]/100.0);
+            lv_obj_align_to(label, slider, LV_ALIGN_OUT_RIGHT_MID, 10, 0);
+        }
+
+
     if (fx_list[id] == "Reeverb") //Reeverb
     {
         label = lv_label_create(dsp_fx_scr);
@@ -150,7 +196,7 @@ static void dsp_open_edit(lv_event_t* e)
         lv_obj_set_user_data(slider, fx);
         lv_obj_add_event_cb(slider, dsp_refresh_fx_slider, LV_EVENT_VALUE_CHANGED, id);
         label = lv_label_create(dsp_fx_scr);
-        lv_label_set_text_fmt(label, "%d%%", dsp_fx_settings[id][fx++]);
+        lv_label_set_text_fmt(label, "%.2f", dsp_fx_settings[id][fx++]/100.0);
         lv_obj_align_to(label, slider, LV_ALIGN_OUT_RIGHT_MID, 10, 0);
 
         label = lv_label_create(dsp_fx_scr);
@@ -220,7 +266,7 @@ static void dsp_open_edit(lv_event_t* e)
         lv_obj_set_user_data(slider, fx);
         lv_obj_add_event_cb(slider, dsp_refresh_fx_slider, LV_EVENT_VALUE_CHANGED, id);
         label = lv_label_create(dsp_fx_scr);
-        lv_label_set_text_fmt(label, "%d%%", dsp_fx_settings[id][fx++]);
+        lv_label_set_text_fmt(label, "%.2f", dsp_fx_settings[id][fx++]/100.0);
         lv_obj_align_to(label, slider, LV_ALIGN_OUT_RIGHT_MID, 10, 0);
 
         label = lv_label_create(dsp_fx_scr);
@@ -294,7 +340,6 @@ static void dsp_open_edit(lv_event_t* e)
 
     if (fx_list[id] == "FIR Filter") //FIR Filter
     {
-        if (dsp_fx_settings[id][4] == 0) dsp_fx_settings[id][4] = 2;
         chart = lv_chart_create(dsp_fx_scr);
         lv_obj_set_size(chart, 200, 150);
         lv_obj_align(chart, LV_ALIGN_LEFT_MID, 50, 50);
@@ -305,8 +350,8 @@ static void dsp_open_edit(lv_event_t* e)
         lv_chart_set_axis_tick(chart, LV_CHART_AXIS_PRIMARY_Y, 10, 5, 5, 2, true, 50);
         ser = lv_chart_add_series(chart, lv_palette_main(LV_PALETTE_RED), LV_CHART_AXIS_PRIMARY_Y);
         lv_chart_set_point_count(chart, dsp_fx_settings[id][4]);
-        dsp_fir_calc(dsp_fx_settings[id][0], dsp_fx_settings[id][1], dsp_fx_settings[id][4], dsp_fx_settings[id][4]/2.0, 1.0 / (float)(SAMPLE_FREQ), dsp_fx_settings[id][2], dsp_fx_settings[id][3]);
-        lv_chart_set_ext_y_array(chart, ser, (lv_coord_t*)dsp_fir_response);
+        for (uint16_t n = 0; n < dsp_fx_settings[id][4]; n++) dsp_filter_response[n] = fir.FIR_FREQUENCY_RESPONSE[n];
+        lv_chart_set_ext_y_array(chart, ser, (lv_coord_t*)dsp_filter_response);
 
         const char* opts1 =
             "Low Pass\n"
@@ -346,36 +391,45 @@ static void dsp_open_edit(lv_event_t* e)
 
         label = lv_label_create(dsp_fx_scr);
         lv_label_set_text(label, "LF");
-        lv_obj_align_to(label, chart, LV_ALIGN_OUT_RIGHT_MID, 10, -40);
+        lv_obj_align_to(label, chart, LV_ALIGN_OUT_RIGHT_TOP, 10, 0);
         slider = lv_slider_create(dsp_fx_scr);
         lv_obj_set_width(slider, 140);
-        lv_slider_set_range(slider, 0, 20000);
+        lv_slider_set_range(slider, 1, 20000);
         lv_obj_align_to(slider, label, LV_ALIGN_OUT_RIGHT_MID, 20, 0);
         lv_slider_set_value(slider, dsp_fx_settings[id][fx], LV_ANIM_OFF);
-        lv_obj_set_user_data(slider, fx++);
+        lv_obj_set_user_data(slider, fx);
         lv_obj_add_event_cb(slider, dsp_refresh_fx_slider, LV_EVENT_VALUE_CHANGED, id);
+        label = lv_label_create(dsp_fx_scr);
+        lv_label_set_text_fmt(label, "%d Hz", dsp_fx_settings[id][fx++]);
+        lv_obj_align_to(label, slider, LV_ALIGN_OUT_TOP_MID, 0, 0);
 
         label = lv_label_create(dsp_fx_scr);
         lv_label_set_text(label, "HF");
-        lv_obj_align_to(label, chart, LV_ALIGN_OUT_RIGHT_MID, 10, 0);
+        lv_obj_align_to(label, chart, LV_ALIGN_OUT_RIGHT_TOP, 10, 40);
         slider = lv_slider_create(dsp_fx_scr);
         lv_obj_set_width(slider, 140);
-        lv_slider_set_range(slider, 0, 20000);
+        lv_slider_set_range(slider, 1, 20000);
         lv_obj_align_to(slider, label, LV_ALIGN_OUT_RIGHT_MID, 20, 0);
         lv_slider_set_value(slider, dsp_fx_settings[id][fx], LV_ANIM_OFF);
-        lv_obj_set_user_data(slider, fx++);
+        lv_obj_set_user_data(slider, fx);
         lv_obj_add_event_cb(slider, dsp_refresh_fx_slider, LV_EVENT_VALUE_CHANGED, id);
+        label = lv_label_create(dsp_fx_scr);
+        lv_label_set_text_fmt(label, "%d Hz", dsp_fx_settings[id][fx++]);
+        lv_obj_align_to(label, slider, LV_ALIGN_OUT_TOP_MID, 0, 0);
 
         label = lv_label_create(dsp_fx_scr);
         lv_label_set_text(label, "Size");
-        lv_obj_align_to(label, chart, LV_ALIGN_OUT_RIGHT_MID, 10, 40);
+        lv_obj_align_to(label, chart, LV_ALIGN_OUT_RIGHT_TOP, 10, 80);
         slider = lv_slider_create(dsp_fx_scr);
         lv_obj_set_width(slider, 140);
-        lv_slider_set_range(slider, 2, 512);
+        lv_slider_set_range(slider, 2, FIR_FILTER_LENGHT);
         lv_obj_align_to(slider, label, LV_ALIGN_OUT_RIGHT_MID, 20, 0);
         lv_slider_set_value(slider, dsp_fx_settings[id][fx], LV_ANIM_OFF);
-        lv_obj_set_user_data(slider, fx++);
+        lv_obj_set_user_data(slider, fx);
         lv_obj_add_event_cb(slider, dsp_refresh_fx_slider, LV_EVENT_VALUE_CHANGED, id);
+        label = lv_label_create(dsp_fx_scr);
+        lv_label_set_text_fmt(label, "%d Samples", dsp_fx_settings[id][fx++]);
+        lv_obj_align_to(label, slider, LV_ALIGN_OUT_TOP_MID, 0, 0);
 
     }
 
@@ -424,73 +478,6 @@ static void dsp_sidechain_response_refresh(uint8_t type, uint8_t width, uint8_t 
     }
 }
 
-
-static void dsp_fir_calc(uint8_t FILT_TYPE, uint8_t WIN_TYPE, uint16_t NUM_TOTAL_SAMPLES, uint16_t NUM_SHIFT_SAMPLES, double SAMPLE_TIME_S, double CUTOFF_FREQUENCY_HZ, double CUTOFF_FREQUENCY2_HZ){
-
-	if (sizeof(impulseResponse) > 1){
-		free(impulseResponse);
-		free(window);
-		free(windowedImpulseResponse);
-		free(frequencyVectorHz);
-		free(winRespMag);
-		free(dsp_fir_response);
-	}
-    impulseResponse = (double*)calloc(NUM_TOTAL_SAMPLES, sizeof(double));
-    window = (double*)calloc(NUM_TOTAL_SAMPLES, sizeof(double));
-    windowedImpulseResponse = (double*)calloc(NUM_TOTAL_SAMPLES, sizeof(double));
-    frequencyVectorHz = (double*)calloc(NUM_TOTAL_SAMPLES, sizeof(double));
-    winRespMag = (double*)calloc(NUM_TOTAL_SAMPLES, sizeof(double));
-    dsp_fir_response = (lv_coord_t*)calloc(NUM_TOTAL_SAMPLES, sizeof(lv_coord_t));
-
-	double df = (20000.0) / ((double)NUM_TOTAL_SAMPLES - 1.0);
-
-    for (uint16_t n = 0; n < NUM_TOTAL_SAMPLES; n++){
-
-		if (n != NUM_SHIFT_SAMPLES){
-            if (FILT_TYPE == 0) impulseResponse[n] = sin(2.0 * M_PI * CUTOFF_FREQUENCY2_HZ * SAMPLE_TIME_S * (n - NUM_SHIFT_SAMPLES)) / (M_PI * SAMPLE_TIME_S * (n - NUM_SHIFT_SAMPLES));
-            if (FILT_TYPE == 1) impulseResponse[n] = (sin(M_PI * (n - NUM_SHIFT_SAMPLES)) - sin(2.0 * M_PI * CUTOFF_FREQUENCY_HZ * SAMPLE_TIME_S * (n - NUM_SHIFT_SAMPLES))) / (M_PI * SAMPLE_TIME_S * (n - NUM_SHIFT_SAMPLES));
-            if (FILT_TYPE == 2) impulseResponse[n] = (sin(2.0 * M_PI * CUTOFF_FREQUENCY2_HZ * SAMPLE_TIME_S * (n - NUM_SHIFT_SAMPLES)) - sin(2.0 * M_PI * CUTOFF_FREQUENCY_HZ * SAMPLE_TIME_S * (n - NUM_SHIFT_SAMPLES))) / (M_PI * SAMPLE_TIME_S * (n - NUM_SHIFT_SAMPLES));
-            if (FILT_TYPE == 3) impulseResponse[n] = (sin(2.0 * M_PI * CUTOFF_FREQUENCY_HZ * SAMPLE_TIME_S * (n - NUM_SHIFT_SAMPLES)) - sin(2.0 * M_PI * CUTOFF_FREQUENCY2_HZ * SAMPLE_TIME_S * (n - NUM_SHIFT_SAMPLES)) + sin(M_PI * (n - NUM_SHIFT_SAMPLES))) / (M_PI * SAMPLE_TIME_S * (n - NUM_SHIFT_SAMPLES));
-        }else{
-            if (FILT_TYPE == 0) impulseResponse[n] = 2.0 * CUTOFF_FREQUENCY2_HZ;
-            if (FILT_TYPE == 1) impulseResponse[n] = 1.0 / SAMPLE_TIME_S - 2.0 * CUTOFF_FREQUENCY_HZ;
-            if (FILT_TYPE == 2) impulseResponse[n] = 2.0 * CUTOFF_FREQUENCY2_HZ - 2.0 * CUTOFF_FREQUENCY_HZ;
-            if (FILT_TYPE == 3) impulseResponse[n] = 2.0 * CUTOFF_FREQUENCY_HZ - 2.0 * CUTOFF_FREQUENCY2_HZ + 1.0 / SAMPLE_TIME_S;
-        }
-
-		impulseResponse[n] *= SAMPLE_TIME_S;
-
-		if(WIN_TYPE <= 0 || WIN_TYPE >= 11) window[n] = 1.0;
-		if(WIN_TYPE == 1) window[n] = 1.0 - abs((n - 0.5 * NUM_TOTAL_SAMPLES) / (0.5 * NUM_TOTAL_SAMPLES));
-		if(WIN_TYPE == 2) window[n] = 1.0 - pow((n - 0.5 * NUM_TOTAL_SAMPLES) / (0.5 * NUM_TOTAL_SAMPLES), 2.0);
-		if(WIN_TYPE == 3) window[n] = sin(M_PI * n / ((double)NUM_TOTAL_SAMPLES));
-		if(WIN_TYPE == 4) window[n] = 0.5 * (1 - cos(2.0 * M_PI * n / ((double)NUM_TOTAL_SAMPLES)));
-		if(WIN_TYPE == 5) window[n] = (25.0 / 46.0) - (21.0 / 46.0) * cos(2.0 * M_PI * n / ((double)NUM_TOTAL_SAMPLES));
-		if(WIN_TYPE == 6) window[n] = 0.42 - 0.5 * cos(2.0 * M_PI * n / ((double)NUM_TOTAL_SAMPLES)) + 0.08 * cos(4.0 * M_PI * n / ((double)NUM_TOTAL_SAMPLES));
-		if(WIN_TYPE == 7) window[n] = 0.355768 - 0.487396 * cos(2.0 * M_PI * n / ((double)NUM_TOTAL_SAMPLES)) + 0.144232 * cos(4.0 * M_PI * n / ((double)NUM_TOTAL_SAMPLES)) - 0.012604 * cos(6.0 * M_PI * n / ((double)NUM_TOTAL_SAMPLES));
-		if(WIN_TYPE == 8) window[n] = 0.3635819 - 0.4891775 * cos(2.0 * M_PI * n / ((double)NUM_TOTAL_SAMPLES)) + 0.1365995 * cos(4.0 * M_PI * n / ((double)NUM_TOTAL_SAMPLES)) - 0.0106411 * cos(6.0 * M_PI * n / ((double)NUM_TOTAL_SAMPLES));
-		if(WIN_TYPE == 9) window[n] = 0.35875 - 0.48829 * cos(2.0 * M_PI * n / ((double)NUM_TOTAL_SAMPLES)) + 0.14128 * cos(4.0 * M_PI * n / ((double)NUM_TOTAL_SAMPLES)) - 0.01168 * cos(6.0 * M_PI * n / ((double)NUM_TOTAL_SAMPLES));
-		if(WIN_TYPE == 10) window[n] = 0.21557895 - 0.41663158 * cos(2.0 * M_PI * n / ((double)NUM_TOTAL_SAMPLES)) + 0.277263158 * cos(4.0 * M_PI * n / ((double)NUM_TOTAL_SAMPLES)) - 0.083578947 * cos(6.0 * M_PI * n / ((double)NUM_TOTAL_SAMPLES)) + 0.006947368 * cos(8.0 * M_PI * n / ((double)NUM_TOTAL_SAMPLES));
-
-		windowedImpulseResponse[n] = impulseResponse[n] * window[n];
-		frequencyVectorHz[n] = n * df;
-    }
-
-
-    for (uint16_t fIndex = 0; fIndex < NUM_TOTAL_SAMPLES; fIndex++){
-        double reWin = 0.0;
-        double imWin = 0.0;
-        for (uint16_t n = 0; n < NUM_TOTAL_SAMPLES; n++){
-            reWin = reWin + windowedImpulseResponse[n] * cos(2.0 * M_PI * frequencyVectorHz[fIndex] * n * SAMPLE_TIME_S);
-            imWin = imWin - windowedImpulseResponse[n] * sin(2.0 * M_PI * frequencyVectorHz[fIndex] * n * SAMPLE_TIME_S);
-        }
-        winRespMag[fIndex] = 100.0 * sqrt(reWin * reWin + imWin * imWin);
-        dsp_fir_response[fIndex] = winRespMag[fIndex];
-    }
-
-}
-
-
 void DSP_sample_callback(){
 	HAL_I2S_Receive(&hi2s2, (uint16_t*)adc_output, 2, 0);
 	HAL_I2S_Transmit(&hi2s1, (uint16_t*)dac_input, 2, 0);
@@ -505,6 +492,8 @@ void DSP_sample_callback(){
 static float dsp_fx_sample(uint8_t id, float input){
 	float output = input;
 
+	if(fx_list[id] == "Distortion") output = Distortion_Update(&dist, input);
+	if(fx_list[id] == "FIR Filter") output = FIRFilter_Update(&fir, input);
 	if(fx_list[id] == "Delay") output = Delay_Update(&dly, input);
 	if(fx_list[id] == "Reeverb") output = Reverb_Update(&rvb, input);
 
@@ -513,12 +502,28 @@ static float dsp_fx_sample(uint8_t id, float input){
 
 static void dsp_fx_init(){
 
-	Delay_Init(&dly, 24000, 0.0, 0.0);
+	Distortion_Init(&dist, 1.0, 1.0, 1.0);
+	dsp_fx_settings[0][0] = 100;
+	dsp_fx_settings[0][1] = 100;
+	dsp_fx_settings[0][2] = 100;
 
-	Reverb_Init(&rvb, 5000, 0.7, 1.0, 1.0);
-	dsp_fx_settings[5][0] = 0.7;
+	FIRFilter_Init(&fir);
+	dsp_fx_settings[3][0] = 2;
+	dsp_fx_settings[3][1] = 5;
+	dsp_fx_settings[3][2] = 1;
+	dsp_fx_settings[3][3] = 20000;
+	dsp_fx_settings[3][4] = FIR_FILTER_LENGHT;
+	FIRFilter_CalcCoeff(&fir, dsp_fx_settings[3][0], dsp_fx_settings[3][1], dsp_fx_settings[3][4], dsp_fx_settings[3][4]/2, 1.0/SAMPLE_FREQ, dsp_fx_settings[3][2], dsp_fx_settings[3][3]);
+
+	Delay_Init(&dly, 24000, 0.0, 0.0);
+	dsp_fx_settings[4][0] = 24000;
+	dsp_fx_settings[4][1] = 0;
+	dsp_fx_settings[4][2] = 0;
+
+	Reverb_Init(&rvb, 5000, 0.7, 1.0, 0.0);
+	dsp_fx_settings[5][0] = 70;
 	dsp_fx_settings[5][1] = 5000;
-	dsp_fx_settings[5][2] = 100;
+	dsp_fx_settings[5][2] = 0;
 	dsp_fx_settings[5][3] = 100;
 
 }
@@ -526,6 +531,17 @@ static void dsp_fx_init(){
 static void dsp_fx_setup(uint8_t id){
 
 	sample_callback = &empty_void;
+
+	if (fx_list[id] == "Distortion"){
+		dist.InputGain = dsp_fx_settings[id][0]/100.0;
+		dist.Threshold = dsp_fx_settings[id][1]/100.0;
+		dist.OutputGain = dsp_fx_settings[id][2]/100.0;
+	}
+
+	if (fx_list[id] == "FIR Filter"){
+		fir.filterLenght = dsp_fx_settings[id][4];
+		FIRFilter_CalcCoeff(&fir, dsp_fx_settings[id][0], dsp_fx_settings[id][1], dsp_fx_settings[id][4], dsp_fx_settings[id][4]/2, 1.0/SAMPLE_FREQ, dsp_fx_settings[id][2], dsp_fx_settings[id][3]);
+	}
 
 	if (fx_list[id] == "Delay"){
 		dly.cbf_dly.Ndelay = dsp_fx_settings[id][0];

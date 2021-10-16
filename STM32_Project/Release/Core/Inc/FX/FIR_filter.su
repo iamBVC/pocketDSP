@@ -1,2 +1,3 @@
-FIR_filter.c:11:6:FIRFilter_Init	16	static
-FIR_filter.c:23:7:FIRFilter_Update	16	static
+FIR_filter.c:11:6:FIRFilter_Init	12	static
+FIR_filter.c:18:7:FIRFilter_Update	16	static
+FIR_filter.c:35:6:FIRFilter_CalcCoeff	216	dynamic

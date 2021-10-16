@@ -2,7 +2,7 @@
 "./Core/Inc/FX/allpass_filter.o"
 "./Core/Inc/FX/comb_filter.o"
 "./Core/Inc/FX/delay.o"
-"./Core/Inc/FX/distorsion.o"
+"./Core/Inc/FX/distortion.o"
 "./Core/Inc/FX/phaser.o"
 "./Core/Inc/FX/reverb.o"
 "./Core/Inc/lvgl/examples/anim/lv_example_anim_1.o"

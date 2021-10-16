@@ -24,16 +24,16 @@ void direct_pass(){
 }
 
 uint32_t float_to_int24(float float_in){
-	if (float_in > 8388607.0) float_in = 8388607.0;
-	if (float_in < 0.0 - 8388607.0) float_in = 0.0 - 8388607.0;
+	if (float_in > 1.0) float_in = 1.0;
+	if (float_in < 0.0 - 1.0) float_in = 0.0 - 1.0;
 	uint32_t int24_out = 0;
-	if (float_in >= 0) int24_out = float_in; else int24_out = 0xFFFFFF + float_in;
+	if (float_in >= 0) int24_out = float_in * 8388607.0; else int24_out = 0xFFFFFF + (float_in*8388607.0);
 	return int24_out;
 }
 
 float int24_to_float(uint32_t int24_in){
 	float float_out;
-	if (int24_in < 0x800000) float_out = int24_in; else float_out = int24_in - (float)0xFFFFFF;
+	if (int24_in < 0x800000) float_out = int24_in / 8388607.0; else float_out = (int24_in/8388608.0) - 2.0;
 	return float_out;
 }
 

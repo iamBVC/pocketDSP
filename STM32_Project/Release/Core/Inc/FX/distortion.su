@@ -1,0 +1,2 @@
+distortion.c:12:6:Distortion_Init	0	static
+distortion.c:18:7:Distortion_Update	0	static

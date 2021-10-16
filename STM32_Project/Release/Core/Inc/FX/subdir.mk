@@ -9,7 +9,7 @@ C_SRCS += \
 ../Core/Inc/FX/allpass_filter.c \
 ../Core/Inc/FX/comb_filter.c \
 ../Core/Inc/FX/delay.c \
-../Core/Inc/FX/distorsion.c \
+../Core/Inc/FX/distortion.c \
 ../Core/Inc/FX/phaser.c \
 ../Core/Inc/FX/reverb.c 
 
@@ -18,7 +18,7 @@ OBJS += \
 ./Core/Inc/FX/allpass_filter.o \
 ./Core/Inc/FX/comb_filter.o \
 ./Core/Inc/FX/delay.o \
-./Core/Inc/FX/distorsion.o \
+./Core/Inc/FX/distortion.o \
 ./Core/Inc/FX/phaser.o \
 ./Core/Inc/FX/reverb.o 
 
@@ -27,7 +27,7 @@ C_DEPS += \
 ./Core/Inc/FX/allpass_filter.d \
 ./Core/Inc/FX/comb_filter.d \
 ./Core/Inc/FX/delay.d \
-./Core/Inc/FX/distorsion.d \
+./Core/Inc/FX/distortion.d \
 ./Core/Inc/FX/phaser.d \
 ./Core/Inc/FX/reverb.d 
 

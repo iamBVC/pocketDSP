@@ -15,6 +15,13 @@
 #include <complex.h>
 #include "stm32h7xx_hal.h"
 #include "lvgl/lvgl.h"
+#include "FX/allpass_filter.h"
+#include "FX/comb_filter.h"
+#include "FX/reverb.h"
+#include "FX/FIR_filter.h"
+#include "FX/phaser.h"
+#include "FX/delay.h"
+#include <FX/distortion.h>
 #include "logo.h"
 #include "startup_sound.h"
 #include "adc.h"
@@ -23,13 +30,7 @@
 #include "oscilloscope.h"
 #include "signal_generator.h"
 
-#include "FX/allpass_filter.h"
-#include "FX/comb_filter.h"
-#include "FX/reverb.h"
-#include "FX/FIR_filter.h"
-#include "FX/phaser.h"
-#include "FX/delay.h"
-#include "FX/distorsion.h"
+
 
 #define SAMPLE_FREQ 48000
 
