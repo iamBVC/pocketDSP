@@ -15,8 +15,6 @@ void ALLPASSFilter_Init(ALLPASSFilter *apf, uint16_t D, float G){
 	apf->out = 0.0f;
 	apf->delayIndex = 0;
 	apf->bufSize = D+1;
-	if (sizeof(apf->bufx) > 4) free(apf->bufx);
-	if (sizeof(apf->bufy) > 4) free(apf->bufy);
 	apf->bufx = (float*)calloc(apf->bufSize, sizeof(float));
 	apf->bufy = (float*)calloc(apf->bufSize, sizeof(float));
 
@@ -35,7 +33,7 @@ float ALLPASSFilter_Update(ALLPASSFilter *apf, float inp){
 	apf->bufy[apf->bufIndex] = apf->out;
 
 	apf->bufIndex++;
-	if (apf->bufIndex == apf->bufSize){
+	if (apf->bufIndex >= apf->bufSize){
 		apf->bufIndex = 0;
 	}
 

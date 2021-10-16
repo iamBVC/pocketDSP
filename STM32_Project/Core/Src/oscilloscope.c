@@ -65,7 +65,7 @@ void start_oscilloscope()
     lv_chart_set_ext_y_array(chart, ser, (lv_coord_t*)oscilloscope_buffer_r);
     ser = lv_chart_add_series(chart, lv_palette_main(LV_PALETTE_GREEN), LV_CHART_AXIS_PRIMARY_Y);
     lv_chart_set_ext_y_array(chart, ser, (lv_coord_t*)oscilloscope_buffer_l);
-    lv_obj_set_style_bg_color(chart, lv_color_make(30, 30, 30), LV_PART_MAIN);
+    lv_obj_set_style_bg_color(chart, lv_color_make(0, 0, 0), LV_PART_MAIN);
 
     sample_callback = &osc_sample_callback;
 

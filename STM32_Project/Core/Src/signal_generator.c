@@ -11,7 +11,7 @@
 static const char *waveform_list[] = { "None", "Sine", "Saw", "Triangle", "Square", "Noise" };
 static uint32_t t_rch, t_lch = 0;
 static float r_ch, l_ch = 0;
-static const uint16_t peak_value = 8080;
+static const float peak_value = 0.01;
 
 void start_signgen(){
 
@@ -175,7 +175,7 @@ void sg_sample_callback(){
 
 	if (sg_settings[0][3] == 0) r_ch = 0;
 	if (sg_settings[0][3] == 1){
-		r_ch = peak_value * sg_settings[0][2] * sin((3.1416 / 180.0)*((sg_settings[0][0] * 360.0 * t_rch / (float)SAMPLE_FREQ)+sg_settings[0][1]));
+		r_ch = peak_value * sg_settings[0][2] * sin((M_PI / 180.0)*((sg_settings[0][0] * 360.0 * t_rch / (float)SAMPLE_FREQ)+sg_settings[0][1]));
 		if (t_rch >= SAMPLE_FREQ - 1) t_rch = 0; else t_rch++;
 	}
 	if (sg_settings[0][3] == 2){
@@ -193,13 +193,13 @@ void sg_sample_callback(){
 		if (t_rch * sg_settings[0][0] <= SAMPLE_FREQ/2) r_ch = peak_value * sg_settings[0][2]; else r_ch = (0.0 - peak_value) * sg_settings[0][2];
 		if (t_rch >= ((float)SAMPLE_FREQ / sg_settings[0][0]) - 1) t_rch = 0; else t_rch++;
 	}
-	if (sg_settings[0][3] == 5) r_ch = sg_settings[0][2] * ((rand() % (2*peak_value - 1)) - peak_value);
+	if (sg_settings[0][3] == 5) r_ch = peak_value * sg_settings[0][2] * ((rand() % ((uint32_t)pow(2,24) + 1)) - (uint32_t)pow(2,23))/pow(2,23);
 
 
 
 	if (sg_settings[1][3] == 0) l_ch = 0;
 	if (sg_settings[1][3] == 1){
-		l_ch = peak_value * sg_settings[1][2] * sin((3.1416 / 180.0)*((sg_settings[1][0] * 360.0 * t_lch / (float)SAMPLE_FREQ)+sg_settings[1][1]));
+		l_ch = peak_value * sg_settings[1][2] * sin((M_PI / 180.0)*((sg_settings[1][0] * 360.0 * t_lch / (float)SAMPLE_FREQ)+sg_settings[1][1]));
 		if (t_lch >= SAMPLE_FREQ - 1) t_lch = 0; else t_lch++;
 	}
 	if (sg_settings[1][3] == 2){
@@ -217,7 +217,7 @@ void sg_sample_callback(){
 		if (t_lch * sg_settings[1][0] <= SAMPLE_FREQ/2) l_ch = peak_value * sg_settings[1][2]; else l_ch = (0.0 - peak_value) * sg_settings[1][2];
 		if (t_lch >= ((float)SAMPLE_FREQ / sg_settings[1][0]) - 1) t_lch = 0; else t_lch++;
 	}
-	if (sg_settings[1][3] == 5) l_ch = sg_settings[1][2] * ((rand() % (2*peak_value + 1)) - peak_value);
+	if (sg_settings[1][3] == 5) l_ch = peak_value * sg_settings[1][2] * ((rand() % ((uint32_t)pow(2,24) + 1)) - (uint32_t)pow(2,23))/pow(2,23);
 
 
 

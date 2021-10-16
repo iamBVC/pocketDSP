@@ -8,7 +8,7 @@
 #ifndef INC_SYSTEM_H_
 #define INC_SYSTEM_H_
 
-#define SOFTWARE_REV 1.1
+#define SOFTWARE_REV 1.00001
 
 #include <stdio.h>
 #include <math.h>

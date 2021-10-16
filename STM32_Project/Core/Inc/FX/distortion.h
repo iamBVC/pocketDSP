@@ -11,10 +11,11 @@
 typedef struct {
 	float InputGain;
 	float OutputGain;
-	float Threshold;
+	float Crossover;
+	float Clipping;
 	float out;
 } Distortion;
-void Distortion_Init(Distortion *dist, float inputgain, float threshold, float outputgain);
+void Distortion_Init(Distortion *dist, float inputgain, float crossover, float clipping, float outputgain);
 float Distortion_Update(Distortion *dist, float inp);
 
 #endif /* INC_DISTORTION_H_ */

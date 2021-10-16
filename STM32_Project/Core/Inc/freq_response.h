@@ -10,8 +10,6 @@
 
 #include "system.h"
 
-static lv_coord_t freq_response[20000];
-
 void start_freqresp();
 void freqresp_sample_callback();
 

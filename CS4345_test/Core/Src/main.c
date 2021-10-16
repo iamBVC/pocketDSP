@@ -50,6 +50,7 @@ TIM_HandleTypeDef htim17;
 
 uint32_t stereo_buffer[2];
 uint16_t t = 0;
+uint32_t DMAbuffer[3600][2];
 
 /* USER CODE END PV */
 
@@ -114,10 +115,11 @@ int main(void)
   MX_TIM13_Init();
   /* USER CODE BEGIN 2 */
 
-  //DAC Init
   HAL_I2S_Init(&hi2s1);
   HAL_TIM_PWM_Start(&htim13, TIM_CHANNEL_1);
   HAL_Delay(100);
+
+
 
   HAL_TIM_Base_Start_IT(&htim17);
 
@@ -353,18 +355,16 @@ static void MX_GPIO_Init(void)
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 
 	if (htim == &htim17) {
+		float f = 1000.0;
+		  if(sin(f*t*180.0/192000.0*57.29578) >= 0){
+			  stereo_buffer[0] = (float)(0x0007FFFF) * sin(f*t/192000.0*57.29578);
+			  stereo_buffer[1] = stereo_buffer[0];
+		  }else{
+			  stereo_buffer[0] = 0x00FFFFFF + ((float)(0x0007FFFF) * sin(f*t/192000.0*57.29578));
+			  stereo_buffer[1] = stereo_buffer[0];
+		  }
 
-		  if(sin(t/57.29578) >= 0)
-			  stereo_buffer[0] = (float)(0x0007FFFF) * sin(t/57.29578);
-		  else
-			  stereo_buffer[0] = 0x00FFFFFF + ((float)(0x0007FFFF) * sin(t/57.29578));
-
-		  if(sin(t/57.29578) >= 0)
-			  stereo_buffer[1] = (float)(0x0007FFFF) * sin(t/57.29578);
-		  else
-			  stereo_buffer[1] = 0x00FFFFFF + ((float)(0x0007FFFF) * sin(t/57.29578));
-
-		  if (t < 359) t++; else t = 0;
+		  if (t < 192000 - 1) t++; else t = 0;
 
 		HAL_I2S_Transmit(&hi2s1, (uint16_t*)stereo_buffer, 2, 0);
 

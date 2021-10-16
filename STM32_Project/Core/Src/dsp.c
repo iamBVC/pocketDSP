@@ -10,14 +10,14 @@
 
 static Distortion dist __attribute__ ((section(".RAMD2"),used));
 static Phaser phs __attribute__ ((section(".RAMD2"),used));
-
 static FIRFilter fir __attribute__ ((section(".RAMD2"),used));
 static Delay dly __attribute__ ((section(".RAMD2"),used));
 static Reverb rvb __attribute__ ((section(".RAMD2"),used));
 
 void start_dsp()
 {
-	dsp_fx_init();
+	dsp_new_project();
+
 	sample_callback = &DSP_sample_callback;
 
     sys_status_refresh();
@@ -75,41 +75,52 @@ static void dsp_menu_cb(lv_event_t* e)
     {
         static const char* btns[] = { "Delete", ""};
         mbox = lv_msgbox_create(app_scr, "Warning", "Delete the current project?", btns, true);
-        lv_obj_add_event_cb(mbox, dsp_new_project, LV_EVENT_VALUE_CHANGED, NULL);
+        lv_obj_add_event_cb(mbox, reset_dsp, LV_EVENT_VALUE_CHANGED, NULL);
         lv_obj_center(mbox);
     }
     if (selected == 1) dsp_open_project();
     if (selected == 2);
     if (selected == 3);
-    if (selected == 4){
-    	reset_dsp();
-    	reset_app();
-    }
+    if (selected == 4) reset_app();
+
 }
 
 static void reset_dsp(){
-    for (uint8_t i = 0; i < DSP_MAX_FX_COUNT; i++)
-        for (uint8_t j = 0; j <= DSP_MAX_FX_SETTINGS; j++)
-            dsp_fx_settings[i][j] = 0;
+	reset_app();
+	reset_scr();
+	start_dsp();
 }
 
 static void dsp_new_project()
 {
-	reset_dsp();
-	reset_scr();
-    start_dsp();
+    for (uint8_t i = 0; i < DSP_MAX_FX_COUNT; i++)
+        for (uint8_t j = 0; j <= DSP_MAX_FX_SETTINGS; j++)
+            dsp_fx_settings[i][j] = 0;
+
+	dsp_fx_settings[0][0] = 100;
+	dsp_fx_settings[0][1] = 0;
+	dsp_fx_settings[0][2] = 1000;
+	dsp_fx_settings[0][3] = 100;
+	dsp_fx_settings[3][0] = 2;
+	dsp_fx_settings[3][1] = 5;
+	dsp_fx_settings[3][2] = 1;
+	dsp_fx_settings[3][3] = 20000;
+	dsp_fx_settings[3][4] = FIR_FILTER_LENGHT;
+	dsp_fx_settings[4][0] = 24000;
+	dsp_fx_settings[4][1] = 0;
+	dsp_fx_settings[4][2] = 0;
+	dsp_fx_settings[5][0] = 70;
+	dsp_fx_settings[5][1] = 5000;
+	dsp_fx_settings[5][2] = 0;
+	dsp_fx_settings[5][3] = 100;
+
+	for (uint8_t n = 0; n < DSP_MAX_FX_COUNT; n++)
+		dsp_fx_setup(n);
 }
 
 static void dsp_open_project()
 {
-    /*
-    dsp_fx_count = 1;
-    dsp_fx_settings[0][0] = 2;
-    dsp_fx_settings[0][1] = 10;
-    dsp_fx_settings[0][2] = 50;
-    */
-    reset_scr();
-    start_dsp();
+
 }
 
 static void dsp_open_edit(lv_event_t* e)
@@ -147,7 +158,7 @@ static void dsp_open_edit(lv_event_t* e)
             slider = lv_slider_create(dsp_fx_scr);
             lv_obj_set_width(slider, 200);
             lv_obj_align(slider, LV_ALIGN_LEFT_MID, 100, -80);
-            lv_slider_set_range(slider, 0, 1000);
+            lv_slider_set_range(slider, 0, 2000);
             lv_slider_set_value(slider, dsp_fx_settings[id][fx], LV_ANIM_OFF);
             lv_obj_set_user_data(slider, fx);
             lv_obj_add_event_cb(slider, dsp_refresh_fx_slider, LV_EVENT_VALUE_CHANGED, id);
@@ -156,25 +167,40 @@ static void dsp_open_edit(lv_event_t* e)
             lv_obj_align_to(label, slider, LV_ALIGN_OUT_RIGHT_MID, 10, 0);
 
             label = lv_label_create(dsp_fx_scr);
-            lv_label_set_text(label, "Threshold");
+            lv_label_set_text(label, "Crossover");
             lv_obj_align(label, LV_ALIGN_LEFT_MID, 20, -40);
             slider = lv_slider_create(dsp_fx_scr);
             lv_obj_set_width(slider, 200);
             lv_obj_align(slider, LV_ALIGN_LEFT_MID, 100, -40);
+            lv_slider_set_range(slider, 0, 100);
             lv_slider_set_value(slider, dsp_fx_settings[id][fx], LV_ANIM_OFF);
             lv_obj_set_user_data(slider, fx);
             lv_obj_add_event_cb(slider, dsp_refresh_fx_slider, LV_EVENT_VALUE_CHANGED, id);
             label = lv_label_create(dsp_fx_scr);
-            lv_label_set_text_fmt(label, "%.2f", dsp_fx_settings[id][fx++]/100.0);
+            lv_label_set_text_fmt(label, "%.3f", dsp_fx_settings[id][fx++]/1000.0);
             lv_obj_align_to(label, slider, LV_ALIGN_OUT_RIGHT_MID, 10, 0);
 
             label = lv_label_create(dsp_fx_scr);
-            lv_label_set_text(label, "OutGain");
+            lv_label_set_text(label, "Clipping");
             lv_obj_align(label, LV_ALIGN_LEFT_MID, 20, 0);
             slider = lv_slider_create(dsp_fx_scr);
             lv_obj_set_width(slider, 200);
             lv_obj_align(slider, LV_ALIGN_LEFT_MID, 100, 0);
             lv_slider_set_range(slider, 0, 1000);
+            lv_slider_set_value(slider, dsp_fx_settings[id][fx], LV_ANIM_OFF);
+            lv_obj_set_user_data(slider, fx);
+            lv_obj_add_event_cb(slider, dsp_refresh_fx_slider, LV_EVENT_VALUE_CHANGED, id);
+            label = lv_label_create(dsp_fx_scr);
+            lv_label_set_text_fmt(label, "%.3f", dsp_fx_settings[id][fx++]/1000.0);
+            lv_obj_align_to(label, slider, LV_ALIGN_OUT_RIGHT_MID, 10, 0);
+
+            label = lv_label_create(dsp_fx_scr);
+            lv_label_set_text(label, "OutGain");
+            lv_obj_align(label, LV_ALIGN_LEFT_MID, 20, 40);
+            slider = lv_slider_create(dsp_fx_scr);
+            lv_obj_set_width(slider, 200);
+            lv_obj_align(slider, LV_ALIGN_LEFT_MID, 100, 40);
+            lv_slider_set_range(slider, 0, 2000);
             lv_slider_set_value(slider, dsp_fx_settings[id][fx], LV_ANIM_OFF);
             lv_obj_set_user_data(slider, fx);
             lv_obj_add_event_cb(slider, dsp_refresh_fx_slider, LV_EVENT_VALUE_CHANGED, id);
@@ -210,7 +236,7 @@ static void dsp_open_edit(lv_event_t* e)
         lv_obj_set_user_data(slider, fx);
         lv_obj_add_event_cb(slider, dsp_refresh_fx_slider, LV_EVENT_VALUE_CHANGED, id);
         label = lv_label_create(dsp_fx_scr);
-        lv_label_set_text_fmt(label, "%d Samples", dsp_fx_settings[id][fx++]);
+        lv_label_set_text_fmt(label, "%.1fms", dsp_fx_settings[id][fx++]*1000.0/SAMPLE_FREQ);
         lv_obj_align_to(label, slider, LV_ALIGN_OUT_RIGHT_MID, 10, 0);
 
         label = lv_label_create(dsp_fx_scr);
@@ -253,7 +279,7 @@ static void dsp_open_edit(lv_event_t* e)
         lv_obj_set_user_data(slider, fx);
         lv_obj_add_event_cb(slider, dsp_refresh_fx_slider, LV_EVENT_VALUE_CHANGED, id);
         label = lv_label_create(dsp_fx_scr);
-        lv_label_set_text_fmt(label, "%d Samples", dsp_fx_settings[id][fx++]);
+        lv_label_set_text_fmt(label, "%.1fms", dsp_fx_settings[id][fx++]*1000.0/SAMPLE_FREQ);
         lv_obj_align_to(label, slider, LV_ALIGN_OUT_RIGHT_MID, 10, 0);
 
         label = lv_label_create(dsp_fx_scr);
@@ -500,31 +526,12 @@ static float dsp_fx_sample(uint8_t id, float input){
 	return output;
 }
 
-static void dsp_fx_init(){
+void dsp_fx_init(){
 
-	Distortion_Init(&dist, 1.0, 1.0, 1.0);
-	dsp_fx_settings[0][0] = 100;
-	dsp_fx_settings[0][1] = 100;
-	dsp_fx_settings[0][2] = 100;
-
+	Distortion_Init(&dist, 1.0, 0.0, 1.0, 1.0);
 	FIRFilter_Init(&fir);
-	dsp_fx_settings[3][0] = 2;
-	dsp_fx_settings[3][1] = 5;
-	dsp_fx_settings[3][2] = 1;
-	dsp_fx_settings[3][3] = 20000;
-	dsp_fx_settings[3][4] = FIR_FILTER_LENGHT;
-	FIRFilter_CalcCoeff(&fir, dsp_fx_settings[3][0], dsp_fx_settings[3][1], dsp_fx_settings[3][4], dsp_fx_settings[3][4]/2, 1.0/SAMPLE_FREQ, dsp_fx_settings[3][2], dsp_fx_settings[3][3]);
-
 	Delay_Init(&dly, 24000, 0.0, 0.0);
-	dsp_fx_settings[4][0] = 24000;
-	dsp_fx_settings[4][1] = 0;
-	dsp_fx_settings[4][2] = 0;
-
 	Reverb_Init(&rvb, 5000, 0.7, 1.0, 0.0);
-	dsp_fx_settings[5][0] = 70;
-	dsp_fx_settings[5][1] = 5000;
-	dsp_fx_settings[5][2] = 0;
-	dsp_fx_settings[5][3] = 100;
 
 }
 
@@ -534,8 +541,9 @@ static void dsp_fx_setup(uint8_t id){
 
 	if (fx_list[id] == "Distortion"){
 		dist.InputGain = dsp_fx_settings[id][0]/100.0;
-		dist.Threshold = dsp_fx_settings[id][1]/100.0;
-		dist.OutputGain = dsp_fx_settings[id][2]/100.0;
+		dist.Crossover = dsp_fx_settings[id][1]/1000.0;
+		dist.Clipping = dsp_fx_settings[id][2]/1000.0;
+		dist.OutputGain = dsp_fx_settings[id][3]/100.0;
 	}
 
 	if (fx_list[id] == "FIR Filter"){
@@ -549,15 +557,12 @@ static void dsp_fx_setup(uint8_t id){
 		dly.DryWet = dsp_fx_settings[id][2]/100.0;
 	}
 	if (fx_list[id] == "Reeverb"){
-		//Reverb_Init(&rvb, dsp_fx_settings[id][1], dsp_fx_settings[id][0]/100.0, dsp_fx_settings[id][3]/100.0, dsp_fx_settings[id][2]/100.0);
-		/*
-		rvb.cbf_rvb_1.Ndelay = dsp_fx_settings[id][1]*1.0/100.0;
-		rvb.cbf_rvb_2.Ndelay = dsp_fx_settings[id][1]*0.967/100.0;
-		rvb.cbf_rvb_3.Ndelay = dsp_fx_settings[id][1]*0.923/100.0;
-		rvb.cbf_rvb_4.Ndelay = dsp_fx_settings[id][1]*0.871/100.0;
-		rvb.apf_rvb_1.Ndelay = dsp_fx_settings[id][1]*0.171/100.0;
-		rvb.apf_rvb_2.Ndelay = dsp_fx_settings[id][1]*0.057/100.0;
-		*/
+		rvb.cbf_rvb_1.Ndelay = dsp_fx_settings[id][1]*1.0;
+		rvb.cbf_rvb_2.Ndelay = dsp_fx_settings[id][1]*0.967;
+		rvb.cbf_rvb_3.Ndelay = dsp_fx_settings[id][1]*0.923;
+		rvb.cbf_rvb_4.Ndelay = dsp_fx_settings[id][1]*0.871;
+		rvb.apf_rvb_1.Ndelay = dsp_fx_settings[id][1]*0.171;
+		rvb.apf_rvb_2.Ndelay = dsp_fx_settings[id][1]*0.057;
 		rvb.apf_rvb_1.gain = dsp_fx_settings[id][0]/100.0;
 		rvb.apf_rvb_2.gain = dsp_fx_settings[id][0]/100.0;
 		rvb.cbf_rvb_1.gain = dsp_fx_settings[id][0]/100.0;
@@ -566,7 +571,6 @@ static void dsp_fx_setup(uint8_t id){
 		rvb.cbf_rvb_4.gain = dsp_fx_settings[id][0]/100.0;
 		rvb.wet = dsp_fx_settings[id][2]/100.0;
 		rvb.dry = dsp_fx_settings[id][3]/100.0;
-
 	}
 
 	sample_callback = &DSP_sample_callback;

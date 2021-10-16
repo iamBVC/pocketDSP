@@ -79,6 +79,7 @@ void delay(uint32_t time) {
                            | ((GPIOE->IDR & (1<<10)) >> 9)))
 
 #define WRITE_DELAY { }
+#define IDLE_DELAY  { }
 #define READ_DELAY  { }
 #define SUPPORT_9488_555          //costs +230 bytes, 0.03s / 0.19s
 

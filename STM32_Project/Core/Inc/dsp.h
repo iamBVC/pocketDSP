@@ -21,7 +21,7 @@ static lv_coord_t dsp_filter_response[FIR_FILTER_LENGHT];
 static uint16_t dsp_fx_settings[DSP_MAX_FX_COUNT][DSP_MAX_FX_SETTINGS + 1];
 
 static void dsp_fx_setup(uint8_t id);
-static void dsp_fx_init();
+void dsp_fx_init();
 void DSP_sample_callback();
 static float dsp_fx_output[DSP_MAX_FX_COUNT];
 static float dsp_fx_sample(uint8_t id, float input);

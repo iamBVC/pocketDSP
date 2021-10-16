@@ -1,7 +1,7 @@
 main.c:89:6:my_disp_flush	8	static
 main.c:95:6:my_touchpad_read	24	static
-main.c:228:6:SystemClock_Config	144	static
-main.c:287:6:PeriphCommonClock_Config	216	static
+main.c:230:6:SystemClock_Config	144	static
+main.c:289:6:PeriphCommonClock_Config	216	static
 main.c:116:5:main	176	static,ignoring_inline_asm
-main.c:902:6:HAL_TIM_PeriodElapsedCallback	8	static
-main.c:919:6:Error_Handler	0	static
+main.c:904:6:HAL_TIM_PeriodElapsedCallback	8	static
+main.c:921:6:Error_Handler	0	static

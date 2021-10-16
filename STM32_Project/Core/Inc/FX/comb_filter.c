@@ -15,8 +15,6 @@ void COMBFilter_Init(COMBFilter *cbf, uint16_t D, float G){
 	cbf->out = 0.0f;
 	cbf->delayIndex = 0;
 	cbf->bufSize = D+1;
-	if (sizeof(cbf->bufx) > 4) free(cbf->bufx);
-	if (sizeof(cbf->bufy) > 4) free(cbf->bufy);
 	cbf->bufx = (float*)calloc(cbf->bufSize, sizeof(float));
 	cbf->bufy = (float*)calloc(cbf->bufSize, sizeof(float));
 
@@ -35,7 +33,7 @@ float COMBFilter_Update(COMBFilter *cbf, float inp){
 	cbf->bufy[cbf->bufIndex] = cbf->out;
 
 	cbf->bufIndex++;
-	if (cbf->bufIndex == cbf->bufSize){
+	if (cbf->bufIndex >= cbf->bufSize){
 		cbf->bufIndex = 0;
 	}
 

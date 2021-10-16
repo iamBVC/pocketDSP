@@ -10,13 +10,10 @@
 
 #include "system.h"
 
-#define FFT_POINTS 1024
-static lv_coord_t fft_graph[FFT_POINTS];
-static float timevalues[FFT_POINTS];
-static double complex fft_vectors[FFT_POINTS];
-
 void start_fft();
+void timer_fft(lv_timer_t* timer);
 void fft_sample_callback();
+void exit_fft();
 
 double hamming(int n, int N) {
 	return (0.54 - 0.46 * cos(2.0 * M_PI * (double)n / (double)(N-1)));

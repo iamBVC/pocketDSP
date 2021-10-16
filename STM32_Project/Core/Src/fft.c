@@ -8,11 +8,13 @@
 
 #include "fft.h"
 
+#define FFT_POINTS (1 << 9)
+static lv_coord_t fft_graph[FFT_POINTS];
+static double complex fft_vectors[FFT_POINTS];
+static uint8_t stop_fft = 0;
+
 void start_fft()
 {
-    for (uint16_t i = 0; i < FFT_POINTS; i++)
-    fft_vectors[i] = 500 + 400.0 * sin(i / 200.0);
-
     sys_status_refresh();
     lv_obj_align(sys_status, LV_ALIGN_TOP_LEFT, 0, 0);
 
@@ -40,7 +42,7 @@ void start_fft()
     btn = lv_list_add_btn(list, LV_SYMBOL_SETTINGS, NULL);
     //lv_obj_add_event_cb(btn, event_cb, LV_EVENT_CLICKED, "osc_settings");
     btn = lv_list_add_btn(list, LV_SYMBOL_POWER, NULL);
-    lv_obj_add_event_cb(btn, reset_app, LV_EVENT_CLICKED, NULL);
+    lv_obj_add_event_cb(btn, exit_fft, LV_EVENT_CLICKED, NULL);
 
     chart = lv_chart_create(app_scr);
     lv_obj_set_size(chart, 360, 300);
@@ -51,40 +53,46 @@ void start_fft()
     lv_chart_set_div_line_count(chart, 11, 11);
     ser = lv_chart_add_series(chart, lv_palette_main(LV_PALETTE_RED), LV_CHART_AXIS_PRIMARY_Y);
     lv_chart_set_point_count(chart, FFT_POINTS/2);
-    lv_chart_set_zoom_x(chart, 256 * 4);
+    lv_chart_set_zoom_x(chart, 256 * 1);
     lv_chart_set_ext_y_array(chart, ser, (lv_coord_t*)fft_graph);
-    lv_obj_set_style_bg_color(chart, lv_color_make(30, 30, 30), LV_PART_MAIN);
+    lv_obj_set_style_bg_color(chart, lv_color_make(0, 0, 0), LV_PART_MAIN);
+
+    timer = lv_timer_create(timer_fft, 100, NULL);
+    lv_timer_set_repeat_count(timer, -1);
+    lv_timer_ready(timer);
 
     sample_callback = &fft_sample_callback;
 
+}
+void exit_fft(){
+	lv_timer_set_repeat_count(timer, 0);
+	reset_app();
+}
+
+void timer_fft(lv_timer_t* timer){
+	stop_fft = 1;
+	FFT(fft_vectors, FFT_POINTS, (double)SAMPLE_FREQ);
+	stop_fft = 0;
+	for (uint32_t n = 0; n < FFT_POINTS/2; n++)
+		fft_graph[n] = 50.0 * log(sqrt((creal(fft_vectors[n])*creal(fft_vectors[n])) + (cimag(fft_vectors[n])*cimag(fft_vectors[n]))));
+	lv_chart_refresh(chart);
 }
 
 void fft_sample_callback(){
 
 	static uint16_t index = 0;
-	static uint32_t elapsed = 0;
 
 	dac_input[0] = adc_output[0];
 	dac_input[1] = adc_output[1];
 	HAL_I2S_Receive(&hi2s2, (uint16_t*)adc_output, 2, 0);
 	HAL_I2S_Transmit(&hi2s1, (uint16_t*)adc_output, 2, 0);
 
-	if (elapsed >= SAMPLE_FREQ / 5.0){
-		if (adc_output[0] < 0x800000) timevalues[index] = adc_output[0]; else timevalues[index] = adc_output[0] - (float)(0xFFFFFF) - 1.0;
-		fft_vectors[index] = timevalues[index] / 0.8388608 + 0.0*I;
+
+	if (stop_fft == 0) fft_vectors[index] = int24_to_float(adc_output[0]) + 0.0*I;
+	if (index == FFT_POINTS - 1 || stop_fft == 1) index = 0; else index++;
 
 
-		if (index == FFT_POINTS - 1){
-			index = 0;
-			elapsed = 0;
-			FFT(fft_vectors, FFT_POINTS, 0.02 / (float)SAMPLE_FREQ);
-			for (uint32_t n = 0; n < FFT_POINTS/2; n++) fft_graph[n] = 333.3 * log(sqrt((creal(fft_vectors[n])*creal(fft_vectors[n])) + (cimag(fft_vectors[n])*cimag(fft_vectors[n])))+1);
-			lv_chart_refresh(chart);
-		}else{
-			index++;
-		}
-	}
 
-	elapsed++;
+
 
 }
